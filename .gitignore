@@ -1,0 +1,19 @@
+# CMake and Visual Studio build files
+build/
+out/
+dlls/
+.vs/
+res/
+CMakeCache.txt
+*.vcxproj*
+*.sln*
+*.suo
+
+# Compiled artifacts
+*.exe
+*.dll
+*.lib
+*.obj
+
+# mesh file
+*.cgns
