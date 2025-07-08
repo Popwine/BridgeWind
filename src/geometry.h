@@ -11,28 +11,61 @@
 #endif // PI
 
 namespace BridgeWind {
-	struct Line {
+	class Line {
+    public:
 		G2C::vector2d<double> begin;
 		G2C::vector2d<double> end;
-	};
+		Line(const G2C::vector2d<double>& b, const G2C::vector2d<double>& e) : begin(b), end(e) {};
+	    void printCADCommand() const;
+        
+    };
 
+    class Rectangle {
+    public:
+        G2C::vector2d<double> bottomLeft; // smaller value
+        G2C::vector2d<double> topRight; // bigger value
+        Rectangle(const G2C::vector2d<double>& bl, const G2C::vector2d<double>& tr);
+        ~Rectangle() = default;
+        void printCADCommand() const;
 
-	struct Arc {
+    };
+
+	class Arc {
+    public:
 		G2C::vector2d<double> center;
 		double radius;
 		double startAngle; // in radians
 		double endAngle;   // in radians
+        Arc(const G2C::vector2d<double>& c, double r, double sa, double ea);
+        bool isInArc(double angle) const;
+        Rectangle getBoundingBox() const;
+        
 	};
 
 	class Geometry {
     public:
-		Geometry() = default;
+		Geometry();
 		~Geometry() = default;
 
 		std::vector<Line> lines;
 		std::vector<Arc> arcs;
+		Rectangle boundingBox;
+    private:
+        bool isBoundingBoxReal;
+		double epsilon; // for floating point comparison
+    public:
 
+        void addLine(const G2C::vector2d<double>& begin, const G2C::vector2d<double>& end);
+        void addArc(const G2C::vector2d<double>& center, double radius, double startAngle, double endAngle);
 		void loadFromDXF(const std::string& dxfFilePath);
+        void print() const;
+        bool isEQ(double a, double b) const;
+        bool isGT(double a, double b) const;
+		bool isLT(double a, double b) const;
+        bool isGE(double a, double b) const;
+		bool isLE(double a, double b) const;
+		double getEpsilon() const { return epsilon; }
+
 
 	};
 	

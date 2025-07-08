@@ -49,34 +49,16 @@ void test_gmsh_to_cgns() {
 		"C:/Projects/GeoToMshTest/rect.msh",
 		"../../../../res/meshes/rect.cgns"
 	);
+
 }
 void test_dxf_reader(std::string dxf_path) {
 	
-	
-	BridgeWind::DXFReader entity_handler;
+	BridgeWind::Geometry geometry;
+	geometry.loadFromDXF(dxf_path);
+	geometry.print();
+	geometry.boundingBox.printCADCommand();
 
-	// 2. 创建 libdxfrw 的主力读取器对象，并把文件名传给它。
-	dxfRW file_reader(dxf_path.c_str());
-
-	// 3. 调用主力读取器的 read() 方法，
-	//    并把你的处理器对象的地址 (&entity_handler) 传给它。
-	//    这样，file_reader 在解析文件时，就会把数据回调给 entity_handler。
-	std::cout << "Starting to read DXF file: " << dxf_path << std::endl;
-	bool success = file_reader.read(&entity_handler, false);
-
-	// 4. 检查读取是否成功
-	if (success) {
-		std::cout << "DXF file read successfully!" << std::endl;
-
-		// 读取完成后，所有数据都存储在你的 entity_handler 对象中了
-		std::cout << "Found " << entity_handler.circles.size() << " circles." << std::endl;
-		std::cout << "Found " << entity_handler.lines.size() << " lines." << std::endl;
-		std::cout << "Found " << entity_handler.polylines.size() << " polylines." << std::endl;
-		entity_handler.printResult();
-	}
-	else {
-		std::cerr << "Failed to read DXF file." << std::endl;
-	}
+	std::cout << geometry.getEpsilon() << std::endl;
 }
 
 int main() {
