@@ -11,20 +11,39 @@
 #endif // PI
 
 namespace BridgeWind {
+    class Point {
+    public:
+        double x;
+        double y;
+        Point() : x(0.0), y(0.0) {};
+        Point(double xCoord, double yCoord) : x(xCoord), y(yCoord) {};
+		~Point() = default;
+		void printCADCommand() const {
+			std::cout << "Point " << x << "," << y << " " << std::endl;
+		}
+		bool isSame(const Point& other) const {
+			return (std::abs(x - other.x) < 1e-8) && (std::abs(y - other.y) < 1e-8);
+		}
+    };
 	class Line {
     public:
-		G2C::vector2d<double> begin;
-		G2C::vector2d<double> end;
-		Line(const G2C::vector2d<double>& b, const G2C::vector2d<double>& e) : begin(b), end(e) {};
+		Point begin;
+		Point end;
+        Line(const Point& b, const Point& e);
+        Line(const Point& begin, double angle, double length);
 	    void printCADCommand() const;
-        
+        double distanceToPoint(const Point& p) const ;
+        Point getPerpendicularFoot(const Point& p) const;
+        double angle() const;
+        double length() const;
+        bool isOnLine(const Point& p) const;
     };
 
     class Rectangle {
     public:
-        G2C::vector2d<double> bottomLeft; // smaller value
-        G2C::vector2d<double> topRight; // bigger value
-        Rectangle(const G2C::vector2d<double>& bl, const G2C::vector2d<double>& tr);
+        Point bottomLeft; // smaller value
+        Point topRight; // bigger value
+        Rectangle(const Point& bl, const Point& tr);
         ~Rectangle() = default;
         void printCADCommand() const;
 
@@ -32,13 +51,16 @@ namespace BridgeWind {
 
 	class Arc {
     public:
-		G2C::vector2d<double> center;
+		Point center;
 		double radius;
 		double startAngle; // in radians
 		double endAngle;   // in radians
-        Arc(const G2C::vector2d<double>& c, double r, double sa, double ea);
+        Arc(const Point& c, double r, double sa, double ea);
         bool isInArc(double angle) const;
+		bool isOnArc(const Point& p) const;
         Rectangle getBoundingBox() const;
+        Point getStartPoint() const;
+        Point getEndPoint() const;
         
 	};
 
@@ -55,17 +77,21 @@ namespace BridgeWind {
 		double epsilon; // for floating point comparison
     public:
 
-        void addLine(const G2C::vector2d<double>& begin, const G2C::vector2d<double>& end);
-        void addArc(const G2C::vector2d<double>& center, double radius, double startAngle, double endAngle);
+        void addLine(const Point& begin, const Point& end);
+        void addArc(const Point& center, double radius, double startAngle, double endAngle);
 		void loadFromDXF(const std::string& dxfFilePath);
         void print() const;
+
+		// Floating point comparison methods
         bool isEQ(double a, double b) const;
         bool isGT(double a, double b) const;
 		bool isLT(double a, double b) const;
         bool isGE(double a, double b) const;
 		bool isLE(double a, double b) const;
-		double getEpsilon() const { return epsilon; }
 
+		double getEpsilon() const { return epsilon; }
+        std::vector<Point> getAllIntersectionPoints() const;
+        std::vector<Point> getAllIntersectionPointsNoEndPoints() const;
 
 	};
 	
@@ -160,6 +186,41 @@ namespace BridgeWind {
 	};
 
 
+	std::vector<Point> getIntersectionPoints(
+		const Line& line1,
+		const Line& line2
+	);
+	std::vector<Point> getIntersectionPoints(
+		const Line& line,
+		const Arc& arc
+	);
+    std::vector<Point> getIntersectionPoints(
+        const Arc& arc,
+        const Line& line
+    );
+    std::vector<Point> getIntersectionPoints(
+        const Arc& arc1,
+        const Arc& arc2
+    );
+    
+	std::vector<Point> getIntersectionPointsNoEndPoints(
+		const Line& line1,
+		const Line& line2
+	);
+	std::vector<Point> getIntersectionPointsNoEndPoints(
+		const Line& line,
+		const Arc& arc
+	);
+	std::vector<Point> getIntersectionPointsNoEndPoints(
+		const Arc& arc,
+		const Line& line
+	);
+	std::vector<Point> getIntersectionPointsNoEndPoints(
+		const Arc& arc1,
+		const Arc& arc2
+	);
+    void formatAngle(double& angle);
+    double distance(const Point& p1, const Point& p2);
 }
 
 

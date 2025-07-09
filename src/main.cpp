@@ -56,9 +56,11 @@ void test_dxf_reader(std::string dxf_path) {
 	BridgeWind::Geometry geometry;
 	geometry.loadFromDXF(dxf_path);
 	geometry.print();
-	geometry.boundingBox.printCADCommand();
-
-	std::cout << geometry.getEpsilon() << std::endl;
+	//std::vector<BridgeWind::Point> intersectionPoints = geometry.getAllIntersectionPoints();
+	std::vector<BridgeWind::Point> intersectionPoints = geometry.getAllIntersectionPointsNoEndPoints();
+	for (const auto& point : intersectionPoints) {
+		point.printCADCommand();
+	}
 }
 
 int main() {
