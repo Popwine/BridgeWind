@@ -1,8 +1,67 @@
 ﻿#include "geometry.h"
 #include <iostream>
 
-
+namespace {
+    // 所有只在本文件使用的东西都放在这里
+    bool isAllUsed(
+        const std::vector<std::pair<BridgeWind::Line, bool>>& lines, 
+        const std::vector<std::pair<BridgeWind::Line, bool>>& arcs
+    ) {
+		for (const auto& line : lines) {
+			if (!line.second) return false; // 如果有未使用的线段
+		}
+		for (const auto& arc : arcs) {
+			if (!arc.second) return false; // 如果有未使用的圆弧
+		}
+		return true; // 所有线段和圆弧都已使用
+    }
+}
 namespace BridgeWind {
+
+    void Point::printCADCommand() const {
+        std::cout << "Point " << x << "," << y << " " << std::endl;
+    }
+    bool Point::isSame(const Point& other) const {
+        return (std::abs(x - other.x) < BW_GEOMETRY_EPSILON) && (std::abs(y - other.y) < BW_GEOMETRY_EPSILON);
+    }
+    /*
+    * for std::map
+    */
+    //bool Point::operator<(const Point& other) const {
+    //    if (std::abs(x - other.x) > BW_GEOMETRY_EPSILON) return x < other.x;
+    //    return y - other.y > BW_GEOMETRY_EPSILON; // 比较 y
+    //}
+    bool Point::operator==(const Point& other) const {
+        return isSame(other);
+    }
+    double Point::distanceTo(const Point& other) const {
+        return std::sqrt((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y));
+    };
+
+    bool PointCmp::operator()(const Point& a, const Point& b) const {
+        // 1. Compare x-coordinates
+        // Is 'a.x' definitively to the left of 'b.x's tolerance interval?
+        if (a.x < b.x - BW_GEOMETRY_EPSILON) {
+            return true;
+        }
+        // Is 'a.x' definitively to the right of 'b.x's tolerance interval?
+        if (a.x > b.x + BW_GEOMETRY_EPSILON) {
+            return false;
+        }
+
+        // If we reach here, the x-coordinates are considered "equivalent".
+        // 2. Now, compare y-coordinates with the same logic.
+        // Is 'a.y' definitively below 'b.y's tolerance interval?
+        if (a.y < b.y - BW_GEOMETRY_EPSILON) {
+            return true;
+        }
+
+        // If 'a.y' is not definitively below 'b.y', then 'a' is not "less than" 'b'.
+        // This also covers the case where 'a' and 'b' are equivalent.
+        return false;
+    }
+
+
     /*
     * initialize a rectangle with any two points
     */
@@ -20,7 +79,7 @@ namespace BridgeWind {
             Point(0, 0),
             Point(0, 0)),
         isBoundingBoxReal(false),
-        epsilon(1e-8)
+        epsilon(BW_GEOMETRY_EPSILON)
     {
 
     }
@@ -38,8 +97,8 @@ namespace BridgeWind {
             boundingBox = Rectangle(begin, end);
             isBoundingBoxReal = true;
         }
-		epsilon = std::max(boundingBox.topRight.x - boundingBox.bottomLeft.x,
-			boundingBox.topRight.y - boundingBox.bottomLeft.y) * 1e-8; // 设置 epsilon 为边界框尺寸的 1e-8
+        epsilon = std::max(boundingBox.topRight.x - boundingBox.bottomLeft.x,
+			boundingBox.topRight.y - boundingBox.bottomLeft.y) * BW_GEOMETRY_EPSILON * 1e-3; 
     }
     void Geometry::addArc(const Point& center, double radius, double startAngle, double endAngle) {
 		Arc arc(center, radius, startAngle, endAngle);
@@ -58,7 +117,7 @@ namespace BridgeWind {
 			
         }
         epsilon = std::max(boundingBox.topRight.x - boundingBox.bottomLeft.x,
-            boundingBox.topRight.y - boundingBox.bottomLeft.y) * 1e-8; // 设置 epsilon 为边界框尺寸的 1e-8
+            boundingBox.topRight.y - boundingBox.bottomLeft.y) * BW_GEOMETRY_EPSILON * 1e-3; 
     }
     void DXFReader::printResult() const {
         std::cout << "\n--- DXF Read Results ---" << std::endl;
@@ -175,7 +234,12 @@ namespace BridgeWind {
         }
         for (const auto& circle : reader.circles) {
             Point center = { circle.basePoint.x, circle.basePoint.y };
-            addArc(center, circle.radious, 0.0, 2 * PI); // 圆的起始角度为0，结束角度为2π
+            addArc(center, circle.radious, 0.0 * PI, 0.5 * PI);
+            addArc(center, circle.radious, 0.5 * PI, 1.0 * PI);
+			addArc(center, circle.radious, 1.0 * PI, 1.5 * PI);
+			addArc(center, circle.radious, 1.5 * PI, 2.0 * PI);
+			// 注意：这里假设圆是完整的，所以我们添加了四个半圆来表示完整的圆
+
         }
         for (const auto& polyline : reader.polylines) {
             for (size_t i = 0; i < polyline.vertlist.size() - 1; ++i) {
@@ -219,13 +283,13 @@ namespace BridgeWind {
     }
 
     bool Geometry::isEQ(double a, double b) const {
-        return std::fabs(a - b) < epsilon;
+        return std::fabs(a - b) < BW_GEOMETRY_EPSILON;
     }
     bool Geometry::isGT(double a, double b) const {
-        return (a - b) > epsilon;
+        return (a - b) > BW_GEOMETRY_EPSILON;
     }
     bool Geometry::isLT(double a, double b) const {
-        return (b - a) > epsilon;
+        return (b - a) > BW_GEOMETRY_EPSILON;
     }
     bool Geometry::isGE(double a, double b) const {
         return isEQ(a, b) || isGT(a, b);
@@ -280,6 +344,12 @@ namespace BridgeWind {
         }
         return intersectionPoints;
     }
+    bool Geometry::isIntersectionExist() const {
+        if (getAllIntersectionPointsNoEndPoints().size() > 0) {
+            return true; // 存在交点
+        }
+        else return false;
+    }
     Arc::Arc(const Point& c, double r, double sa, double ea) : center(c), radius(r), startAngle(sa), endAngle(ea) {
         if (radius <= 0) {
             throw std::invalid_argument("Radius must be positive.");
@@ -306,7 +376,7 @@ namespace BridgeWind {
 		// 计算点到圆心的距离
 		double distanceToCenter = distance(center, p);
 		// 检查是否在圆上
-        if (fabs(distanceToCenter - radius) > 1e-8) {
+        if (fabs(distanceToCenter - radius) > BW_GEOMETRY_EPSILON) {
 			return false; // 点不在圆上
 		}
 		// 计算点的角度
@@ -327,7 +397,7 @@ namespace BridgeWind {
         // 0 degree point (if exit)
 		if (
             startAngle > endAngle // 弧线穿过0度处
-            || std::fabs(endAngle - startAngle - 2 * PI) < 1e-8 //纯圆
+            || std::fabs(endAngle - startAngle - 2 * PI) < BW_GEOMETRY_EPSILON //纯圆
             ) {
 			xCoords.push_back(center.x + radius);
 			yCoords.push_back(center.y);
@@ -335,7 +405,7 @@ namespace BridgeWind {
 		// 90 degree point (if exit)
         if (
 			isInArc(PI * 0.5) 
-            || std::fabs(endAngle - startAngle - 2 * PI) < 1e-8 //纯圆
+            || std::fabs(endAngle - startAngle - 2 * PI) < BW_GEOMETRY_EPSILON //纯圆
             ) {
 			xCoords.push_back(center.x);
 			yCoords.push_back(center.y + radius);
@@ -344,7 +414,7 @@ namespace BridgeWind {
 		// 180 degree point (if exit)
         if (
             isInArc(PI)
-            || std::fabs(endAngle - startAngle - 2 * PI) < 1e-8 //纯圆
+            || std::fabs(endAngle - startAngle - 2 * PI) < BW_GEOMETRY_EPSILON //纯圆
             ) {
 			xCoords.push_back(center.x - radius);
 			yCoords.push_back(center.y);
@@ -353,7 +423,7 @@ namespace BridgeWind {
         // 270 degree point (if exit)
         if (
             isInArc(PI * 1.5)
-            || std::fabs(endAngle - startAngle - 2 * PI) < 1e-8 //纯圆
+            || std::fabs(endAngle - startAngle - 2 * PI) < BW_GEOMETRY_EPSILON //纯圆
             ) {
 			xCoords.push_back(center.x);
 			yCoords.push_back(center.y - radius);
@@ -380,8 +450,9 @@ namespace BridgeWind {
             center.y + radius * sin(endAngle)
         );
     };
+    
     Line::Line(const Point& b, const Point& e) : begin(b), end(e) {
-        if (std::fabs(b.x - e.x) < 1e-8 && std::fabs(b.y - e.y) < 1e-8) {
+        if (std::fabs(b.x - e.x) < BW_GEOMETRY_EPSILON && std::fabs(b.y - e.y) < BW_GEOMETRY_EPSILON) {
             throw std::invalid_argument("Line cannot have zero length.");
         }
     }
@@ -392,7 +463,7 @@ namespace BridgeWind {
             begin.y + length * sin(angle)
         )
     {
-		if (length < 1e-8) {
+		if (length < BW_GEOMETRY_EPSILON) {
 			throw std::invalid_argument("Length must be positive.");
 		}
 		
@@ -442,7 +513,7 @@ namespace BridgeWind {
     }
     bool Line::isOnLine(const Point& p) const {
         double crossProduct = (end.y - begin.y) * (p.x - begin.x) - (end.x - begin.x) * (p.y - begin.y);
-        if (std::fabs(crossProduct) > 1e-8) {
+        if (std::fabs(crossProduct) > BW_GEOMETRY_EPSILON) {
             return false; // 点不在直线上
         }
         double dotProduct = (p.x - begin.x) * (end.x - begin.x) + (p.y - begin.y) * (end.y - begin.y);
@@ -463,7 +534,7 @@ namespace BridgeWind {
         const Line& line1,
         const Line& line2
     ) {
-		const double EPS = 1e-8; // 定义一个小的 epsilon 值用于浮点数比较
+		const double EPS = BW_GEOMETRY_EPSILON; // 定义一个小的 BW_GEOMETRY_EPSILON 值用于浮点数比较
         double x1 = line1.begin.x, y1 = line1.begin.y;
         double x2 = line1.end.x, y2 = line1.end.y;
         double x3 = line2.begin.x, y3 = line2.begin.y;
@@ -474,24 +545,44 @@ namespace BridgeWind {
         // --- Case 1: 线段平行或共线 ---
         if (std::abs(denom) < EPS) {
             // 判断是否共线 (collinear)
-            // 检查 line1 的起点是否在 line2 的承载直线上
-            // 通过检查 P1, P3, P4 三点叉积是否为0
             double cross_product_314 = (x1 - x3) * (y4 - y3) - (y1 - y3) * (x4 - x3);
 
             if (std::abs(cross_product_314) < EPS) {
                 // 三点共线，说明两线段在同一条直线上
                 // 现在检查它们的一维投影是否重叠
 
-                // 为了处理垂直线段，我们同时检查x和y区间的重叠
-                bool x_overlap = (std::min(x1, x2) <= std::max(x3, x4) + EPS) &&
-                    (std::min(x3, x4) <= std::max(x1, x2) + EPS);
+                // 计算线段1和线段2在X轴和Y轴上的投影范围
+                double min_x1 = std::min(x1, x2), max_x1 = std::max(x1, x2);
+                double min_y1 = std::min(y1, y2), max_y1 = std::max(y1, y2);
+                double min_x2 = std::min(x3, x4), max_x2 = std::max(x3, x4);
+                double min_y2 = std::min(y3, y4), max_y2 = std::max(y3, y4);
 
-                bool y_overlap = (std::min(y1, y2) <= std::max(y3, y4) + EPS) &&
-                    (std::min(y3, y4) <= std::max(y1, y2) + EPS);
+                // 检查投影是否有交集（这是你原来的代码，是正确的）
+                bool x_overlap_possible = (min_x1 <= max_x2 + EPS) && (min_x2 <= max_x1 + EPS);
+                bool y_overlap_possible = (min_y1 <= max_y2 + EPS) && (min_y2 <= max_y1 + EPS);
 
-                if (x_overlap && y_overlap) {
-                    // 如果两个区间的投影都重叠，说明线段重叠
-                    throw std::runtime_error("The two lines are collinear and overlap.");
+                if (x_overlap_possible && y_overlap_possible) {
+                    // 投影有交集，现在区分是“重叠”还是“接触”
+                    // 计算重叠区间的端点
+                    Point overlap_start(std::max(min_x1, min_x2), std::max(min_y1, min_y2));
+                    Point overlap_end(std::min(max_x1, max_x2), std::min(max_y1, max_y2));
+
+                    // 计算重叠区间的“距离”或“长度”
+                    // 如果重叠区间的起点和终点是同一个点（在EPS容差内），则为“接触”
+                    if (overlap_start.distanceTo(overlap_end) < EPS) {
+                        // 这是一个单点接触，行为与正常相交一致
+                        return { overlap_start }; // 或者 overlap_end，它们是同一个点
+                    }
+                    else {
+                        // 重叠区间的长度大于0，这是一个真正的重叠
+                        // 此时抛出异常是合理的，因为交点有无限个
+                        std::string message = "The two lines are collinear and overlap. The two lines are: Line1: ("
+                            + std::to_string(x1) + ", " + std::to_string(y1) + ") to (" +
+                            std::to_string(x2) + ", " + std::to_string(y2) + "), "
+                            + "Line2: (" + std::to_string(x3) + ", " + std::to_string(y3) + ") to (" +
+                            std::to_string(x4) + ", " + std::to_string(y4) + ")";
+                        throw std::runtime_error(message);
+                    }
                 }
             }
 
@@ -506,7 +597,7 @@ namespace BridgeWind {
         double ua = ua_num / denom;
         double ub = ub_num / denom;
 
-        // 使用带 epsilon 的比较来判断是否在线段上 [0, 1]
+        // 使用带 BW_GEOMETRY_EPSILON 的比较来判断是否在线段上 [0, 1]
         if (ua >= -EPS && ua <= 1.0 + EPS && ub >= -EPS && ub <= 1.0 + EPS) {
             Point intersectionPoint(
                 x1 + ua * (x2 - x1),
@@ -531,7 +622,7 @@ namespace BridgeWind {
         
         
         
-		if (distance < 1e-8) {
+		if (distance < BW_GEOMETRY_EPSILON) {
 			//线段长度为零，说明直线通过圆心
 			std::vector<Point> intersectionPoints;
 			double angle1 = line.angle();
@@ -563,7 +654,7 @@ namespace BridgeWind {
         Line perpendicularLine​(arc.center, foot);
 
         double perpendicularLine​Angle = perpendicularLine​.angle();
-        if (std::fabs(distance - arc.radius) < 1e-8) {
+        if (std::fabs(distance - arc.radius) < BW_GEOMETRY_EPSILON) {
 			// 线段与圆弧相切
 			
 			if (arc.isInArc(perpendicularLine​Angle)) {
@@ -626,8 +717,8 @@ namespace BridgeWind {
 
         double d = distance(p1, p2);
 
-        // 使用一个小的 epsilon 来处理浮点数比较
-        const double EPS = 1e-9;
+        // 使用一个小的 BW_GEOMETRY_EPSILON 来处理浮点数比较
+        const double EPS = BW_GEOMETRY_EPSILON;
 
         // Case 1: 圆心距离太远或太近，圆不相交
         // d > r1 + r2  (相离)
@@ -867,4 +958,5 @@ namespace BridgeWind {
     double distance(const Point& p1, const Point& p2) {
         return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
     }
+
 }

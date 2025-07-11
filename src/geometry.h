@@ -8,6 +8,7 @@
 #include <stdexcept>
 #ifndef PI
 #define PI 3.14159265358979323846264338
+#define BW_GEOMETRY_EPSILON 1e-8 
 #endif // PI
 
 namespace BridgeWind {
@@ -18,13 +19,44 @@ namespace BridgeWind {
         Point() : x(0.0), y(0.0) {};
         Point(double xCoord, double yCoord) : x(xCoord), y(yCoord) {};
 		~Point() = default;
-		void printCADCommand() const {
-			std::cout << "Point " << x << "," << y << " " << std::endl;
-		}
-		bool isSame(const Point& other) const {
-			return (std::abs(x - other.x) < 1e-8) && (std::abs(y - other.y) < 1e-8);
-		}
+        void printCADCommand() const;
+        bool isSame(const Point& other) const;
+        //bool operator<(const Point& other) const;
+        bool operator==(const Point& other) const;
+        double distanceTo(const Point& other) const;
+
     };
+    /**
+     * @brief A custom comparator for Point objects, designed for use with std::map.
+     *
+     * This comparator uses an epsilon value to handle floating-point inaccuracies,
+     * ensuring that points that are very close together are treated as equivalent keys
+     * in the map. It establishes a strict weak ordering to prevent undefined behavior.
+     */
+    class PointCmp {
+    private:
+        
+
+    public:
+        /**
+         * @brief Constructs the comparator with a specific epsilon.
+         * @param eps The tolerance value. Should be a small positive number.
+         */
+        explicit PointCmp() {}
+
+        /**
+         * @brief The comparison operator called by std::map.
+         *
+         * It compares two points lexicographically (first by x, then by y)
+         * using a robust, non-symmetric method to maintain strict weak ordering.
+         *
+         * @param a The first point.
+         * @param b The second point.
+         * @return True if point 'a' should be ordered before point 'b'.
+         */
+        bool operator()(const Point& a, const Point& b) const ;
+    };
+
 	class Line {
     public:
 		Point begin;
@@ -72,6 +104,7 @@ namespace BridgeWind {
 		std::vector<Line> lines;
 		std::vector<Arc> arcs;
 		Rectangle boundingBox;
+		
     private:
         bool isBoundingBoxReal;
 		double epsilon; // for floating point comparison
@@ -92,7 +125,7 @@ namespace BridgeWind {
 		double getEpsilon() const { return epsilon; }
         std::vector<Point> getAllIntersectionPoints() const;
         std::vector<Point> getAllIntersectionPointsNoEndPoints() const;
-
+        bool isIntersectionExist() const;
 	};
 	
 
@@ -124,7 +157,7 @@ namespace BridgeWind {
 		};
 		void printResult() const ;
 
-
+		// 以下方法是空实现，具体实现可以根据需要添加
         void addHeader(const DRW_Header* data) override {}
         void addLType(const DRW_LType& data) override {}
         void addLayer(const DRW_Layer& data) override {}
@@ -132,13 +165,9 @@ namespace BridgeWind {
         void addVport(const DRW_Vport& data) override {}
         void addTextStyle(const DRW_Textstyle& data) override {}
         void addAppId(const DRW_AppId& data) override {}
-
-        // -- Blocks --
         void addBlock(const DRW_Block& data) override {}
         void setBlock(const int handle) override {}
         void endBlock() override {}
-
-        // -- Entities (that you don't care about) --
         void addPoint(const DRW_Point& data) override {}
         void addRay(const DRW_Ray& data) override {}
         void addXline(const DRW_Xline& data) override {}
@@ -165,8 +194,6 @@ namespace BridgeWind {
         void linkImage(const DRW_ImageDef* data) override {}
         void addComment(const char* comment) override {}
         void addPlotSettings(const DRW_PlotSettings* data) override {}
-
-        // -- Write functions --
         void writeHeader(DRW_Header& data) override {}
         void writeBlocks() override {}
         void writeBlockRecords() override {}

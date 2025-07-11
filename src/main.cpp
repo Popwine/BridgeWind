@@ -4,9 +4,9 @@
 
 #include "geometry.h"
 #include "gmsh2cgns.h"
+#include "topology_analyzer.h"
 
 
-/*
 void test_mesh_and_field() {
     G2C::Mesh mesh;
     G2C::GmeshReader reader;
@@ -37,12 +37,9 @@ void test_mesh_and_field() {
 	std::cout << std::endl;
 
 
-	
 
 
-
-
-}*/
+}
 
 void test_gmsh_to_cgns() {
 	G2C::convertGmshToCgns(
@@ -61,6 +58,9 @@ void test_dxf_reader(std::string dxf_path) {
 	for (const auto& point : intersectionPoints) {
 		point.printCADCommand();
 	}
+	BridgeWind::TopologyAnalyzer analyzer(geometry);
+	analyzer.analyze();
+	analyzer.printLoops();
 }
 
 int main() {

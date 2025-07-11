@@ -27,6 +27,12 @@ add_library(geometry STATIC geometry.cpp geometry.h)
 target_include_directories(geometry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(geometry PUBLIC vector2d libdxfrw::libdxfrw )
 
+add_library(topology_analyzer STATIC topology_analyzer.cpp topology_analyzer.h)
+target_include_directories(topology_analyzer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(topology_analyzer PUBLIC 
+    geometry 
+)
+
 
 add_executable(BridgeWind
     main.cpp
@@ -37,4 +43,5 @@ target_link_libraries(BridgeWind PRIVATE
     gmsh2cgns
     gmsh_generator
     geometry
+    topology_analyzer
 )
