@@ -30,6 +30,7 @@ namespace BridgeWind {
         GraphEdge(GraphNode* s, GraphNode* e, const Line* l);
 
         GraphEdge(GraphNode* s, GraphNode* e, const Arc* a);
+        
     };
 
     class Loop {
@@ -37,13 +38,17 @@ namespace BridgeWind {
         bool properties_calculated;
         std::vector<const GraphNode*> nodes;
         std::vector<const GraphEdge*> edges;
-        
+        std::vector<double> lengthRatios;
+        double length;
     public:
         explicit Loop(const std::vector<GraphEdge*>& orderedd_edges);
         double getArea() const;
         void print() const;
-
-
+        double getLength() const;
+        size_t segmentCount() const { return edges.size(); };
+        const std::vector<const GraphNode*>& getNodes() const { return nodes; }
+		const std::vector<const GraphEdge*>& getEdges() const { return edges; }
+        const std::vector<double>& getLengthRatios() const;
     };
 
     class TopologyAnalyzer {
@@ -52,6 +57,8 @@ namespace BridgeWind {
         void analyze();
         bool areAllElementsClosed() const;
         void printLoops() const;
+		const Geometry& getSourceGeometry() const { return sourceGeometry; }
+        const std::vector<std::unique_ptr<Loop>>& getLoops() const;
     private:
         const Geometry& sourceGeometry;
         std::map<Point, std::unique_ptr<GraphNode>, PointCmp> nodeMap;
@@ -64,6 +71,8 @@ namespace BridgeWind {
         void findLoops();
         void buildHierarchy(); 
         GraphNode* findOrCreateNode(const Point& p);
+        
+        
     };
 
 }

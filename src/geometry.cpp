@@ -17,6 +17,13 @@ namespace {
     }
 }
 namespace BridgeWind {
+    Point::Point(Point p, double dis, double angle)
+        :
+        x(p.x + cos(angle) * dis),
+        y(p.y + sin(angle) * dis)
+    {
+
+    };
 
     void Point::printCADCommand() const {
         std::cout << "Point " << x << "," << y << " " << std::endl;
@@ -350,6 +357,12 @@ namespace BridgeWind {
         }
         else return false;
     }
+    double Geometry::getBoundingBoxWidth() const {
+        return boundingBox.topRight.x - boundingBox.bottomLeft.x;
+    };
+    double Geometry::getBoundingBoxHeight() const {
+        return boundingBox.topRight.y - boundingBox.bottomLeft.y;
+    };
     Arc::Arc(const Point& c, double r, double sa, double ea) : center(c), radius(r), startAngle(sa), endAngle(ea) {
         if (radius <= 0) {
             throw std::invalid_argument("Radius must be positive.");
@@ -450,7 +463,19 @@ namespace BridgeWind {
             center.y + radius * sin(endAngle)
         );
     };
+	Point Arc::getCenterPoint() const {
+		return center;
+	}
+
     
+	double Arc::length() const {
+		// 计算弧长
+		double angleDifference = endAngle - startAngle;
+		if (angleDifference < 0) {
+			angleDifference += 2 * PI; // 确保角度差为正
+		}
+		return radius * angleDifference; // 弧长公式
+	}
     Line::Line(const Point& b, const Point& e) : begin(b), end(e) {
         if (std::fabs(b.x - e.x) < BW_GEOMETRY_EPSILON && std::fabs(b.y - e.y) < BW_GEOMETRY_EPSILON) {
             throw std::invalid_argument("Line cannot have zero length.");

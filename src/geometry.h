@@ -18,6 +18,7 @@ namespace BridgeWind {
         double y;
         Point() : x(0.0), y(0.0) {};
         Point(double xCoord, double yCoord) : x(xCoord), y(yCoord) {};
+        Point(Point p, double dis, double angle);
 		~Point() = default;
         void printCADCommand() const;
         bool isSame(const Point& other) const;
@@ -93,6 +94,8 @@ namespace BridgeWind {
         Rectangle getBoundingBox() const;
         Point getStartPoint() const;
         Point getEndPoint() const;
+		Point getCenterPoint() const;
+        double length() const;
         
 	};
 
@@ -126,6 +129,9 @@ namespace BridgeWind {
         std::vector<Point> getAllIntersectionPoints() const;
         std::vector<Point> getAllIntersectionPointsNoEndPoints() const;
         bool isIntersectionExist() const;
+        double getBoundingBoxWidth() const;
+        double getBoundingBoxHeight() const;
+        
 	};
 	
 

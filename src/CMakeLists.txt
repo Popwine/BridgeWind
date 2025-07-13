@@ -33,6 +33,13 @@ target_link_libraries(topology_analyzer PUBLIC
     geometry 
 )
 
+add_library(geo_generator STATIC geo_generator.cpp geo_generator.h)
+target_include_directories(geo_generator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(geo_generator PUBLIC 
+    gmsh_generator 
+    geometry 
+    topology_analyzer
+)
 
 add_executable(BridgeWind
     main.cpp
@@ -44,4 +51,5 @@ target_link_libraries(BridgeWind PRIVATE
     gmsh_generator
     geometry
     topology_analyzer
+    geo_generator
 )

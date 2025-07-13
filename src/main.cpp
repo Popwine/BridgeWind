@@ -5,6 +5,7 @@
 #include "geometry.h"
 #include "gmsh2cgns.h"
 #include "topology_analyzer.h"
+#include "geo_generator.h"
 
 
 void test_mesh_and_field() {
@@ -43,8 +44,8 @@ void test_mesh_and_field() {
 
 void test_gmsh_to_cgns() {
 	G2C::convertGmshToCgns(
-		"C:/Projects/GeoToMshTest/rect.msh",
-		"../../../../res/meshes/rect.cgns"
+		"C:/Projects/GeoToMshTest/bridge.msh",
+		"../../../../res/meshes/bridge.cgns"
 	);
 
 }
@@ -61,12 +62,15 @@ void test_dxf_reader(std::string dxf_path) {
 	BridgeWind::TopologyAnalyzer analyzer(geometry);
 	analyzer.analyze();
 	analyzer.printLoops();
+	BridgeWind::GeoGenerator geoGen(analyzer, "../../../../res/meshes/test.geo");
+	geoGen.generateGeoFile();
 }
 
 int main() {
 
 	try {
 		test_dxf_reader("../../../../res/meshes/Drawing1.dxf");
+		//test_gmsh_to_cgns();
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << "Runtime error: " << e.what() << std::endl;

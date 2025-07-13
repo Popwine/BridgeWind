@@ -89,6 +89,10 @@ namespace BridgeWind{
             loop->print();
         }
     }
+
+    const std::vector<std::unique_ptr<Loop>>& TopologyAnalyzer::getLoops() const {
+        return loops;
+    }
     void TopologyAnalyzer::validateGraph() const{
         for (const auto& pair : nodeMap) {
             const GraphNode* node = pair.second.get(); // 获取原始指针
@@ -175,6 +179,7 @@ namespace BridgeWind{
 		: startNode(s), endNode(e), type(GeomType::ARC) {
 		geometry.arc_ptr = a;
 	}
+    
 	GraphNode* TopologyAnalyzer::findOrCreateNode(const Point& p) {
 		auto it = nodeMap.find(p);
 		if (it != nodeMap.end()) {// 如果节点已存在，返回其指针
@@ -285,6 +290,34 @@ namespace BridgeWind{
         if (this->nodes.size() != loop_edges_from_find.size() || this->edges.size() != loop_edges_from_find.size()) {
             throw std::logic_error("Failed to construct a valid loop. Node/edge count mismatch.");
         }
+		// --- 步骤 5: 计算环的长度 ---
+        double total_length = 0.0;
+        for (const auto& edge : edges) {
+            if (edge->type == GraphEdge::GeomType::LINE) {
+                total_length += edge->geometry.line_ptr->length();
+            }
+            else if (edge->type == GraphEdge::GeomType::ARC) {
+                total_length += edge->geometry.arc_ptr->length();
+            }
+            else {
+                throw std::runtime_error("Unknown edge type in Loop::length()");
+            }
+        }
+		length = total_length; // 计算并缓存环的总长度
+		// --- 步骤 6: 计算长度比例 ---
+        for (const auto& edge : edges) {
+            double edgeLength = 0.0;
+            if (edge->type == GraphEdge::GeomType::LINE) {
+                edgeLength = edge->geometry.line_ptr->length();
+            }
+            else if (edge->type == GraphEdge::GeomType::ARC) {
+                edgeLength = edge->geometry.arc_ptr->length();
+            }
+            else {
+                throw std::runtime_error("Unknown edge type in GeoGenerator::generateGeoFileSingleLoop");
+            }
+            this->lengthRatios.push_back(edgeLength / this->getLength());
+        }
     }
     void Loop::print() const{
 		std::cout << "Loop with " << edges.size() << " edges:" << std::endl;
@@ -297,5 +330,11 @@ namespace BridgeWind{
 
 			i++;
         }
+    }
+    double Loop::getLength() const {
+		return this->length; // 这里假设 length 已经被正确计算并缓存
+    }
+    const std::vector<double>& Loop::getLengthRatios() const {
+        return lengthRatios;
     }
 }
