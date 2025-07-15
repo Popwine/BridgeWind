@@ -41,6 +41,10 @@ target_link_libraries(geo_generator PUBLIC
     topology_analyzer
 )
 
+add_library(gmsh_controller STATIC gmsh_controller.cpp gmsh_controller.h)
+target_include_directories(gmsh_controller PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+
 add_executable(BridgeWind
     main.cpp
 )
@@ -52,4 +56,5 @@ target_link_libraries(BridgeWind PRIVATE
     geometry
     topology_analyzer
     geo_generator
+    gmsh_controller
 )

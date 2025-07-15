@@ -18,7 +18,9 @@ namespace BridgeWind
 		const Point& previousStart,
 		const Point& previousEnd
 	);
-
+	GeoGenerator::~GeoGenerator() {
+		finalize();
+	}
 	GeoGenerator::GeoGenerator(const TopologyAnalyzer& a, const std::string& f)
 		: analyzer(a), filename(f), ofs(f), writtedWallPoints(), writtedFarfieldPoints()
 	{
@@ -46,7 +48,15 @@ namespace BridgeWind
 		}
 		
 	}
-
+	void GeoGenerator::finalize() {
+		if (ofs.is_open()) {
+			ofs.close();
+		}
+		if (!ofs) {
+			throw std::runtime_error("Failed to close file: " + filename);
+		}
+		std::cout << "Geo file generated successfully at: " << filename << std::endl;
+	}
 	void GeoGenerator::generateGeoFileSingleLoop()  {
 		// 第一步：设置Geo文件的变量
 		// 求每条线段的分段数

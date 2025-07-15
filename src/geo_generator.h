@@ -20,7 +20,7 @@ namespace BridgeWind{
 		
 	public:
 		GeoGenerator() = delete;
-		~GeoGenerator() = default;
+		~GeoGenerator();
 		//只接受 Geometry 对象的引用
 		GeoGenerator(const TopologyAnalyzer& analyzer, const std::string& filename) ;
 		std::string filename;
@@ -28,6 +28,7 @@ namespace BridgeWind{
 
 
 		void generateGeoFile() ;
+		void finalize();
 	private:
 		std::ofstream ofs;
 		std::vector<Point> writtedWallPoints; // 壁面点
@@ -46,7 +47,7 @@ namespace BridgeWind{
 		int circumferentialMeshNumber = 360; // 周向网格数
 
 		double meshGrowthRate = 0.95; // 网格增长率，从外向到中心
-		
+	private:
 		size_t getWallPointStartIndex() const { return wallPointStartIndex; };
 		size_t getWallArcCenterStartIndex() const { return wallArcCenterStartIndex; };
 		size_t getFarfieldPointStartIndex() const { return farfieldPointStartIndex; };

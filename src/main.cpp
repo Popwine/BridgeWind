@@ -1,11 +1,14 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <windows.h>
+#include <memory>
 
 #include "geometry.h"
 #include "gmsh2cgns.h"
 #include "topology_analyzer.h"
 #include "geo_generator.h"
+#include "gmsh_controller.h"
 
 
 void test_mesh_and_field() {
@@ -38,8 +41,6 @@ void test_mesh_and_field() {
 	std::cout << std::endl;
 
 
-
-
 }
 
 void test_gmsh_to_cgns() {
@@ -65,12 +66,49 @@ void test_dxf_reader(std::string dxf_path) {
 	BridgeWind::GeoGenerator geoGen(analyzer, "../../../../res/meshes/test.geo");
 	geoGen.generateGeoFile();
 }
+void test_process() {
+	BridgeWind::Geometry geometry;
+	geometry.loadFromDXF("../../../../res/meshes/Drawing1.dxf");
+
+
+	BridgeWind::TopologyAnalyzer analyzer(geometry);
+	analyzer.analyze();
+	analyzer.printLoops();
+	BridgeWind::GeoGenerator geoGen(analyzer, "../../../../res/meshes/test.geo");
+	geoGen.generateGeoFile();
+	geoGen.finalize();
+	std::cout << "Geo file generated successfully." << std::endl;
+	
+	
+	BridgeWind::GmshController gmshController(
+		"../../../../res/meshes/test.geo",
+		"../../../../res/meshes/test.msh"
+	);
+	
+	gmshController.generateMesh();
+	
+
+
+
+	//gmshController.openOutputMeshFile();
+	
+	G2C::convertGmshToCgns(
+		"../../../../res/meshes/test.msh",
+		"../../../../res/meshes/test.cgns"
+	);
+	std::cout << "CGNS file generated successfully." << std::endl;
+	
+
+    
+}
+
 
 int main() {
 
 	try {
-		test_dxf_reader("../../../../res/meshes/Drawing1.dxf");
+		//test_dxf_reader("../../../../res/meshes/Drawing1.dxf");
 		//test_gmsh_to_cgns();
+        test_process();
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << "Runtime error: " << e.what() << std::endl;
