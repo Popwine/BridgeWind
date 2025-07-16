@@ -1,4 +1,4 @@
-#include "gmsh_controller.h"
+#include "app_controller.h"
 namespace BridgeWind {
     void AppController::simpleExecute(const std::string & command) {
         

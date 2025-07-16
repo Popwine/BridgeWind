@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GMSH_GENERATOR_H
 #define GMSH_GENERATOR_H
 

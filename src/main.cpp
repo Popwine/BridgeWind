@@ -8,7 +8,8 @@
 #include "gmsh2cgns.h"
 #include "topology_analyzer.h"
 #include "geo_generator.h"
-#include "gmsh_controller.h"
+#include "app_controller.h"
+#include "hypara_generator.h"
 
 
 void test_mesh_and_field() {
@@ -102,13 +103,40 @@ void test_process() {
     
 }
 
+void test_hypara() {
+	//BridgeWind::HyparaFile hyparaFile("../../../../res/test_case/bin/cfd_para_subsonic.hypara");
+	//hyparaFile.load();
+	//hyparaFile.print();
+	std::string templatePath = "C:/Projects/PHengLEI/phenglei-testcases/B25_unsteady/bin/";
+	std::string testPath = "C:/Projects/PHengLEI/phenglei-testcases/B25_unsteady_test_hypara/bin/";
+	BridgeWind::HyparaFile boundary_condition(templatePath + "boundary_condition.hypara");
+	BridgeWind::HyparaFile cfd_para_subsonic(templatePath + "cfd_para_subsonic.hypara");
+	BridgeWind::HyparaFile grid_para(templatePath + "grid_para.hypara");
+	BridgeWind::HyparaFile key(templatePath + "key.hypara");
+	BridgeWind::HyparaFile partition(templatePath + "partition.hypara");
+	BridgeWind::HyparaFile volume_condition(templatePath + "volume_condition.hypara");
+	
+	cfd_para_subsonic.load();
+	grid_para.load();
+	key.load();
+	partition.load();
+	
+	
+	cfd_para_subsonic.saveAs(testPath + "cfd_para_subsonic.hypara");
+	grid_para.saveAs(testPath + "grid_para.hypara");
+	key.saveAs(testPath + "key.hypara");
+	partition.saveAs(testPath + "partition.hypara");
+	
+
+}
 
 int main() {
 
 	try {
 		//test_dxf_reader("../../../../res/meshes/Drawing1.dxf");
 		//test_gmsh_to_cgns();
-        test_process();
+        //test_process();
+		test_hypara();
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << "Runtime error: " << e.what() << std::endl;

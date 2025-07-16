@@ -1,5 +1,6 @@
-#ifndef GMSH_CONTROLLER_H
-#define GMSH_CONTROLLER_H
+#pragma once
+#ifndef APP_CONTROLLER_H
+#define APP_CONTROLLER_H
 #include <iostream>
 #include <string>
 #include <windows.h>
@@ -12,11 +13,12 @@ namespace BridgeWind {
 	public:
 		AppController() = default;
 		~AppController() = default;
-	
+	public:
 		void simpleExecute(const std::string& command);
-
+	protected:
 		void simpleExecuteWithCreateProcess(const std::string& command);
 	};
+
 	class GmshController : public AppController {
 	private:
 		std::string geoFilePath;
@@ -38,7 +40,17 @@ namespace BridgeWind {
 		void generateMesh();
 		void openOutputMeshFile();
 	};
+	class PHengLEIController : public AppController {
+	private:
+		std::string workDir;
+		std::string cgnsFileName;
+	public:
+		PHengLEIController() = delete;
+		~PHengLEIController() = default;
+
+	};
+
 }
 
 
-#endif GMSH_CONTROLLER_H
+#endif APP_CONTROLLER_H

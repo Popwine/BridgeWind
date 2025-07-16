@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TOPOLOGY_ANALYZER_H
 #define TOPOLOGY_ANALYZER_H
 #include "geometry.h"
