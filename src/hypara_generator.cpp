@@ -224,7 +224,7 @@ namespace BridgeWind {
     }
 
     // [重构] HyparaFile::saveAs() 也变得极其简单
-    void HyparaFile::saveAs(const std::string& new_path) {
+    void HyparaFile::saveAs(const std::string& new_path) const {
         std::ofstream ofs(new_path);
         if (!ofs.is_open()) {
             throw std::runtime_error("Failed to open file for writing: " + new_path);
@@ -235,5 +235,49 @@ namespace BridgeWind {
         for (const auto& var : this->variables) {
             ofs << var.toString() << "\n";
         }
+        ofs.close();
+    }
+    void HyparaFile::saveAs(const std::filesystem::path& new_path) const {
+        saveAs(new_path.string());
+    }
+
+
+    bool HyparaFile::exists(const std::string& name) const {
+        return findVar(name) != this->variables.end();
+    }
+
+    bool HyparaFile::remove(const std::string& name) {
+        auto it = findVar(name);
+        if (it != this->variables.end()) {
+            this->variables.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+
+    HyparaGenerator::HyparaGenerator(const std::filesystem::path& templatePath)
+        : 
+        cfdParaSubsonic(templatePath / "cfd_para_subsonic.hypara"),
+        gridPara(templatePath / "grid_para.hypara"),
+        key(templatePath / "key.hypara"),
+        partition(templatePath / "partition.hypara") {
+        loadAll();
+    }
+
+    void HyparaGenerator::loadAll() {
+		
+		cfdParaSubsonic.load();
+		gridPara.load();
+		key.load();
+    	partition.load();
+    }
+
+    void HyparaGenerator::saveAll(const std::filesystem::path& outputPath)  const {
+        
+        cfdParaSubsonic.saveAs(outputPath / "cfd_para_subsonic.hypara");
+        gridPara.saveAs(outputPath / "grid_para.hypara");
+        key.saveAs(outputPath / "key.hypara");
+        partition.saveAs(outputPath / "partition.hypara");
     }
 }

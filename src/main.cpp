@@ -10,6 +10,7 @@
 #include "geo_generator.h"
 #include "app_controller.h"
 #include "hypara_generator.h"
+#include "bridge_simulation_service.h"
 
 
 void test_mesh_and_field() {
@@ -103,6 +104,9 @@ void test_process() {
     
 }
 
+
+
+
 void test_hypara() {
 	//BridgeWind::HyparaFile hyparaFile("../../../../res/test_case/bin/cfd_para_subsonic.hypara");
 	//hyparaFile.load();
@@ -130,13 +134,38 @@ void test_hypara() {
 
 }
 
+
+void test_service() {
+	BridgeWind::SimulationParameters params;
+	params.dxfFilePath = "../../../../res/meshes/Drawing1.dxf";
+	params.workingDirectory = "C:/Projects/BridgeWind/res/test_service";
+	BridgeWind::BridgeSimulationService service;
+	service.connectProgressSignal([](const std::string& message) {
+		std::cout << "Progress: " << message << std::endl;
+		});
+	service.connectErrorSignal([](const std::string& message) {
+		std::cerr << "Error: " << message << std::endl;
+		});
+	service.connectFinishedSignal([]() {
+		std::cout << "Simulation finished successfully." << std::endl;
+		});
+	if (service.run(params)) {
+		std::cout << "Simulation completed successfully." << std::endl;
+	}
+	else {
+		std::cerr << "Simulation failed." << std::endl;
+	}
+
+}
 int main() {
 
 	try {
 		//test_dxf_reader("../../../../res/meshes/Drawing1.dxf");
 		//test_gmsh_to_cgns();
         //test_process();
-		test_hypara();
+		//test_hypara();
+		test_service();
+
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << "Runtime error: " << e.what() << std::endl;

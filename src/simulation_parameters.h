@@ -1,19 +1,22 @@
 #pragma once
-#ifnedf SIMULATION_PARAMETERS_H
+#ifndef SIMULATION_PARAMETERS_H
 #define SIMULATION_PARAMETERS_H
 
 #include <string>
 
+namespace BridgeWind{
+    struct SimulationParameters {
+        // 输入几何
+        std::string dxfFilePath;
+        double refReNumber = 25.0;
+		int maxproc = 4; 
+
+        
+        std::string workingDirectory;
+    };
+}
 
 
-struct SimulationParameters {
-    // 输入几何
-    std::string dxfFilePath;
-
-
-    // 工作目录：所有中间文件和结果都将保存在这里
-    std::string workingDirectory;
-};
 
 
 #endif // SIMULATION_PARAMETERS_H

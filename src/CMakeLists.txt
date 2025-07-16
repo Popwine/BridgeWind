@@ -47,12 +47,23 @@ target_include_directories(app_controller PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(hypara_generator STATIC hypara_generator.cpp hypara_generator.h)
 target_include_directories(hypara_generator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_library(bridge_simulation_service STATIC bridge_simulation_service.cpp bridge_simulation_service.h)
+target_include_directories(bridge_simulation_service PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(bridge_simulation_service PUBLIC
+    gmsh2cgns
+    gmsh_generator
+    geometry
+    topology_analyzer
+    geo_generator
+    app_controller
+    hypara_generator
+)
 
 add_executable(BridgeWind
     main.cpp
 )
 
-# 将链接目标从 CGNS::CGNS 改为 CGNS 提供的具体目标
+
 target_link_libraries(BridgeWind PRIVATE
     gmsh2cgns
     gmsh_generator
@@ -61,4 +72,5 @@ target_link_libraries(BridgeWind PRIVATE
     geo_generator
     app_controller
     hypara_generator
+    bridge_simulation_service
 )

@@ -15,8 +15,12 @@ namespace BridgeWind {
 		~AppController() = default;
 	public:
 		void simpleExecute(const std::string& command);
-	protected:
+
 		void simpleExecuteWithCreateProcess(const std::string& command);
+		void AppController::simpleExecuteWithCreateProcess(
+			const std::string& command,
+			const std::string& workingDirectory
+		);
 	};
 
 	class GmshController : public AppController {
