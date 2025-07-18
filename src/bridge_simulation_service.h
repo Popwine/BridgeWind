@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef BRIDGE_SIMULATION_SERVICE_H
 #define BRIDGE_SIMULATION_SERVICE_H
 
@@ -11,6 +11,9 @@
 #include <windows.h>
 #include <memory>
 
+#include <Qstring>
+#include <Qobject>
+
 #include "geometry.h"
 #include "gmsh2cgns.h"
 #include "topology_analyzer.h"
@@ -22,42 +25,34 @@
 
 namespace BridgeWind
 {
-    class BridgeSimulationService {
+    class BridgeSimulationService : public QObject {
+        Q_OBJECT
     public:
-        // --- ÕâÊÇÎ´À´ÓëUIÍ¨ĞÅµÄ¡°ĞÅºÅ¡± ---
-        // ¶¨ÒåĞÅºÅÀàĞÍ£¬²ÎÊıÊÇ½ø¶ÈÃèÊö×Ö·û´®
-        using ProgressSignal = std::function<void(const std::string&)>;
-        // ¶¨Òå´íÎóĞÅºÅÀàĞÍ
-        using ErrorSignal = std::function<void(const std::string&)>;
-        // ¶¨Òå³É¹¦ĞÅºÅÀàĞÍ
-        using FinishedSignal = std::function<void()>;
+        BridgeSimulationService(QObject* parent = nullptr);
 
-        // --- Á¬½Ó¡°²Ûº¯Êı¡±µÄ·½·¨ ---
-        void connectProgressSignal(ProgressSignal slot) { onProgress = slot; }
-        void connectErrorSignal(ErrorSignal slot) { onError = slot; }
-        void connectFinishedSignal(FinishedSignal slot) { onFinished = slot; }
+    signals:
+        //    å°†åŸæ¥çš„ std::function å®šä¹‰æ”¹ä¸ºçœŸæ­£çš„ Qt ä¿¡å·
+        //    ä¿¡å·åªæœ‰å£°æ˜ï¼Œæ²¡æœ‰å®ç°ï¼Œç”± moc è‡ªåŠ¨ç”Ÿæˆ
+        void progressUpdated(const QString& message);
+        void errorOccurred(const QString& errorMessage);
+        void finished();
 
-        // --- ºËĞÄ¹«¹²½Ó¿Ú ---
-        // Õâ¸öº¯Êı½«Ö´ĞĞÍêÕûµÄ¼ÆËãÁ÷³Ì¡£
-        // ÎªÁË¼òµ¥Æğ¼û£¬ÎÒÃÇÏÈÈÃËüÍ¬²½Ö´ĞĞ¡£Î´À´¿ÉÒÔÇáËÉµØ°ÑËü·Åµ½Ïß³ÌÀï¡£
+
+
+
+    public slots:
         bool run(const SimulationParameters& params);
 
     private:
-        // --- Ë½ÓĞ³ÉÔ±±äÁ¿£¬ÓÃÀ´´æ´¢¡°²Ûº¯Êı¡± ---
-        ProgressSignal onProgress = nullptr;
-        ErrorSignal    onError = nullptr;
-        FinishedSignal onFinished = nullptr;
 
-        // --- Ë½ÓĞ¸¨Öúº¯Êı£¬½«´óÈÎÎñ·Ö½âÎªĞ¡²½Öè ---
+
+        // --- ç§æœ‰è¾…åŠ©å‡½æ•°ï¼Œå°†å¤§ä»»åŠ¡åˆ†è§£ä¸ºå°æ­¥éª¤ ---
         bool runMeshing(const SimulationParameters& params, std::string& outCgnsFilePath);
 		bool prepareHyparaFiles(const SimulationParameters& params);
 		bool runPhengLeiMeshAndPartition(const SimulationParameters& params);
         bool runSolver(const SimulationParameters& params, const std::string& cgnsFilePath);
 
-        // ¸¨Öúº¯Êı£¬ÓÃÓÚ·¢³öĞÅºÅ
-        void emitProgress(const std::string& message);
-        void emitError(const std::string& message);
-        void emitFinished();
+
 
         void createFolder(std::filesystem::path path);
         void copyFile(const std::filesystem::path& source, const std::filesystem::path& destination);

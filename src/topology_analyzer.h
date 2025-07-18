@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #ifndef TOPOLOGY_ANALYZER_H
 #define TOPOLOGY_ANALYZER_H
 #include "geometry.h"
@@ -54,18 +54,18 @@ namespace BridgeWind {
 
     class TopologyAnalyzer {
     public:
-        explicit TopologyAnalyzer(const Geometry& geometry);
+        explicit TopologyAnalyzer(std::shared_ptr<BridgeWind::Geometry> geometry);
         void analyze();
         bool areAllElementsClosed() const;
         void printLoops() const;
-		const Geometry& getSourceGeometry() const { return sourceGeometry; }
+        std::shared_ptr<BridgeWind::Geometry> getSourceGeometry() const { return sourceGeometry; }
         const std::vector<std::unique_ptr<Loop>>& getLoops() const;
     private:
-        const Geometry& sourceGeometry;
+        std::shared_ptr<BridgeWind::Geometry> sourceGeometry;
         std::map<Point, std::unique_ptr<GraphNode>, PointCmp> nodeMap;
         std::vector<std::unique_ptr<GraphEdge>> allEdges;
         std::vector<std::unique_ptr<Loop>> loops;
-        // ... ∆‰À˚≥…‘± ...
+        // ... ÂÖ∂‰ªñÊàêÂëò ...
     private:
         void buildGraph(); 
         void validateGraph() const;

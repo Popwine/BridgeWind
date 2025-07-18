@@ -1,15 +1,21 @@
 
 cmake_minimum_required(VERSION 3.15)
-project(Gmsh2CGNS LANGUAGES CXX)
+project(BridgeWind LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(MSVC)
+    add_compile_options(/utf-8)
+else()
+    add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
 
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/hdf5-1.14.4-3-install")
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/CGNS-4.4.0-install")
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/libdxfrw-install")
 
-
+set(Qt5_DIR "C:/DevTools/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
 # 1. 正常找到 HDF5。执行完这行，目标 HDF5::HDF5 就被定义了。
 find_package(HDF5 REQUIRED)
 
@@ -27,8 +33,27 @@ endif()
 find_package(CGNS REQUIRED)
 find_package(libdxfrw REQUIRED)
 
+# 这一行让CMake在处理Qt的 .h 文件时能自动调用 moc, uic, rcc 等工具
+# 这对于使用信号和槽、.ui文件、资源文件至关重要
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+# 查找Qt5的包。我们需要 Core 和 Widgets 模块来创建最基本的GUI应用。
+# REQUIRED 意味着如果找不到Qt5，CMake会报错并停止。
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt5 COMPONENTS LinguistTools REQUIRED)
+set(TS_FILES translations/bridgewind_zh_CN.ts)
+
+include_directories(
+    src
+    ${Qt5Widgets_INCLUDE_DIRS} # 这是 find_package 帮我们找到的Qt头文件路径
+)
+
 message(STATUS "Found HDF5: ${HDF5_FOUND}, Version: ${HDF5_VERSION_STRING}")
 message(STATUS "Found CGNS: ${CGNS_FOUND}, Version: ${CGNS_VERSION_STRING}")
 message(STATUS "Found libdxfrw: ${libdxfrw_FOUND}, Version: ${libdxfrw_VERSION_STRING}")
+
+# 设置自动生成的文件存放目录
+set(CMAKE_AUTOGEN_BUILD_DIR "${CMAKE_BINARY_DIR}/autogen")
 
 add_subdirectory(src)

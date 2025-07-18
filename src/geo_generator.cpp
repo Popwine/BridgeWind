@@ -1,4 +1,4 @@
-#include "geo_generator.h"
+ï»¿#include "geo_generator.h"
 #include <numeric>
 #include <algorithm>
 #include <iomanip>
@@ -25,8 +25,8 @@ namespace BridgeWind
 		: analyzer(a), filename(f), ofs(f), writtedWallPoints(), writtedFarfieldPoints()
 	{
 		fieldDiameter = std::max(
-			analyzer.getSourceGeometry().getBoundingBoxWidth(),
-			analyzer.getSourceGeometry().getBoundingBoxHeight()
+			analyzer.getSourceGeometry()->getBoundingBoxWidth(),
+			analyzer.getSourceGeometry()->getBoundingBoxHeight()
 		) * 50.0;
 		if (!ofs.is_open()) {
 			throw std::runtime_error("Failed to open file: " + filename);
@@ -39,11 +39,11 @@ namespace BridgeWind
 			throw std::runtime_error("No loops found in the topology analysis.");
 		}
 		if (loops.size() > 1) {
-			// ¶à»·Çé¿ö
+			// å¤šç¯æƒ…å†µ
 			generateGeoFileMultiLoop();
 		}
 		else if (loops.size() == 1) {
-			// µ¥»·
+			// å•ç¯
 			generateGeoFileSingleLoop();
 		}
 		
@@ -58,8 +58,8 @@ namespace BridgeWind
 		std::cout << "Geo file generated successfully at: " << filename << std::endl;
 	}
 	void GeoGenerator::generateGeoFileSingleLoop()  {
-		// µÚÒ»²½£ºÉèÖÃGeoÎÄ¼şµÄ±äÁ¿
-		// ÇóÃ¿ÌõÏß¶ÎµÄ·Ö¶ÎÊı
+		// ç¬¬ä¸€æ­¥ï¼šè®¾ç½®Geoæ–‡ä»¶çš„å˜é‡
+		// æ±‚æ¯æ¡çº¿æ®µçš„åˆ†æ®µæ•°
 		const Loop& loop = *analyzer.getLoops()[0];//
 		double loopLength = loop.getLength();
 		int segmentCount = loop.segmentCount();
@@ -82,11 +82,11 @@ namespace BridgeWind
 			meshNumbersVariabls.emplace_back(variableName, num + 1);
 			varIndex++;
 		}
-		geoSetVariable(BW_GEO_RADIUS_MESH_NUM_VAR_NAME, radialMeshNumber);
+		geoSetVariable(BW_GEO_RADIUS_MESH_NUM_VAR_NAME, radialMeshNumber + 1);
 		geoSetVariable(BW_GEO_CIRCUM_GROWTH_RATE_VAR_NAME, 1.0);
 		geoSetVariable(BW_GEO_DEFAULT_RADIUS_GROWTH_RATE_VAR_NAME, meshGrowthRate);
 		
-		// µÚ¶ş²½£ºĞ´ÈëµãµÄ×ø±ê---------------------------------
+		// ç¬¬äºŒæ­¥ï¼šå†™å…¥ç‚¹çš„åæ ‡---------------------------------
 		geoWriteLineComment("Setting points");
 
 		int pointIndex = 1;
@@ -94,14 +94,14 @@ namespace BridgeWind
 		this->wallPointStartIndex = pointIndex;
 		geoWriteWallPoints(loop, pointIndex);
 
-		this->farfieldPointStartIndex = pointIndex; // ¼ÇÂ¼Ç½ÃæµãµÄÊıÁ¿
+		this->farfieldPointStartIndex = pointIndex; // è®°å½•å¢™é¢ç‚¹çš„æ•°é‡
 		geoWriteFarfieldPoints(loop, pointIndex);
 
 		this->centerPointIndex = pointIndex;
 		geoSetPoint(centerPointIndex, Point(0.0, 0.0));
 		pointIndex++;
 
-		// µÚÈı²½£ºĞ´ÈëÏßµÄÁ¬½Ó---------------------------------
+		// ç¬¬ä¸‰æ­¥ï¼šå†™å…¥çº¿çš„è¿æ¥---------------------------------
 		geoWriteLineComment("Setting Lines");
 		int lineIndex = 1;
 
@@ -111,7 +111,7 @@ namespace BridgeWind
 
 		geoWriteFarfieldLine(loop, lineIndex);
 
-		// µÚËÄ²½£º Ğ´ÈëÃæ---------------------------------------
+		// ç¬¬å››æ­¥ï¼š å†™å…¥é¢---------------------------------------
 		geoWriteLineComment("Setting Surfaces");
 		int surfaceIndex = 1;
 
@@ -121,7 +121,7 @@ namespace BridgeWind
 
 		geoRecombineSurfaces(1, segmentCount);
 
-		// µÚÎå²½£º Ğ´ÈëÎïÀí×é------------------------------
+		// ç¬¬äº”æ­¥ï¼š å†™å…¥ç‰©ç†ç»„------------------------------
 
 		geoSetPhysicalCurves("Solid Surface", 1, 1, segmentCount);
 		geoSetPhysicalCurves("Farfield", 2, 2 * segmentCount + 1, 3 * segmentCount);
@@ -215,41 +215,43 @@ namespace BridgeWind
 	}
 
 	void GeoGenerator::geoWriteWallPoints(
-		const Loop& loop, // Ö±½Ó´«Èë Loop ¶ÔÏó
+		const Loop& loop, // ç›´æ¥ä¼ å…¥ Loop å¯¹è±¡
 		int& pointIndex
 	) {
-		const auto& nodes = loop.getNodes(); // »ñÈ¡ÓĞĞò½Úµã
+		geoWriteLineComment("Setting Wall Points");
+		const auto& nodes = loop.getNodes(); // è·å–æœ‰åºèŠ‚ç‚¹
 
-		// ±éÀúÃ¿Ò»¸ö½Úµã£¬Ëü¾ÍÊÇ»·ÉÏµÄÒ»¸ö¶¥µã
+		// éå†æ¯ä¸€ä¸ªèŠ‚ç‚¹ï¼Œå®ƒå°±æ˜¯ç¯ä¸Šçš„ä¸€ä¸ªé¡¶ç‚¹
 		for (size_t i = 0; i < nodes.size(); ++i) {
-			// »ñÈ¡µ±Ç°¶¥µã
+			// è·å–å½“å‰é¡¶ç‚¹
 			const Point& current_point = nodes[i]->point;
 
-			// Ğ´Èë.geoÎÄ¼ş
+			// å†™å…¥.geoæ–‡ä»¶
 			geoSetPoint(pointIndex, current_point);
 
-			// ¼ÇÂ¼Õâ¸öµãÒÑ¾­±»Ğ´Èë
+			// è®°å½•è¿™ä¸ªç‚¹å·²ç»è¢«å†™å…¥
 			writtedWallPoints.push_back(current_point);
 
 			pointIndex++;
 		}
 		this->wallArcCenterStartIndex = pointIndex;
-		// ¶ÔÓÚÔ²»¡£¬»¹ĞèÒªĞ´ÈëËüÃÇµÄÔ²ĞÄ×÷Îª¶îÍâµÄµã
+		// å¯¹äºåœ†å¼§ï¼Œè¿˜éœ€è¦å†™å…¥å®ƒä»¬çš„åœ†å¿ƒä½œä¸ºé¢å¤–çš„ç‚¹
 		const auto& edges = loop.getEdges();
 		for (const auto& edge : edges) {
 			if (edge->type == GraphEdge::GeomType::ARC) {
 				const Point& center_point = edge->geometry.arc_ptr->center;
 				geoSetPoint(pointIndex, center_point);
-				// ÕâÀïÒ²¿ÉÒÔ¼ÇÂ¼Ô²ĞÄµã£¬Èç¹ûĞèÒªµÄ»°
+				// è¿™é‡Œä¹Ÿå¯ä»¥è®°å½•åœ†å¿ƒç‚¹ï¼Œå¦‚æœéœ€è¦çš„è¯
 				pointIndex++;
 			}
 		}
 	}
 	void GeoGenerator::geoWriteFarfieldPoints(const Loop& loop, int& pointIndex) {
-		// È·¶¨Ô²ÖÜÉÏµÚÒ»¸öµãµÄ×ø±ê
+		// ç¡®å®šåœ†å‘¨ä¸Šç¬¬ä¸€ä¸ªç‚¹çš„åæ ‡
+		geoWriteLineComment("Setting Farfield Points");
 		const auto& nodes = loop.getNodes();
 		Line ray(Point(0, 0), nodes[0]->point);
-		// Ê¹ÓÃ¼«×ø±ê³õÊ¼»¯µÚÒ»¸öµã
+		// ä½¿ç”¨æåæ ‡åˆå§‹åŒ–ç¬¬ä¸€ä¸ªç‚¹
 		double angle = ray.angle();
 		Point firstPoint(Point(0, 0), fieldDiameter / 2.0, angle);
 		geoSetPoint(pointIndex, firstPoint);
@@ -348,15 +350,27 @@ namespace BridgeWind
 			int index2 = i == nodeNum ? nodeNum + 1 : nodeNum + i + 1;
 			int index3 = 2 * nodeNum + i;
 			int index4 =  nodeNum + i;
+			//é¡ºæ—¶é’ˆ
+			//geoWriteSurface(
+			//	i,
+			//	std::vector<int>{
+			//		index1,
+			//		-index2,
+			//		-index3,
+			//		index4
+			//	}
+			//);
+			//é€†æ—¶é’ˆ
 			geoWriteSurface(
 				i,
 				std::vector<int>{
-					index1,
-					-index2,
-					-index3,
-					index4
-				}
+					-index4,
+					index3,
+					index2,
+					-index1
+			}
 			);
+
 		}
 	}
 	void GeoGenerator::geoTransfiniteSurfaces(int startIndex, int endIndex) {
@@ -395,31 +409,31 @@ namespace BridgeWind
 		std::vector<double> raw_parts(n);
 		std::vector<int> int_parts(n);
 
-		// ¼ÆËã×Ü±ÈÀı
+		// è®¡ç®—æ€»æ¯”ä¾‹
 		double sum_ratios = std::accumulate(ratios.begin(), ratios.end(), 0.0);
 
-		// ³õ²½·ÖÅä£¨¸¡µãÊı -> ÏòÏÂÈ¡Õû£©
+		// åˆæ­¥åˆ†é…ï¼ˆæµ®ç‚¹æ•° -> å‘ä¸‹å–æ•´ï¼‰
 		for (int i = 0; i < n; ++i) {
 			raw_parts[i] = x * ratios[i] / sum_ratios;
 			int_parts[i] = static_cast<int>(std::floor(raw_parts[i]));
 		}
 
-		// ¼ÆËãÎó²î²îÖµ
+		// è®¡ç®—è¯¯å·®å·®å€¼
 		int remainder = x - std::accumulate(int_parts.begin(), int_parts.end(), 0);
 
-		// ¼ÇÂ¼Ã¿¸öÏîµÄÎó²î£¨¸¡µãÖµ - ÏòÏÂÈ¡Õû£©
+		// è®°å½•æ¯ä¸ªé¡¹çš„è¯¯å·®ï¼ˆæµ®ç‚¹å€¼ - å‘ä¸‹å–æ•´ï¼‰
 		std::vector<std::pair<int, double>> deltas(n);
 		for (int i = 0; i < n; ++i) {
 			deltas[i] = { i, raw_parts[i] - int_parts[i] };
 		}
 
-		// °´ÕÕÎó²î´Ó´óµ½Ğ¡ÅÅĞò
+		// æŒ‰ç…§è¯¯å·®ä»å¤§åˆ°å°æ’åº
 		std::sort(deltas.begin(), deltas.end(),
 			[](const std::pair<int, double>& a, const std::pair<int, double>& b) {
 				return a.second > b.second;
 			});
 
-		// ½øĞĞÎó²î²¹³¥£¬¼Ó»ØÈ±Ê§µÄ remainder
+		// è¿›è¡Œè¯¯å·®è¡¥å¿ï¼ŒåŠ å›ç¼ºå¤±çš„ remainder
 		for (int i = 0; i < remainder; ++i) {
 			int_parts[deltas[i].first] += 1;
 		}

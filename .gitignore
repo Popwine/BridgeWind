@@ -4,6 +4,8 @@ out/
 dlls/
 .vs/
 res/
+bin/
+
 CMakeCache.txt
 *.vcxproj*
 *.sln*

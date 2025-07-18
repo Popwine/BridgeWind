@@ -1,4 +1,4 @@
-#include "app_controller.h"
+ï»¿#include "app_controller.h"
 namespace BridgeWind {
     void AppController::simpleExecute(const std::string & command) {
         
@@ -12,7 +12,7 @@ namespace BridgeWind {
         std::strcpy(cmd, command.c_str());
 
         std::cout << "Calling external command \"" << cmd << "\" " << "using system" << std::endl;
-        // Ö´ÐÐ¼òµ¥µÄÃüÁî
+        // æ‰§è¡Œç®€å•çš„å‘½ä»¤
         system(command.c_str());
     }
     void AppController::simpleExecuteWithCreateProcess(const std::string& command) {
@@ -25,31 +25,31 @@ namespace BridgeWind {
         char cmd[1024];
         std::strcpy(cmd, command.c_str());
 
-        // ×¼±¸ STARTUPINFO ½á¹¹Ìå
+        // å‡†å¤‡ STARTUPINFO ç»“æž„ä½“
         STARTUPINFO si;
-        ZeroMemory(&si, sizeof(si)); // ÏÈ½«½á¹¹ÌåÇåÁã
-        si.cb = sizeof(si);          // ÉèÖÃ½á¹¹Ìå´óÐ¡
+        ZeroMemory(&si, sizeof(si)); // å…ˆå°†ç»“æž„ä½“æ¸…é›¶
+        si.cb = sizeof(si);          // è®¾ç½®ç»“æž„ä½“å¤§å°
 
-        // ×¼±¸ PROCESS_INFORMATION ½á¹¹Ìå
+        // å‡†å¤‡ PROCESS_INFORMATION ç»“æž„ä½“
         PROCESS_INFORMATION pi;
-        ZeroMemory(&pi, sizeof(pi)); // ÇåÁã
+        ZeroMemory(&pi, sizeof(pi)); // æ¸…é›¶
 
         std::cout << "Calling external command \"" << cmd << "\" " << "using CreateProcess" << std::endl;
 
-        // ´´½¨½ø³Ì
-        // ²ÎÊýËµÃ÷£º
-        // 1. lpApplicationName: Í¨³£Îª NULL£¬´ËÊ±³ÌÐòÃû±ØÐëÔÚÃüÁîÐÐ×Ö·û´®µÄ¿ªÍ·
-        // 2. lpCommandLine: ÒªÖ´ÐÐµÄÃüÁîÐÐ£¬±ØÐëÊÇ¿ÉÐ´ÄÚ´æ
-        // 3. lpProcessAttributes: ½ø³Ì°²È«ÊôÐÔ£¬NULL
-        // 4. lpThreadAttributes: Ïß³Ì°²È«ÊôÐÔ£¬NULL
-        // 5. bInheritHandles: ÊÇ·ñ¼Ì³Ð¸¸½ø³ÌµÄ¾ä±ú£¬¶ÔÓÚ¼òµ¥µ÷ÓÃÉèÎª FALSE
-        // 6. dwCreationFlags: ´´½¨±êÖ¾£¬0 ±íÊ¾Ä¬ÈÏ¡£¿ÉÒÔÓÃ CREATE_NO_WINDOW À´Òþ²Ø´°¿Ú
-        // 7. lpEnvironment: »·¾³±äÁ¿£¬NULL ±íÊ¾Ê¹ÓÃ¸¸½ø³ÌµÄ»·¾³±äÁ¿
-        // 8. lpCurrentDirectory: µ±Ç°Ä¿Â¼£¬NULL ±íÊ¾Ê¹ÓÃ¸¸½ø³ÌµÄµ±Ç°Ä¿Â¼
-        // 9. lpStartupInfo: Ö¸Ïò STARTUPINFO ½á¹¹ÌåµÄÖ¸Õë
-        // 10. lpProcessInformation: Ö¸Ïò PROCESS_INFORMATION ½á¹¹ÌåµÄÖ¸Õë£¬½ÓÊÕÐÂ½ø³ÌÐÅÏ¢
-        if (!CreateProcess(NULL,   // Ê¹ÓÃ cmd ²ÎÊýÖÐµÄ³ÌÐòÃû
-            cmd,    // ÃüÁîÐÐ×Ö·û´®
+        // åˆ›å»ºè¿›ç¨‹
+        // å‚æ•°è¯´æ˜Žï¼š
+        // 1. lpApplicationName: é€šå¸¸ä¸º NULLï¼Œæ­¤æ—¶ç¨‹åºåå¿…é¡»åœ¨å‘½ä»¤è¡Œå­—ç¬¦ä¸²çš„å¼€å¤´
+        // 2. lpCommandLine: è¦æ‰§è¡Œçš„å‘½ä»¤è¡Œï¼Œå¿…é¡»æ˜¯å¯å†™å†…å­˜
+        // 3. lpProcessAttributes: è¿›ç¨‹å®‰å…¨å±žæ€§ï¼ŒNULL
+        // 4. lpThreadAttributes: çº¿ç¨‹å®‰å…¨å±žæ€§ï¼ŒNULL
+        // 5. bInheritHandles: æ˜¯å¦ç»§æ‰¿çˆ¶è¿›ç¨‹çš„å¥æŸ„ï¼Œå¯¹äºŽç®€å•è°ƒç”¨è®¾ä¸º FALSE
+        // 6. dwCreationFlags: åˆ›å»ºæ ‡å¿—ï¼Œ0 è¡¨ç¤ºé»˜è®¤ã€‚å¯ä»¥ç”¨ CREATE_NO_WINDOW æ¥éšè—çª—å£
+        // 7. lpEnvironment: çŽ¯å¢ƒå˜é‡ï¼ŒNULL è¡¨ç¤ºä½¿ç”¨çˆ¶è¿›ç¨‹çš„çŽ¯å¢ƒå˜é‡
+        // 8. lpCurrentDirectory: å½“å‰ç›®å½•ï¼ŒNULL è¡¨ç¤ºä½¿ç”¨çˆ¶è¿›ç¨‹çš„å½“å‰ç›®å½•
+        // 9. lpStartupInfo: æŒ‡å‘ STARTUPINFO ç»“æž„ä½“çš„æŒ‡é’ˆ
+        // 10. lpProcessInformation: æŒ‡å‘ PROCESS_INFORMATION ç»“æž„ä½“çš„æŒ‡é’ˆï¼ŒæŽ¥æ”¶æ–°è¿›ç¨‹ä¿¡æ¯
+        if (!CreateProcess(NULL,   // ä½¿ç”¨ cmd å‚æ•°ä¸­çš„ç¨‹åºå
+            cmd,    // å‘½ä»¤è¡Œå­—ç¬¦ä¸²
             NULL,   // Process handle not inheritable
             NULL,   // Thread handle not inheritable
             FALSE,  // Set handle inheritance to FALSE
@@ -59,23 +59,23 @@ namespace BridgeWind {
             &si,    // Pointer to STARTUPINFO structure
             &pi)    // Pointer to PROCESS_INFORMATION structure
             ) {
-            // Èç¹û´´½¨Ê§°Ü£¬´òÓ¡´íÎóÐÅÏ¢
+            // å¦‚æžœåˆ›å»ºå¤±è´¥ï¼Œæ‰“å°é”™è¯¯ä¿¡æ¯
             throw std::runtime_error("CreateProcess failed (" + std::to_string(GetLastError()) + ").");
             return;
         }
 
-        // µÈ´ý×Ó½ø³ÌÖ´ÐÐ½áÊø
+        // ç­‰å¾…å­è¿›ç¨‹æ‰§è¡Œç»“æŸ
         WaitForSingleObject(pi.hProcess, INFINITE);
 
         std::cout << "External command executed." << std::endl;
 
-        // »ñÈ¡×Ó½ø³ÌµÄÍË³öÂë
+        // èŽ·å–å­è¿›ç¨‹çš„é€€å‡ºç 
         DWORD exitCode;
         if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
             std::cout << "Child process exit code: " << exitCode << std::endl;
         }
 
-        // ¹Ø±Õ½ø³ÌºÍÏß³Ì¾ä±ú£¬·ÀÖ¹×ÊÔ´Ð¹Â¶
+        // å…³é—­è¿›ç¨‹å’Œçº¿ç¨‹å¥æŸ„ï¼Œé˜²æ­¢èµ„æºæ³„éœ²
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
 
@@ -94,31 +94,31 @@ namespace BridgeWind {
         char cmd[1024];
         std::strcpy(cmd, command.c_str());
 		const char* workingDir = workingDirectory.empty() ? NULL : workingDirectory.c_str();
-        // ×¼±¸ STARTUPINFO ½á¹¹Ìå
+        // å‡†å¤‡ STARTUPINFO ç»“æž„ä½“
         STARTUPINFO si;
-        ZeroMemory(&si, sizeof(si)); // ÏÈ½«½á¹¹ÌåÇåÁã
-        si.cb = sizeof(si);          // ÉèÖÃ½á¹¹Ìå´óÐ¡
+        ZeroMemory(&si, sizeof(si)); // å…ˆå°†ç»“æž„ä½“æ¸…é›¶
+        si.cb = sizeof(si);          // è®¾ç½®ç»“æž„ä½“å¤§å°
 
-        // ×¼±¸ PROCESS_INFORMATION ½á¹¹Ìå
+        // å‡†å¤‡ PROCESS_INFORMATION ç»“æž„ä½“
         PROCESS_INFORMATION pi;
-        ZeroMemory(&pi, sizeof(pi)); // ÇåÁã
+        ZeroMemory(&pi, sizeof(pi)); // æ¸…é›¶
 
         std::cout << "Calling external command \"" << cmd << "\" " << "using CreateProcess" << std::endl;
 
-        // ´´½¨½ø³Ì
-        // ²ÎÊýËµÃ÷£º
-        // 1. lpApplicationName: Í¨³£Îª NULL£¬´ËÊ±³ÌÐòÃû±ØÐëÔÚÃüÁîÐÐ×Ö·û´®µÄ¿ªÍ·
-        // 2. lpCommandLine: ÒªÖ´ÐÐµÄÃüÁîÐÐ£¬±ØÐëÊÇ¿ÉÐ´ÄÚ´æ
-        // 3. lpProcessAttributes: ½ø³Ì°²È«ÊôÐÔ£¬NULL
-        // 4. lpThreadAttributes: Ïß³Ì°²È«ÊôÐÔ£¬NULL
-        // 5. bInheritHandles: ÊÇ·ñ¼Ì³Ð¸¸½ø³ÌµÄ¾ä±ú£¬¶ÔÓÚ¼òµ¥µ÷ÓÃÉèÎª FALSE
-        // 6. dwCreationFlags: ´´½¨±êÖ¾£¬0 ±íÊ¾Ä¬ÈÏ¡£¿ÉÒÔÓÃ CREATE_NO_WINDOW À´Òþ²Ø´°¿Ú
-        // 7. lpEnvironment: »·¾³±äÁ¿£¬NULL ±íÊ¾Ê¹ÓÃ¸¸½ø³ÌµÄ»·¾³±äÁ¿
-        // 8. lpCurrentDirectory: µ±Ç°Ä¿Â¼£¬NULL ±íÊ¾Ê¹ÓÃ¸¸½ø³ÌµÄµ±Ç°Ä¿Â¼
-        // 9. lpStartupInfo: Ö¸Ïò STARTUPINFO ½á¹¹ÌåµÄÖ¸Õë
-        // 10. lpProcessInformation: Ö¸Ïò PROCESS_INFORMATION ½á¹¹ÌåµÄÖ¸Õë£¬½ÓÊÕÐÂ½ø³ÌÐÅÏ¢
-        if (!CreateProcess(NULL,   // Ê¹ÓÃ cmd ²ÎÊýÖÐµÄ³ÌÐòÃû
-            cmd,    // ÃüÁîÐÐ×Ö·û´®
+        // åˆ›å»ºè¿›ç¨‹
+        // å‚æ•°è¯´æ˜Žï¼š
+        // 1. lpApplicationName: é€šå¸¸ä¸º NULLï¼Œæ­¤æ—¶ç¨‹åºåå¿…é¡»åœ¨å‘½ä»¤è¡Œå­—ç¬¦ä¸²çš„å¼€å¤´
+        // 2. lpCommandLine: è¦æ‰§è¡Œçš„å‘½ä»¤è¡Œï¼Œå¿…é¡»æ˜¯å¯å†™å†…å­˜
+        // 3. lpProcessAttributes: è¿›ç¨‹å®‰å…¨å±žæ€§ï¼ŒNULL
+        // 4. lpThreadAttributes: çº¿ç¨‹å®‰å…¨å±žæ€§ï¼ŒNULL
+        // 5. bInheritHandles: æ˜¯å¦ç»§æ‰¿çˆ¶è¿›ç¨‹çš„å¥æŸ„ï¼Œå¯¹äºŽç®€å•è°ƒç”¨è®¾ä¸º FALSE
+        // 6. dwCreationFlags: åˆ›å»ºæ ‡å¿—ï¼Œ0 è¡¨ç¤ºé»˜è®¤ã€‚å¯ä»¥ç”¨ CREATE_NO_WINDOW æ¥éšè—çª—å£
+        // 7. lpEnvironment: çŽ¯å¢ƒå˜é‡ï¼ŒNULL è¡¨ç¤ºä½¿ç”¨çˆ¶è¿›ç¨‹çš„çŽ¯å¢ƒå˜é‡
+        // 8. lpCurrentDirectory: å½“å‰ç›®å½•ï¼ŒNULL è¡¨ç¤ºä½¿ç”¨çˆ¶è¿›ç¨‹çš„å½“å‰ç›®å½•
+        // 9. lpStartupInfo: æŒ‡å‘ STARTUPINFO ç»“æž„ä½“çš„æŒ‡é’ˆ
+        // 10. lpProcessInformation: æŒ‡å‘ PROCESS_INFORMATION ç»“æž„ä½“çš„æŒ‡é’ˆï¼ŒæŽ¥æ”¶æ–°è¿›ç¨‹ä¿¡æ¯
+        if (!CreateProcess(NULL,   // ä½¿ç”¨ cmd å‚æ•°ä¸­çš„ç¨‹åºå
+            cmd,    // å‘½ä»¤è¡Œå­—ç¬¦ä¸²
             NULL,   // Process handle not inheritable
             NULL,   // Thread handle not inheritable
             FALSE,  // Set handle inheritance to FALSE
@@ -128,23 +128,23 @@ namespace BridgeWind {
             &si,    // Pointer to STARTUPINFO structure
             &pi)    // Pointer to PROCESS_INFORMATION structure
             ) {
-            // Èç¹û´´½¨Ê§°Ü£¬´òÓ¡´íÎóÐÅÏ¢
+            // å¦‚æžœåˆ›å»ºå¤±è´¥ï¼Œæ‰“å°é”™è¯¯ä¿¡æ¯
             throw std::runtime_error("CreateProcess failed (" + std::to_string(GetLastError()) + ").");
             return;
         }
 
-        // µÈ´ý×Ó½ø³ÌÖ´ÐÐ½áÊø
+        // ç­‰å¾…å­è¿›ç¨‹æ‰§è¡Œç»“æŸ
         WaitForSingleObject(pi.hProcess, INFINITE);
 
         std::cout << "External command executed." << std::endl;
 
-        // »ñÈ¡×Ó½ø³ÌµÄÍË³öÂë
+        // èŽ·å–å­è¿›ç¨‹çš„é€€å‡ºç 
         DWORD exitCode;
         if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
             std::cout << "Child process exit code: " << exitCode << std::endl;
         }
 
-        // ¹Ø±Õ½ø³ÌºÍÏß³Ì¾ä±ú£¬·ÀÖ¹×ÊÔ´Ð¹Â¶
+        // å…³é—­è¿›ç¨‹å’Œçº¿ç¨‹å¥æŸ„ï¼Œé˜²æ­¢èµ„æºæ³„éœ²
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
 
@@ -152,19 +152,19 @@ namespace BridgeWind {
 	GmshController::GmshController(const std::string& geoPath, const std::string& meshPath)
 		: geoFilePath(geoPath), meshFilePath(meshPath) {
 	}
-	// ÉèÖÃ¼¸ºÎÎÄ¼þÂ·¾¶
+	// è®¾ç½®å‡ ä½•æ–‡ä»¶è·¯å¾„
 	void GmshController::setGeoFilePath(const std::string& path) {
 		geoFilePath = path;
 	}
-	// »ñÈ¡¼¸ºÎÎÄ¼þÂ·¾¶
+	// èŽ·å–å‡ ä½•æ–‡ä»¶è·¯å¾„
 	std::string GmshController::getGeoFilePath() const {
 		return geoFilePath;
 	}
-	// ÉèÖÃÍø¸ñÎÄ¼þÂ·¾¶
+	// è®¾ç½®ç½‘æ ¼æ–‡ä»¶è·¯å¾„
 	void GmshController::GmshController::setMeshFilePath(const std::string& path) {
 		meshFilePath = path;
 	}
-	// »ñÈ¡Íø¸ñÎÄ¼þÂ·¾¶
+	// èŽ·å–ç½‘æ ¼æ–‡ä»¶è·¯å¾„
 	std::string GmshController::getMeshFilePath() const {
 		return meshFilePath;
 	}

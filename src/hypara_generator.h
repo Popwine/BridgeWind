@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef HYPARA_GENERATOR_H
 #define HYPARA_GENERATOR_H
 
@@ -22,7 +22,7 @@ namespace BridgeWind {
             std::vector<double>
         > value;
 
-        // --- ¹¹Ôìº¯Êı ---
+        // --- æ„é€ å‡½æ•° ---
         HyparaVar() = delete;
         HyparaVar(const std::string& name, int val) : name(name), value(val) {}
         HyparaVar(const std::string& name, double val) : name(name), value(val) {}
@@ -38,8 +38,8 @@ namespace BridgeWind {
         std::string filePath;
         std::vector<HyparaVar> variables;
 
-        explicit HyparaFile(const std::string& path) : filePath(path) {}; // Ê¹ÓÃ explicit ±ÜÃâÒşÊ½×ª»»
-		explicit HyparaFile(const std::filesystem::path& path) : filePath(path.string()) {}; // Ö§³Ö std::filesystem::path
+        explicit HyparaFile(const std::string& path) : filePath(path) {}; // ä½¿ç”¨ explicit é¿å…éšå¼è½¬æ¢
+		explicit HyparaFile(const std::filesystem::path& path) : filePath(path.string()) {}; // æ”¯æŒ std::filesystem::path
         ~HyparaFile() = default;
 
         void load();
@@ -55,33 +55,33 @@ namespace BridgeWind {
                 });
         }
 
-        // ·Ç const °æ±¾£¬ÓÃÓÚĞŞ¸Ä
+        // é const ç‰ˆæœ¬ï¼Œç”¨äºä¿®æ”¹
         auto findVar(const std::string& name) {
             return std::find_if(this->variables.begin(), this->variables.end(),
                 [&name](const HyparaVar& var) {
                     return var.name == name;
                 });
         }
-        // »ù´¡ get: »ñÈ¡Ö¸¶¨ÀàĞÍµÄÖµ£¬Èç¹û±äÁ¿²»´æÔÚ»òÀàĞÍ²»Æ¥ÅäÔòÅ×³öÒì³£
+        // åŸºç¡€ get: è·å–æŒ‡å®šç±»å‹çš„å€¼ï¼Œå¦‚æœå˜é‡ä¸å­˜åœ¨æˆ–ç±»å‹ä¸åŒ¹é…åˆ™æŠ›å‡ºå¼‚å¸¸
         template<typename T>
         T get(const std::string& name) const;
 
-        // °²È« get: »ñÈ¡Ö¸¶¨ÀàĞÍµÄÖµ£¬Èç¹û±äÁ¿²»´æÔÚ»òÀàĞÍ²»Æ¥Åä£¬Ôò·µ»ØÌá¹©µÄÄ¬ÈÏÖµ
+        // å®‰å…¨ get: è·å–æŒ‡å®šç±»å‹çš„å€¼ï¼Œå¦‚æœå˜é‡ä¸å­˜åœ¨æˆ–ç±»å‹ä¸åŒ¹é…ï¼Œåˆ™è¿”å›æä¾›çš„é»˜è®¤å€¼
         template<typename T>
         T get(const std::string& name, T default_value) const;
 
-        // --- ĞŞ¸Ä±äÁ¿ ---
+        // --- ä¿®æ”¹å˜é‡ ---
 
-        // set: ÉèÖÃÒ»¸ö±äÁ¿µÄÖµ¡£Èç¹û±äÁ¿ÒÑ´æÔÚ£¬Ôò¸üĞÂ£»Èç¹û²»´æÔÚ£¬Ôò´´½¨¡£
+        // set: è®¾ç½®ä¸€ä¸ªå˜é‡çš„å€¼ã€‚å¦‚æœå˜é‡å·²å­˜åœ¨ï¼Œåˆ™æ›´æ–°ï¼›å¦‚æœä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºã€‚
         template<typename T>
         void set(const std::string& name, T value);
 
-        // --- ¸¨Öúº¯Êı ---
+        // --- è¾…åŠ©å‡½æ•° ---
 
-        // exists: ¼ì²éÒ»¸ö±äÁ¿ÊÇ·ñ´æÔÚ
+        // exists: æ£€æŸ¥ä¸€ä¸ªå˜é‡æ˜¯å¦å­˜åœ¨
         bool exists(const std::string& name) const;
 
-        // remove: É¾³ıÒ»¸ö±äÁ¿
+        // remove: åˆ é™¤ä¸€ä¸ªå˜é‡
         bool remove(const std::string& name);
     };
 
@@ -93,7 +93,7 @@ namespace BridgeWind {
         HyparaFile key;
         HyparaFile partition;
 
-        // ¹¹Ôìº¯Êı£¬¼ÓÔØËùÓĞ±ØÒªµÄ Hypara ÎÄ¼ş
+        // æ„é€ å‡½æ•°ï¼ŒåŠ è½½æ‰€æœ‰å¿…è¦çš„ Hypara æ–‡ä»¶
         explicit HyparaGenerator(const std::filesystem::path& templatePath);
         void loadAll();
         void saveAll(const std::filesystem::path& outputPath) const;
@@ -103,7 +103,7 @@ namespace BridgeWind {
     
 
 
-    // --- API ÊµÏÖ ---
+    // --- API å®ç° ---
 
 
 
@@ -114,8 +114,8 @@ namespace BridgeWind {
             throw std::runtime_error("Variable '" + name + "' not found.");
         }
 
-        // Ê¹ÓÃ std::get_if ½øĞĞÀàĞÍ°²È«µÄ·ÃÎÊ
-        // Èç¹û variant µ±Ç°´æ´¢µÄ²»ÊÇÀàĞÍ T£¬Ëü»á·µ»Ø nullptr
+        // ä½¿ç”¨ std::get_if è¿›è¡Œç±»å‹å®‰å…¨çš„è®¿é—®
+        // å¦‚æœ variant å½“å‰å­˜å‚¨çš„ä¸æ˜¯ç±»å‹ Tï¼Œå®ƒä¼šè¿”å› nullptr
         if (const T* value_ptr = std::get_if<T>(&(it->value))) {
             return *value_ptr;
         }
@@ -128,14 +128,14 @@ namespace BridgeWind {
     T HyparaFile::get(const std::string& name, T default_value) const {
         auto it = findVar(name);
         if (it == this->variables.end()) {
-            return default_value; // ²»´æÔÚ£¬·µ»ØÄ¬ÈÏÖµ
+            return default_value; // ä¸å­˜åœ¨ï¼Œè¿”å›é»˜è®¤å€¼
         }
 
         if (T* value_ptr = std::get_if<T>(&(it->value))) {
-            return *value_ptr; // ÀàĞÍÆ¥Åä£¬·µ»ØÖµ
+            return *value_ptr; // ç±»å‹åŒ¹é…ï¼Œè¿”å›å€¼
         }
         else {
-            return default_value; // ÀàĞÍ²»Æ¥Åä£¬·µ»ØÄ¬ÈÏÖµ
+            return default_value; // ç±»å‹ä¸åŒ¹é…ï¼Œè¿”å›é»˜è®¤å€¼
         }
     }
 
@@ -143,12 +143,12 @@ namespace BridgeWind {
     void HyparaFile::set(const std::string& name, T value) {
         auto it = findVar(name);
         if (it != this->variables.end()) {
-            // ±äÁ¿ÒÑ´æÔÚ£¬Ö±½Ó¸üĞÂËüµÄ value
-            // std::variant µÄ¸³Öµ²Ù×÷·û»á´¦ÀíºÃÒ»ÇĞ
+            // å˜é‡å·²å­˜åœ¨ï¼Œç›´æ¥æ›´æ–°å®ƒçš„ value
+            // std::variant çš„èµ‹å€¼æ“ä½œç¬¦ä¼šå¤„ç†å¥½ä¸€åˆ‡
             it->value = value;
         }
         else {
-            // ±äÁ¿²»´æÔÚ£¬ÔÚÄ©Î²´´½¨Ò»¸öĞÂµÄ
+            // å˜é‡ä¸å­˜åœ¨ï¼Œåœ¨æœ«å°¾åˆ›å»ºä¸€ä¸ªæ–°çš„
             this->variables.emplace_back(name, value);
         }
     }

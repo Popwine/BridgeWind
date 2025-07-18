@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef GMSH2CGNS_H
 #define GMSH2CGNS_H
 #include <vector>
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-#include "cgnslib.h" // ÒýÈë CGNS ¿âµÄÍ·ÎÄ¼þ
+#include "cgnslib.h" // å¼•å…¥ CGNS åº“çš„å¤´æ–‡ä»¶
 
 #ifndef CG_CALL
 #define CG_CALL(func) \

@@ -1,4 +1,4 @@
-#include "hypara_generator.h"
+ï»¿#include "hypara_generator.h"
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -16,7 +16,7 @@ namespace {
         return s.substr(start, end - start + 1);
     }
 
-    // [ĞŞÕı] Ê¹´íÎó´¦Àí¸üÑÏ¸ñ
+    // [ä¿®æ­£] ä½¿é”™è¯¯å¤„ç†æ›´ä¸¥æ ¼
     template<typename T>
     std::vector<T> parse_array_string(const std::string& s, const std::string& var_name) {
         std::vector<T> result;
@@ -34,7 +34,7 @@ namespace {
                 }
             }
             catch (const std::exception& e) {
-                // [ĞÂ] Å×³ö´øÓĞÉÏÏÂÎÄµÄÏêÏ¸´íÎó
+                // [æ–°] æŠ›å‡ºå¸¦æœ‰ä¸Šä¸‹æ–‡çš„è¯¦ç»†é”™è¯¯
                 throw std::invalid_argument(
                     "Invalid element '" + trimmed_item + "' in array '" + var_name + "'"
                 );
@@ -54,19 +54,19 @@ namespace BridgeWind {
             throw std::runtime_error("Failed to open file: " + filePath);
         }
 
-        // --- ¶¨ÒåËùÓĞÕıÔò±í´ïÊ½£¬Ê¹ÓÃÍ³Ò»µÄ×Ô¶¨Òå¶¨½ç·û `+` ---
+        // --- å®šä¹‰æ‰€æœ‰æ­£åˆ™è¡¨è¾¾å¼ï¼Œä½¿ç”¨ç»Ÿä¸€çš„è‡ªå®šä¹‰å®šç•Œç¬¦ `+` ---
 
-        // ¸ñÊ½ 1: string name = "value";
+        // æ ¼å¼ 1: string name = "value";
         const std::regex string_regex(R"+(^\s*string\s+([a-zA-Z0-9_]+)\s*=\s*"(.*)"\s*;\s*$)+");
 
-        // ¸ñÊ½ 2: type name = value; (ÓÃÓÚ int, double)
+        // æ ¼å¼ 2: type name = value; (ç”¨äº int, double)
         const std::regex numeric_regex(R"+(^\s*(int|double)\s+([a-zA-Z0-9_]+)\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*;\s*$)+");
 
-        // ¸ñÊ½ 3: type name[] = [values]; (´øÀ¨ºÅµÄÊı×é)
+        // æ ¼å¼ 3: type name[] = [values]; (å¸¦æ‹¬å·çš„æ•°ç»„)
         const std::regex array_with_brackets_regex(R"+(^\s*(int|double)\s+([a-zA-Z0-9_]+)\s*\[\s*\]\s*=\s*\[(.*)\]\s*;\s*$)+");
 
-        // [ĞÂÔö] ¸ñÊ½ 4: type name[] = values; (²»´øÀ¨ºÅµÄÊı×é)
-        // Õâ¸ö±í´ïÊ½²¶»ñ´Ó '=' Ö®ºóµ½ ';' Ö®Ç°µÄËùÓĞÄÚÈİ
+        // [æ–°å¢] æ ¼å¼ 4: type name[] = values; (ä¸å¸¦æ‹¬å·çš„æ•°ç»„)
+        // è¿™ä¸ªè¡¨è¾¾å¼æ•è·ä» '=' ä¹‹ååˆ° ';' ä¹‹å‰çš„æ‰€æœ‰å†…å®¹
         const std::regex array_no_brackets_regex(R"+(^\s*(int|double)\s+([a-zA-Z0-9_]+)\s*\[\s*\]\s*=\s*(.*)\s*;\s*$)+");
 
         std::string line;
@@ -74,7 +74,7 @@ namespace BridgeWind {
         while (std::getline(ifs, line)) {
             line_number++;
 
-            // Ô¤´¦Àí
+            // é¢„å¤„ç†
             size_t comment_pos = line.find("//");
             if (comment_pos != std::string::npos) line = line.substr(0, comment_pos);
             comment_pos = line.find('#');
@@ -82,15 +82,15 @@ namespace BridgeWind {
             std::string trimmed_line = trim(line);
             if (trimmed_line.empty()) continue;
 
-            // --- Æ¥ÅäÓë½âÎöÂß¼­ ---
+            // --- åŒ¹é…ä¸è§£æé€»è¾‘ ---
             std::smatch match;
 
-            // ½«Á½ÖÖÊı×é¸ñÊ½µÄÆ¥ÅäÂß¼­ºÏ²¢£¬ÒòÎªËüÃÇµÄºóĞø´¦ÀíÊÇÏàÍ¬µÄ
+            // å°†ä¸¤ç§æ•°ç»„æ ¼å¼çš„åŒ¹é…é€»è¾‘åˆå¹¶ï¼Œå› ä¸ºå®ƒä»¬çš„åç»­å¤„ç†æ˜¯ç›¸åŒçš„
             bool is_array_match = std::regex_match(trimmed_line, match, array_with_brackets_regex) ||
                 std::regex_match(trimmed_line, match, array_no_brackets_regex);
 
             if (is_array_match) {
-                // ´¦ÀíËùÓĞÊı×é¸ñÊ½
+                // å¤„ç†æ‰€æœ‰æ•°ç»„æ ¼å¼
                 std::string type_str = match[1];
                 std::string name = match[2];
                 std::string values_str = match[3];
@@ -102,13 +102,13 @@ namespace BridgeWind {
                 }
             }
             else if (std::regex_match(trimmed_line, match, string_regex)) {
-                // ´¦Àí string
+                // å¤„ç† string
                 std::string name = match[1];
                 std::string value = match[2];
                 variables.emplace_back(name, value);
             }
             else if (std::regex_match(trimmed_line, match, numeric_regex)) {
-                // ´¦Àí int/double ±êÁ¿
+                // å¤„ç† int/double æ ‡é‡
                 std::string type_str = match[1];
                 std::string name = match[2];
                 std::string value_str = match[3];
@@ -128,7 +128,7 @@ namespace BridgeWind {
                 }
             }
             else {
-                // ËùÓĞÒÑÖª¸ñÊ½¶¼Æ¥ÅäÊ§°Ü£¬Å×³ö´íÎó
+                // æ‰€æœ‰å·²çŸ¥æ ¼å¼éƒ½åŒ¹é…å¤±è´¥ï¼ŒæŠ›å‡ºé”™è¯¯
                 throw std::runtime_error(
                     "Syntax error in '" + filePath + "' on line " + std::to_string(line_number) +
                     ": Invalid statement -> \"" + trimmed_line + "\""
@@ -143,7 +143,7 @@ namespace BridgeWind {
         std::visit([&ss, this](auto&& arg) {
             using T = std::decay_t<decltype(arg)>;
 
-            // --- ¹¹ÔìÀàĞÍºÍ±äÁ¿Ãû²¿·Ö ---
+            // --- æ„é€ ç±»å‹å’Œå˜é‡åéƒ¨åˆ† ---
             std::stringstream name_part;
             if constexpr (std::is_same_v<T, int>) {
                 name_part << "int    " << std::left << std::setw(23) << this->name;
@@ -162,18 +162,18 @@ namespace BridgeWind {
             }
             ss << name_part.str() << " = ";
 
-            // --- ¹¹ÔìÖµ²¿·Ö ---
+            // --- æ„é€ å€¼éƒ¨åˆ† ---
             if constexpr (std::is_same_v<T, int>) {
                 ss << arg << ";";
             }
             else if constexpr (std::is_same_v<T, double>) {
-                // [ĞÂÔöÂß¼­] ¼ì²é double ÊÇ·ñÎªÕûÊı
+                // [æ–°å¢é€»è¾‘] æ£€æŸ¥ double æ˜¯å¦ä¸ºæ•´æ•°
                 if (arg == std::floor(arg)) {
-                    // ÊÇÕûÊı£¬Ç¿ÖÆÒÔ .0 ½áÎ²Êä³ö
+                    // æ˜¯æ•´æ•°ï¼Œå¼ºåˆ¶ä»¥ .0 ç»“å°¾è¾“å‡º
                     ss << std::fixed << std::setprecision(1) << arg;
                 }
                 else {
-                    // ²»ÊÇÕûÊı£¬°´Ä¬ÈÏ¾«¶ÈÊä³öÒÔ±ÜÃâÊı¾İ¶ªÊ§
+                    // ä¸æ˜¯æ•´æ•°ï¼ŒæŒ‰é»˜è®¤ç²¾åº¦è¾“å‡ºä»¥é¿å…æ•°æ®ä¸¢å¤±
                     ss << arg;
                 }
                 ss << ";";
@@ -183,7 +183,7 @@ namespace BridgeWind {
             }
             else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<double>>) {
                 ss << "[";
-                // ¶ÔÓÚÊı×éÖĞµÄ double£¬ÎÒÃÇÒ²¿ÉÒÔÓ¦ÓÃÏàÍ¬µÄÂß¼­
+                // å¯¹äºæ•°ç»„ä¸­çš„ doubleï¼Œæˆ‘ä»¬ä¹Ÿå¯ä»¥åº”ç”¨ç›¸åŒçš„é€»è¾‘
                 for (size_t i = 0; i < arg.size(); ++i) {
                     if constexpr (std::is_same_v<std::decay_t<decltype(arg[i])>, double>) {
                         if (arg[i] == std::floor(arg[i])) {
@@ -207,12 +207,12 @@ namespace BridgeWind {
         return ss.str();
     }
 
-    // [ÖØ¹¹] HyparaVar::print() ±äµÃ¼«Æä¼òµ¥
+    // [é‡æ„] HyparaVar::print() å˜å¾—æå…¶ç®€å•
     void HyparaVar::print() {
         std::cout << this->toString() << std::endl;
     }
 
-    // [ÖØ¹¹] HyparaFile::print() ÎŞĞèĞŞ¸Ä£¬Ëü»á×Ô¶¯µ÷ÓÃĞÂµÄ HyparaVar::print()
+    // [é‡æ„] HyparaFile::print() æ— éœ€ä¿®æ”¹ï¼Œå®ƒä¼šè‡ªåŠ¨è°ƒç”¨æ–°çš„ HyparaVar::print()
     void HyparaFile::print() {
         std::cout << "###################################################################" << std::endl;
         std::cout << "#                 Hypara File Content Preview                 #" << std::endl;
@@ -223,7 +223,7 @@ namespace BridgeWind {
         std::cout << "###################################################################" << std::endl;
     }
 
-    // [ÖØ¹¹] HyparaFile::saveAs() Ò²±äµÃ¼«Æä¼òµ¥
+    // [é‡æ„] HyparaFile::saveAs() ä¹Ÿå˜å¾—æå…¶ç®€å•
     void HyparaFile::saveAs(const std::string& new_path) const {
         std::ofstream ofs(new_path);
         if (!ofs.is_open()) {

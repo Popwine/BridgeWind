@@ -1,4 +1,4 @@
-#include <algorithm> // for std::transform
+ï»¿#include <algorithm> // for std::transform
 #include <cctype>    // for std::tolower
 #include "gmsh2cgns.h"
 void G2C::convertGmshToCgns(
@@ -143,49 +143,49 @@ void G2C::convertGmshToCgns(
 	std::unordered_map<std::string, int> family_indexes;
 
 	for (size_t i = 0; i < gmshPhysicalNamesCount; ++i) {
-		// 1. ÏÈ»ñÈ¡ÎïÀí×é¶ÔÏóºÍËüµÄÃû×Ö£¬±ÜÃâÖØ¸´µ÷ÓÃ
+		// 1. å…ˆè·å–ç‰©ç†ç»„å¯¹è±¡å’Œå®ƒçš„åå­—ï¼Œé¿å…é‡å¤è°ƒç”¨
 		const auto& physicalName = mesh.getPhysicalNameByIndex(i);
 		const std::string& name = physicalName.name;
 		if (physicalName.dimension == 0 || physicalName.dimension == 3) {
-			continue; // Ìø¹ıµãºÍÌåÎïÀí×é
+			continue; // è·³è¿‡ç‚¹å’Œä½“ç‰©ç†ç»„
 		}
-		// 2. ¼ì²éÊÇ·ñÒÑ¾­´¦Àí¹ıÕâ¸öÃû×ÖµÄ×å
+		// 2. æ£€æŸ¥æ˜¯å¦å·²ç»å¤„ç†è¿‡è¿™ä¸ªåå­—çš„æ—
 		if (family_indexes.count(name)) {
 			continue;
 		}
 
-		// 3. ¼ì²éÊÇ·ñÓĞ½Úµã¹ØÁª
+		// 3. æ£€æŸ¥æ˜¯å¦æœ‰èŠ‚ç‚¹å…³è”
 		if (mesh.getNodeIndexesByPhysicalNameIndex(i).empty()) {
 			std::cerr << "Warning: Skipping family '" << name << "' because it has no associated nodes." << std::endl;
 			continue;
 		}
 
-		// 4. Ê¹ÓÃÒ»¸öÁÙÊ±±äÁ¿À´½ÓÊÕÊä³ö£¬ÒâÍ¼¸üÇåÎú
-		// Èç¹ûÊÇ´ú±íÁ÷ÌåÓòµÄ 2D ÎïÀí×é£¬ÎÒÃÇÖ»´´½¨×å£¬²»´´½¨BC
+		// 4. ä½¿ç”¨ä¸€ä¸ªä¸´æ—¶å˜é‡æ¥æ¥æ”¶è¾“å‡ºï¼Œæ„å›¾æ›´æ¸…æ™°
+		// å¦‚æœæ˜¯ä»£è¡¨æµä½“åŸŸçš„ 2D ç‰©ç†ç»„ï¼Œæˆ‘ä»¬åªåˆ›å»ºæ—ï¼Œä¸åˆ›å»ºBC
 		if (physicalName.dimension == 2) {
 			int dummy_family_index;
 			CG_CALL(cg_family_write(fileIndex, baseIndex, name.c_str(), &dummy_family_index));
 			family_indexes[name] = dummy_family_index;
-			continue; // ´¦ÀíÏÂÒ»¸öÎïÀí×é
+			continue; // å¤„ç†ä¸‹ä¸€ä¸ªç‰©ç†ç»„
 		}
 		int family_index = 0;
 		CG_CALL(cg_family_write(
 			fileIndex,
 			baseIndex,
-			name.c_str(),      // Ê¹ÓÃ .c_str()
-			&family_index  // ´«µİÁÙÊ±±äÁ¿µÄµØÖ·
+			name.c_str(),      // ä½¿ç”¨ .c_str()
+			&family_index  // ä¼ é€’ä¸´æ—¶å˜é‡çš„åœ°å€
 		));
 
-		// 5. ½«»ñÈ¡µ½µÄË÷Òı´æÈë map
+		// 5. å°†è·å–åˆ°çš„ç´¢å¼•å­˜å…¥ map
 		family_indexes[name] = family_index;
 
 		int fambcIndex;
 		CG_CALL(cg_fambc_write(
 			fileIndex,
 			baseIndex,
-			family_index, // Ê¹ÓÃµÚÒ»²½·µ»ØµÄË÷Òı
-			"FamBC",    // Õâ¸ö FamilyBC_t ½ÚµãµÄÃû×Ö£¬¿ÉÒÔ×Ô¶¨Òå
-			autoDetectBCType(name),   // ¹Ø¼ü£ºÔÚÕâÀï¶¨ÒåÎïÀíÀàĞÍ
+			family_index, // ä½¿ç”¨ç¬¬ä¸€æ­¥è¿”å›çš„ç´¢å¼•
+			"FamBC",    // è¿™ä¸ª FamilyBC_t èŠ‚ç‚¹çš„åå­—ï¼Œå¯ä»¥è‡ªå®šä¹‰
+			autoDetectBCType(name),   // å…³é”®ï¼šåœ¨è¿™é‡Œå®šä¹‰ç‰©ç†ç±»å‹
 			&fambcIndex
 		));
 
@@ -197,12 +197,12 @@ void G2C::convertGmshToCgns(
 		addNumberAll(elementList, static_cast<cgsize_t>(mesh.getNumQuadElements()));
 		int BCIndex;
 		//-----------------------------------------------------
-		bool isPointRange = isSuitForPointRange(elementList); // ¼ì²éÔªËØÁĞ±íÊÇ·ñÊÊºÏµã·¶Î§
+		bool isPointRange = isSuitForPointRange(elementList); // æ£€æŸ¥å…ƒç´ åˆ—è¡¨æ˜¯å¦é€‚åˆç‚¹èŒƒå›´
 
 		if (isPointRange) {
 			std::vector<cgsize_t> elementRange{
-				elementList.front(), // µÚÒ»¸öÔªËØ
-				elementList.back()   // ×îºóÒ»¸öÔªËØ
+				elementList.front(), // ç¬¬ä¸€ä¸ªå…ƒç´ 
+				elementList.back()   // æœ€åä¸€ä¸ªå…ƒç´ 
 			};
 			CG_CALL(cg_boco_write(
 				fileIndex, baseIndex, zoneIndexA,
@@ -230,8 +230,8 @@ void G2C::convertGmshToCgns(
 		CG_CALL(cg_goto(
 			fileIndex, baseIndex,
 			"Zone_t", zoneIndexA,
-			"ZoneBC_t", 1,      // Í¨³£Ö»ÓĞÒ»¸ö ZoneBC ÈİÆ÷£¬ËùÒÔË÷ÒıÊÇ 1
-			"BC_t", BCIndex,   // Ê¹ÓÃÉÏÒ»²½·µ»ØµÄË÷ÒıÀ´¶¨Î»
+			"ZoneBC_t", 1,      // é€šå¸¸åªæœ‰ä¸€ä¸ª ZoneBC å®¹å™¨ï¼Œæ‰€ä»¥ç´¢å¼•æ˜¯ 1
+			"BC_t", BCIndex,   // ä½¿ç”¨ä¸Šä¸€æ­¥è¿”å›çš„ç´¢å¼•æ¥å®šä½
 			"end"
 		));
 		CG_CALL(cg_famname_write(name.c_str()));
@@ -241,96 +241,96 @@ void G2C::convertGmshToCgns(
 
 	}
 	
-	CG_CALL(cg_goto(fileIndex, baseIndex, "end")); // »Øµ½Base½Úµã
+	CG_CALL(cg_goto(fileIndex, baseIndex, "end")); // å›åˆ°BaseèŠ‚ç‚¹
 	CG_CALL(cg_dataclass_write(Dimensional));
 	CG_CALL(cg_units_write(Kilogram, Meter, Second, Kelvin, Radian));
 
 	CG_CALL(cg_close(fileIndex));
 } 
 
-BCType_t G2C::autoDetectBCType(std::string name){ // ÎªÁËºÍÄúµÄº¯ÊıÇ©Ãû±£³ÖÒ»ÖÂ
+BCType_t G2C::autoDetectBCType(std::string name){ // ä¸ºäº†å’Œæ‚¨çš„å‡½æ•°ç­¾åä¿æŒä¸€è‡´
 
-	// 1. ½«ÊäÈë×Ö·û´®È«²¿×ª»»ÎªĞ¡Ğ´£¬±ãÓÚ²»Çø·Ö´óĞ¡Ğ´µÄ±È½Ï
+	// 1. å°†è¾“å…¥å­—ç¬¦ä¸²å…¨éƒ¨è½¬æ¢ä¸ºå°å†™ï¼Œä¾¿äºä¸åŒºåˆ†å¤§å°å†™çš„æ¯”è¾ƒ
 	std::transform(name.begin(), name.end(), name.begin(),
 		[](unsigned char c) { return std::tolower(c); });
 
-	// 2. °´ÓÅÏÈ¼¶½øĞĞ¹Ø¼ü´ÊÆ¥Åä
+	// 2. æŒ‰ä¼˜å…ˆçº§è¿›è¡Œå…³é”®è¯åŒ¹é…
 
-	// --- Èë¿ÚÏà¹ØµÄ±ß½ç ---
+	// --- å…¥å£ç›¸å…³çš„è¾¹ç•Œ ---
 	if (name.find("inlet") != std::string::npos ||
 		name.find("inflow") != std::string::npos) {
-		return BCInflow;//BCInflow; // Ä¬ÈÏ·µ»ØÑÇÒôËÙÈë¿Ú£¬ÕâÊÇ×î³£¼ûµÄÇé¿ö
+		return BCInflow;//BCInflow; // é»˜è®¤è¿”å›äºšéŸ³é€Ÿå…¥å£ï¼Œè¿™æ˜¯æœ€å¸¸è§çš„æƒ…å†µ
 	}
 
-	// --- ³ö¿ÚÏà¹ØµÄ±ß½ç ---
+	// --- å‡ºå£ç›¸å…³çš„è¾¹ç•Œ ---
 	if (name.find("outlet") != std::string::npos ||
 		name.find("outflow") != std::string::npos) {
-		return BCOutflow;//BCOutflow; // Ä¬ÈÏ·µ»ØÑÇÒôËÙ³ö¿Ú
+		return BCOutflow;//BCOutflow; // é»˜è®¤è¿”å›äºšéŸ³é€Ÿå‡ºå£
 	}
 
-	// --- ¶Ô³Æ±ß½ç ---
-	// ÕâÀï¿ÉÒÔ½øÒ»²½Ï¸»¯
+	// --- å¯¹ç§°è¾¹ç•Œ ---
+	// è¿™é‡Œå¯ä»¥è¿›ä¸€æ­¥ç»†åŒ–
 	if (name.find("symmetry") != std::string::npos) {
-		// Èç¹ûĞèÒªÇø·Ö¼«×ø±ê¶Ô³Æ£¬¿ÉÒÔ¼ì²éÆäËû¹Ø¼ü´Ê
+		// å¦‚æœéœ€è¦åŒºåˆ†æåæ ‡å¯¹ç§°ï¼Œå¯ä»¥æ£€æŸ¥å…¶ä»–å…³é”®è¯
 		if (name.find("polar") != std::string::npos || name.find("axis") != std::string::npos) {
 			return BCSymmetryPolar;
 		}
-		// ·ñÔò£¬Ä¬ÈÏÎª¶Ô³ÆÆ½Ãæ
+		// å¦åˆ™ï¼Œé»˜è®¤ä¸ºå¯¹ç§°å¹³é¢
 		return BCSymmetryPlane;
 	}
 
-	// --- ±ÚÃæÏà¹ØµÄ±ß½ç ---
-	// Õâ¸öÆ¥ÅäÓ¦¸Ã·ÅÔÚÈë¿Ú/³ö¿ÚÖ®ºó£¬ÒòÎª¿ÉÄÜÓĞ "inlet_wall" ÕâÑùµÄÃû×Ö
+	// --- å£é¢ç›¸å…³çš„è¾¹ç•Œ ---
+	// è¿™ä¸ªåŒ¹é…åº”è¯¥æ”¾åœ¨å…¥å£/å‡ºå£ä¹‹åï¼Œå› ä¸ºå¯èƒ½æœ‰ "inlet_wall" è¿™æ ·çš„åå­—
 	if (name.find("wall") != std::string::npos||
 		name.find("solid surface") != std::string::npos) {
-		// ¿ÉÒÔ¸ù¾İÆäËû¹Ø¼ü´ÊÏ¸»¯±ÚÃæÀàĞÍ
+		// å¯ä»¥æ ¹æ®å…¶ä»–å…³é”®è¯ç»†åŒ–å£é¢ç±»å‹
 		if (name.find("inviscid") != std::string::npos || name.find("slip") != std::string::npos) {
-			return BCWallInviscid; // ÎŞÕ³/»¬ÒÆ±ÚÃæ
+			return BCWallInviscid; // æ— ç²˜/æ»‘ç§»å£é¢
 		}
 		if (name.find("isothermal") != std::string::npos) {
-			return BCWallViscousIsothermal; // µÈÎÂÕ³ĞÔ±ÚÃæ
+			return BCWallViscousIsothermal; // ç­‰æ¸©ç²˜æ€§å£é¢
 		}
 		if (name.find("heatflux") != std::string::npos) {
-			return BCWallViscousHeatFlux; // ÈÈÁ÷ÃÜ¶È±ÚÃæ
+			return BCWallViscousHeatFlux; // çƒ­æµå¯†åº¦å£é¢
 		}
-		// Ä¬ÈÏ·µ»ØÍ¨ÓÃÕ³ĞÔ±ÚÃæ
-		return BCWall; // Õ³ĞÔ±ÚÃæBCWallViscous»òÕß¸üÍ¨ÓÃµÄ BCWall
+		// é»˜è®¤è¿”å›é€šç”¨ç²˜æ€§å£é¢
+		return BCWall; // ç²˜æ€§å£é¢BCWallViscousæˆ–è€…æ›´é€šç”¨çš„ BCWall
 	}
 
-	// --- Ô¶³¡±ß½ç ---
+	// --- è¿œåœºè¾¹ç•Œ ---
 	if (name.find("farfield") != std::string::npos ||
 		name.find("far-field") != std::string::npos) {
 		return BCFarfield;
 	}
 
-	// --- ÖÜÆÚĞÔ±ß½ç ---
+	// --- å‘¨æœŸæ€§è¾¹ç•Œ ---
 	if (name.find("periodic") != std::string::npos || name.find("cyclic") != std::string::npos) {
-		// ×¢Òâ£ºÖÜÆÚĞÔ±ß½çÔÚCGNSÖĞÓĞ¸ü¸´ÔÓµÄ¶¨Òå£¬ÕâÀïÖ»·µ»ØÀàĞÍ
-		// Êµ¼ÊÓ¦ÓÃÖĞĞèÒªÓÃ cg_conn_periodic_write µÈº¯Êı¶¨Òå±ä»»¹ØÏµ
-		return BCTypeUserDefined; // ÖÜÆÚĞÔ±ß½çÍ¨³£²»Ö±½ÓÓÃ BCType ¶¨Òå
+		// æ³¨æ„ï¼šå‘¨æœŸæ€§è¾¹ç•Œåœ¨CGNSä¸­æœ‰æ›´å¤æ‚çš„å®šä¹‰ï¼Œè¿™é‡Œåªè¿”å›ç±»å‹
+		// å®é™…åº”ç”¨ä¸­éœ€è¦ç”¨ cg_conn_periodic_write ç­‰å‡½æ•°å®šä¹‰å˜æ¢å…³ç³»
+		return BCTypeUserDefined; // å‘¨æœŸæ€§è¾¹ç•Œé€šå¸¸ä¸ç›´æ¥ç”¨ BCType å®šä¹‰
 	}
 
 
-	// 3. Èç¹ûËùÓĞ¹Ø¼ü´Ê¶¼Î´Æ¥ÅäÉÏ£¬·µ»ØÒ»¸öÄ¬ÈÏÖµ
+	// 3. å¦‚æœæ‰€æœ‰å…³é”®è¯éƒ½æœªåŒ¹é…ä¸Šï¼Œè¿”å›ä¸€ä¸ªé»˜è®¤å€¼
 	return BCTypeUserDefined;
 }
 
 bool G2C::isSuitForPointRange(std::vector<cgsize_t>& elementList) {
-	// ¼ì²éÔªËØÁĞ±íÊÇ·ñÎª¿Õ
+	// æ£€æŸ¥å…ƒç´ åˆ—è¡¨æ˜¯å¦ä¸ºç©º
 	if (elementList.empty()) {
 		throw std::runtime_error("Element list is empty.");
 	}
 	for (int i = 0; i < elementList.size() - 1; ++i) {
-		// ¼ì²éÏàÁÚÔªËØÊÇ·ñÁ¬Ğø
+		// æ£€æŸ¥ç›¸é‚»å…ƒç´ æ˜¯å¦è¿ç»­
 		if (elementList[i] + 1 != elementList[i + 1]) {
-			return false; // Èç¹ûÓĞ²»Á¬ĞøµÄÔªËØ£¬·µ»Ø false
+			return false; // å¦‚æœæœ‰ä¸è¿ç»­çš„å…ƒç´ ï¼Œè¿”å› false
 		}
 	}
-	return true; // Èç¹ûËùÓĞ¼ì²é¶¼Í¨¹ı£¬·µ»Ø true
+	return true; // å¦‚æœæ‰€æœ‰æ£€æŸ¥éƒ½é€šè¿‡ï¼Œè¿”å› true
 }
 
 void G2C::addNumberAll(std::vector<cgsize_t>& elementList, cgsize_t number) {
 	for (auto& elem : elementList) {
-		elem += number; // ½«Ã¿¸öÔªËØµÄÖµ¼ÓÉÏÖ¸¶¨µÄ number
+		elem += number; // å°†æ¯ä¸ªå…ƒç´ çš„å€¼åŠ ä¸ŠæŒ‡å®šçš„ number
 	}
 }

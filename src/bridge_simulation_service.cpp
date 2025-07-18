@@ -2,41 +2,45 @@
 
 namespace BridgeWind
 {
+    BridgeSimulationService::BridgeSimulationService(QObject* parent) : QObject(parent) {
+        
+    }
+
     bool BridgeSimulationService::run(const SimulationParameters& params) {
         std::string cgnsFilePath;
         
         // --- 步骤 1: 网格生成 ---
-        emitProgress(Strings::MeshGenerationStarted);
+        emit progressUpdated(QString::fromStdString(Strings::MeshGenerationStarted));
         if (!runMeshing(params, cgnsFilePath)) {
-            // runMeshing 内部会调用 emitError
+            // runMeshing 内部会调用 errorOccurred(QString::fromStdString
             return false;
         }
-        emitProgress(Strings::MeshGenerationComplete + cgnsFilePath);
+        emit progressUpdated(QString::fromStdString(Strings::MeshGenerationComplete + cgnsFilePath));
 
 		// --- 步骤 2: 准备 Hypara 文件 ---
-		emitProgress(Strings::HyparaFileGenerateStarted);
+		emit progressUpdated(QString::fromStdString(Strings::HyparaFileGenerateStarted));
 		if (!prepareHyparaFiles(params)) {
-			// prepareHyparaFiles 内部会调用 emitError
+			// prepareHyparaFiles 内部会调用 errorOccurred(QString::fromStdString
 			return false;
 		}
 
 		// --- 步骤 3: 运行 PHengLEI 网格划分和分区 ---
-		emitProgress(Strings::RunningPHengLEIMeshAndPartition);
+		emit progressUpdated(QString::fromStdString(Strings::RunningPHengLEIMeshAndPartition));
 		if (!runPhengLeiMeshAndPartition(params)) {
-			// runPhengLeiMeshAndPartition 内部会调用 emitError
+			// runPhengLeiMeshAndPartition 内部会调用 errorOccurred(QString::fromStdString
 			return false;
 		}
-		emitProgress(Strings::PHengLEIMeshAndPartitionCompleted);
+		emit progressUpdated(QString::fromStdString(Strings::PHengLEIMeshAndPartitionCompleted));
 
 		// --- 步骤 4: 运行求解器 ---
-		emitProgress(Strings::SolverStarted);
+		emit progressUpdated(QString::fromStdString(Strings::SolverStarted));
 		if (!runSolver(params, cgnsFilePath)) {
-			// runSolver 内部会调用 emitError
+			// runSolver 内部会调用 errorOccurred(QString::fromStdString
 			return false;
 		}
-		emitProgress(Strings::SolverStarted + cgnsFilePath);
+		emit progressUpdated(QString::fromStdString(Strings::SolverStarted + cgnsFilePath));
 
-        emitFinished(); // 全部成功
+        emit finished(); // 全部成功
         return true;
     }
 
@@ -46,49 +50,50 @@ namespace BridgeWind
 			std::filesystem::path workdir(params.workingDirectory);
 
             // 1. 加载DXF
-            emitProgress(Strings::LoadingDXF + params.dxfFilePath);
-            BridgeWind::Geometry geo;
-            geo.loadFromDXF(params.dxfFilePath);
+            emit progressUpdated(QString::fromStdString(Strings::LoadingDXF + params.dxfFilePath));
+            auto geo = std::make_shared<BridgeWind::Geometry>();
+            geo->loadFromDXF(params.dxfFilePath);
 			
 
             // 2. 拓扑分析
-            emitProgress(Strings::TopologyAnalysisStarted);
+            emit progressUpdated(QString::fromStdString(Strings::TopologyAnalysisStarted));
             BridgeWind::TopologyAnalyzer analyzer(geo);
             analyzer.analyze();
-            emitProgress(Strings::TopologyAnalysisComplete);
+            emit progressUpdated(QString::fromStdString(Strings::TopologyAnalysisComplete));
 
             // 3. 生成.geo文件
 			createFolder(workdir / "grid");
 
-            emitProgress(Strings::GeneratingGeoFile);
-			GeoGenerator geoGen(analyzer, (workdir / "grid" / "bridge_wind.geo").string());
+            emit progressUpdated(QString::fromStdString(Strings::GeneratingGeoFile));
+			GeoGenerator geoGen(analyzer, (workdir / "grid" / "Bridge_Wind.geo").string());
 
-            geoGen.circumferentialMeshNumber = 60;
-			geoGen.radialMeshNumber = 60;
+            geoGen.circumferentialMeshNumber = params.circumferentialMeshNumber;
+			geoGen.radialMeshNumber = params.radialMeshNumber;
+			geoGen.meshGrowthRate = params.radialMeshGrowthRate;
 			geoGen.generateGeoFile();
 			geoGen.finalize();
-            emitProgress(Strings::GeoFileGenerated);
+            emit progressUpdated(QString::fromStdString(Strings::GeoFileGenerated));
 
             // 4. 调用Gmsh生成.msh
-            emitProgress(Strings::GeneratingMesh);
+            emit progressUpdated(QString::fromStdString(Strings::GeneratingMesh));
 			GmshController gmshController(
-				(workdir / "grid" / "bridge_wind.geo").string(),
-				(workdir / "grid" / "bridge_wind.msh").string()
+				(workdir / "grid" / "Bridge_Wind.geo").string(),
+				(workdir / "grid" / "Bridge_Wind.msh").string()
 			);
             gmshController.generateMesh();
 
             // 5. 转换为.cgns
-            emitProgress(Strings::ConvertingToCgns);
+            emit progressUpdated(QString::fromStdString(Strings::ConvertingToCgns));
 			G2C::convertGmshToCgns(
-				(workdir / "grid" / "bridge_wind.msh").string(),
-				(workdir / "grid" / "bridge_wind.cgns").string()
+				(workdir / "grid" / "Bridge_Wind.msh").string(),
+				(workdir / "grid" / "Bridge_Wind.cgns").string()
 			);
-			emitProgress(Strings::CgnsFileGenerated + (workdir / "grid" / "bridge_wind.cgns").string());
+			emit progressUpdated(QString::fromStdString(Strings::CgnsFileGenerated + (workdir / "grid" / "Bridge_Wind.cgns").string()));
 
 
         }
         catch (const std::exception& e) {
-            emitError(Strings::MeshGenerationFailed + std::string(e.what()));
+            errorOccurred(QString::fromStdString(Strings::MeshGenerationFailed + std::string(e.what())));
             return false;
         }
 
@@ -135,10 +140,10 @@ namespace BridgeWind
 
 		}
         catch (const std::exception& e) {
-            emitError(Strings::ErrorSimulation + std::string(e.what()));
+            errorOccurred(QString::fromStdString(Strings::ErrorSimulation + std::string(e.what())));
             return false;
         }
-		emitProgress(Strings::HyparaFileGenerated);
+		emit progressUpdated(QString::fromStdString(Strings::HyparaFileGenerated));
 		return true;
 
         
@@ -160,7 +165,7 @@ namespace BridgeWind
                 (workdir / "PHengLEIv3d0.exe").string(),
 				workdir.string()
 			);
-			emitProgress(Strings::PHengLEIGridGenerationCompleted);
+			emit progressUpdated(QString::fromStdString(Strings::PHengLEIGridGenerationCompleted));
 			// 3 - 划分网格
             keyFile.set<int>("nsimutask", 3);
             keyFile.set<std::string>("parafilename", "./bin/partition.hypara");
@@ -172,10 +177,10 @@ namespace BridgeWind
 
 		}
         catch (const std::exception& e) {
-            emitError(Strings::ErrorSimulation + std::string(e.what()));
+            errorOccurred(QString::fromStdString(Strings::ErrorSimulation + std::string(e.what())));
             return false;
         }
-		emitProgress(Strings::HyparaFileGenerated);
+		emit progressUpdated(QString::fromStdString(Strings::HyparaFileGenerated));
 		return true;
     }
 
@@ -188,31 +193,17 @@ namespace BridgeWind
             keyFile.set<std::string>("parafilename", "./bin/cfd_para_subsonic.hypara");
             keyFile.save();
 
-
+			// 此处应该用 mpiexec 运行 PHengLEI 求解器，但是目前还没想好怎么做
 			
 		}
         catch (const std::exception& e) {
-            emitError(Strings::ErrorSolver + std::string(e.what()));
+            errorOccurred(QString::fromStdString(Strings::ErrorSolver + std::string(e.what())));
             return false;
         }
 		return true;
     }
 
-    void BridgeSimulationService::emitProgress(const std::string& message) {
-        if (onProgress) {
-            onProgress(message);
-        }
-    }
-    void BridgeSimulationService::emitError(const std::string& message){
-		if (onError) {
-			onError(message);
-		}
-	}
-    void BridgeSimulationService::emitFinished() {
-        if (onFinished) {
-            onFinished();
-        }
-    }
+
 
     void BridgeSimulationService::createFolder(std::filesystem::path path) {
         std::filesystem::create_directories(path);

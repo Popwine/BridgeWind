@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 #include <vector>
@@ -164,7 +164,7 @@ namespace BridgeWind {
 		};
 		void printResult() const ;
 
-		// ÒÔÏÂ·½·¨ÊÇ¿ÕÊµÏÖ£¬¾ßÌåÊµÏÖ¿ÉÒÔ¸ù¾İĞèÒªÌí¼Ó
+		// ä»¥ä¸‹æ–¹æ³•æ˜¯ç©ºå®ç°ï¼Œå…·ä½“å®ç°å¯ä»¥æ ¹æ®éœ€è¦æ·»åŠ 
         void addHeader(const DRW_Header* data) override {}
         void addLType(const DRW_LType& data) override {}
         void addLayer(const DRW_Layer& data) override {}

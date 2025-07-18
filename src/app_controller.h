@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef APP_CONTROLLER_H
 #define APP_CONTROLLER_H
 #include <iostream>
@@ -33,13 +33,13 @@ namespace BridgeWind {
 		GmshController() = delete;
 		~GmshController() = default;
 		GmshController(const std::string& geoPath, const std::string& meshPath);
-		// ÉèÖÃ¼¸ºÎÎÄ¼şÂ·¾¶
+		// è®¾ç½®å‡ ä½•æ–‡ä»¶è·¯å¾„
 		void setGeoFilePath(const std::string& path);
-		// »ñÈ¡¼¸ºÎÎÄ¼şÂ·¾¶
+		// è·å–å‡ ä½•æ–‡ä»¶è·¯å¾„
 		std::string getGeoFilePath() const;
-		// ÉèÖÃÍø¸ñÎÄ¼şÂ·¾¶
+		// è®¾ç½®ç½‘æ ¼æ–‡ä»¶è·¯å¾„
 		void setMeshFilePath(const std::string& path);
-		// »ñÈ¡Íø¸ñÎÄ¼şÂ·¾¶
+		// è·å–ç½‘æ ¼æ–‡ä»¶è·¯å¾„
 		std::string getMeshFilePath() const;
 		void generateMesh();
 		void openOutputMeshFile();

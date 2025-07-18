@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef GEO_GENERATOR_H
 #define GEO_GENERATOR_H
 #include "geometry.h"
@@ -22,7 +22,7 @@ namespace BridgeWind{
 	public:
 		GeoGenerator() = delete;
 		~GeoGenerator();
-		//Ö»½ÓÊÜ Geometry ¶ÔÏóµÄÒıÓÃ
+		//åªæ¥å— Geometry å¯¹è±¡çš„å¼•ç”¨
 		GeoGenerator(const TopologyAnalyzer& analyzer, const std::string& filename) ;
 		std::string filename;
 		
@@ -32,8 +32,8 @@ namespace BridgeWind{
 		void finalize();
 	private:
 		std::ofstream ofs;
-		std::vector<Point> writtedWallPoints; // ±ÚÃæµã
-		std::vector<Point> writtedFarfieldPoints; // Ô¶³¡µã
+		std::vector<Point> writtedWallPoints; // å£é¢ç‚¹
+		std::vector<Point> writtedFarfieldPoints; // è¿œåœºç‚¹
 		std::vector<std::pair<std::string, int>> meshNumbersVariabls;
 		std::vector<std::vector<int>> surfaceNodes;
 		
@@ -44,10 +44,10 @@ namespace BridgeWind{
 		double fieldDiameter = 0.0;
 
 	public:
-		int radialMeshNumber = 90; // ¾¶ÏòÍø¸ñÊı
-		int circumferentialMeshNumber = 360; // ÖÜÏòÍø¸ñÊı
+		int radialMeshNumber = 90; // å¾„å‘ç½‘æ ¼æ•°
+		int circumferentialMeshNumber = 360; // å‘¨å‘ç½‘æ ¼æ•°
 
-		double meshGrowthRate = 0.95; // Íø¸ñÔö³¤ÂÊ£¬´ÓÍâÏòµ½ÖĞĞÄ
+		double meshGrowthRate = 0.95; // ç½‘æ ¼å¢é•¿ç‡ï¼Œä»å¤–å‘åˆ°ä¸­å¿ƒ
 	private:
 		size_t getWallPointStartIndex() const { return wallPointStartIndex; };
 		size_t getWallArcCenterStartIndex() const { return wallArcCenterStartIndex; };
@@ -58,7 +58,7 @@ namespace BridgeWind{
 		void generateGeoFileSingleLoop() ;
 		void generateGeoFileMultiLoop() ;
 	private:
-		// geoÎÄ¼ş»ù´¡ÃüÁî
+		// geoæ–‡ä»¶åŸºç¡€å‘½ä»¤
 		void geoSetVariable(std::string name, double value);
 		void geoSetVariable(std::string name, int value);
 		void geoSetPoint(int index, double x, double y, double z = 0.0);
@@ -87,7 +87,7 @@ namespace BridgeWind{
 		void geoSetPhysicalSurface(std::string name, int index, std::vector<int> indexes);
 
 	private:
-		// geoÎÄ¼şĞ´Èë·½·¨
+		// geoæ–‡ä»¶å†™å…¥æ–¹æ³•
 		void geoWriteWallPoints(const Loop& loop, int& pointIndex);
 		void geoWriteFarfieldPoints(const Loop& loop, int& pointIndex);
 

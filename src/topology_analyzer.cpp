@@ -1,6 +1,6 @@
-#include "topology_analyzer.h"
+ï»¿#include "topology_analyzer.h"
 namespace BridgeWind{
-    TopologyAnalyzer::TopologyAnalyzer(const Geometry& geometry) :
+    TopologyAnalyzer::TopologyAnalyzer(std::shared_ptr<BridgeWind::Geometry> geometry) :
 		sourceGeometry(geometry)
     {
 
@@ -12,14 +12,14 @@ namespace BridgeWind{
         //loops.clear();
         //danglingEdges.clear();
 
-        // 1. ±éÀúËùÓĞÏß¶Î
-        for (const auto& line : sourceGeometry.lines) {
+        // 1. éå†æ‰€æœ‰çº¿æ®µ
+        for (const auto& line : sourceGeometry->lines) {
             GraphNode* startNode = findOrCreateNode(line.begin);
             GraphNode* endNode = findOrCreateNode(line.end);
 
             if (startNode == endNode) continue;
 
-            // Ê¹ÓÃ´ø²ÎÊıµÄ¹¹Ôìº¯Êı£¬²¢²ÉÓÃ¸ü°²È«µÄÖ¸Õë»ñÈ¡·½Ê½
+            // ä½¿ç”¨å¸¦å‚æ•°çš„æ„é€ å‡½æ•°ï¼Œå¹¶é‡‡ç”¨æ›´å®‰å…¨çš„æŒ‡é’ˆè·å–æ–¹å¼
             auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &line);
             GraphEdge* rawEdgePtr = newEdge.get();
 
@@ -28,8 +28,8 @@ namespace BridgeWind{
             allEdges.push_back(std::move(newEdge));
         }
 
-        // 2. ±éÀúËùÓĞÔ²»¡
-        for (const auto& arc : sourceGeometry.arcs) {
+        // 2. éå†æ‰€æœ‰åœ†å¼§
+        for (const auto& arc : sourceGeometry->arcs) {
             Point startPoint = arc.getStartPoint();
             Point endPoint = arc.getEndPoint();
             //
@@ -37,7 +37,7 @@ namespace BridgeWind{
             GraphNode* startNode = findOrCreateNode(startPoint);
             GraphNode* endNode = findOrCreateNode(endPoint);
 
-            // ÍêÕûµÄÔ²ÔÚÕâÀï±»¹ıÂËµô
+            // å®Œæ•´çš„åœ†åœ¨è¿™é‡Œè¢«è¿‡æ»¤æ‰
             if (startNode == endNode) continue;
 
             auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &arc);
@@ -49,27 +49,27 @@ namespace BridgeWind{
         }
     }
     void TopologyAnalyzer::analyze() {
-        if (sourceGeometry.isIntersectionExist()) {
+        if (sourceGeometry->isIntersectionExist()) {
 			throw std::runtime_error("Geometry contains intersection points, \
                 which is not allowed for topology analysis.");
         }
-        // 1. ¹¹½¨Í¼µÄÁ¬½Ó¹ØÏµ
+        // 1. æ„å»ºå›¾çš„è¿æ¥å…³ç³»
         buildGraph();
 
-        // 2. ÑéÖ¤Í¼ÊÇ·ñ·ûºÏ¡°ËùÓĞ½Úµã¶ÈÎª2¡±µÄÔ¼Êø
-        validateGraph(); // <--- ÔÚÕâÀïµ÷ÓÃ
+        // 2. éªŒè¯å›¾æ˜¯å¦ç¬¦åˆâ€œæ‰€æœ‰èŠ‚ç‚¹åº¦ä¸º2â€çš„çº¦æŸ
+        validateGraph(); // <--- åœ¨è¿™é‡Œè°ƒç”¨
 
-        // ºóĞø²½Öè£¨ÔİÊ±Áô¿Õ£©
+        // åç»­æ­¥éª¤ï¼ˆæš‚æ—¶ç•™ç©ºï¼‰
         findLoops();
         // buildHierarchy();
     }
     bool TopologyAnalyzer::areAllElementsClosed() const {
-        // Èç¹ûÍ¼ÖĞÃ»ÓĞÈÎºÎ½Úµã£¬¿ÉÒÔÊÓÎª¿ÕµÄ±ÕºÏÍ¼ĞÎ
+        // å¦‚æœå›¾ä¸­æ²¡æœ‰ä»»ä½•èŠ‚ç‚¹ï¼Œå¯ä»¥è§†ä¸ºç©ºçš„é—­åˆå›¾å½¢
         if (nodeMap.empty()) {
             return true;
         }
 
-        // ±éÀúËùÓĞ½Úµã£¬Ö»ÒªÓĞÒ»¸ö¶È²»Îª2£¬¾Í²»ÊÇ±ÕºÏµÄ»·¼¯ºÏ
+        // éå†æ‰€æœ‰èŠ‚ç‚¹ï¼Œåªè¦æœ‰ä¸€ä¸ªåº¦ä¸ä¸º2ï¼Œå°±ä¸æ˜¯é—­åˆçš„ç¯é›†åˆ
         for (const auto& pair : nodeMap) {
             if (pair.second->edges.size() != 2) {
                 return false;
@@ -95,12 +95,12 @@ namespace BridgeWind{
     }
     void TopologyAnalyzer::validateGraph() const{
         for (const auto& pair : nodeMap) {
-            const GraphNode* node = pair.second.get(); // »ñÈ¡Ô­Ê¼Ö¸Õë
+            const GraphNode* node = pair.second.get(); // è·å–åŸå§‹æŒ‡é’ˆ
 
-            // ¼ì²é½ÚµãµÄ¶È£¨Á¬½ÓµÄ±ßµÄÊıÁ¿£©
+            // æ£€æŸ¥èŠ‚ç‚¹çš„åº¦ï¼ˆè¿æ¥çš„è¾¹çš„æ•°é‡ï¼‰
             if (node->edges.size() != 2) {
-                // Èç¹û¶È²»Îª2£¬ËµÃ÷Í¼ĞÎ²»·ûºÏÔ¤ÆÚ£¬Å×³öÒì³£
-                // Òì³£ĞÅÏ¢Ó¦¾¡¿ÉÄÜÏêÏ¸£¬±ãÓÚµ÷ÊÔ
+                // å¦‚æœåº¦ä¸ä¸º2ï¼Œè¯´æ˜å›¾å½¢ä¸ç¬¦åˆé¢„æœŸï¼ŒæŠ›å‡ºå¼‚å¸¸
+                // å¼‚å¸¸ä¿¡æ¯åº”å°½å¯èƒ½è¯¦ç»†ï¼Œä¾¿äºè°ƒè¯•
                 std::string error_message = "Topology validation failed: Node at (" +
                     std::to_string(node->point.x) + ", " +
                     std::to_string(node->point.y) +
@@ -111,59 +111,59 @@ namespace BridgeWind{
         }
     }
     void TopologyAnalyzer::findLoops() {
-        // Çå¿ÕÉÏÒ»´Î·ÖÎöµÄ½á¹û
+        // æ¸…ç©ºä¸Šä¸€æ¬¡åˆ†æçš„ç»“æœ
         loops.clear();
 
-        // Ê¹ÓÃÒ»¸ö set À´¸ú×ÙÒÑ¾­ÊôÓÚÄ³¸ö»·µÄ±ß£¬·ÀÖ¹ÖØ¸´´¦Àí
+        // ä½¿ç”¨ä¸€ä¸ª set æ¥è·Ÿè¸ªå·²ç»å±äºæŸä¸ªç¯çš„è¾¹ï¼Œé˜²æ­¢é‡å¤å¤„ç†
         std::unordered_set<const GraphEdge*> visited_edges;
 
-        // ±éÀúÍ¼ÖĞµÄÃ¿Ò»Ìõ±ß£¬×÷ÎªÇ±ÔÚĞÂ»·µÄÆğµã
+        // éå†å›¾ä¸­çš„æ¯ä¸€æ¡è¾¹ï¼Œä½œä¸ºæ½œåœ¨æ–°ç¯çš„èµ·ç‚¹
         for (const auto& edge_ptr : allEdges) {
             const GraphEdge* start_edge = edge_ptr.get();
 
-            // Èç¹ûÕâÌõ±ßÒÑ¾­±»°üº¬ÔÚÖ®Ç°ÕÒµ½µÄ»·ÀïÁË£¬¾ÍÌø¹ı
+            // å¦‚æœè¿™æ¡è¾¹å·²ç»è¢«åŒ…å«åœ¨ä¹‹å‰æ‰¾åˆ°çš„ç¯é‡Œäº†ï¼Œå°±è·³è¿‡
             if (visited_edges.count(start_edge)) {
                 continue;
             }
 
-            // --- ´Ó start_edge ¿ªÊ¼£¬×·×ÙÒ»¸öĞÂµÄ»· ---
+            // --- ä» start_edge å¼€å§‹ï¼Œè¿½è¸ªä¸€ä¸ªæ–°çš„ç¯ ---
             std::vector<GraphEdge*> current_loop_edges;
 
             const GraphEdge* current_edge = start_edge;
-            // ÈÎÒâÑ¡ÔñÒ»¸ö·½Ïò¿ªÊ¼£¬±ÈÈç´Ó startNode ³ö·¢
+            // ä»»æ„é€‰æ‹©ä¸€ä¸ªæ–¹å‘å¼€å§‹ï¼Œæ¯”å¦‚ä» startNode å‡ºå‘
             GraphNode* current_node = start_edge->startNode;
 
             while (true) {
-                // ½«µ±Ç°±ß¼ÓÈëµ½»·µÄ±ßÁĞ±íºÍÒÑ·ÃÎÊ¼¯ºÏÖĞ
+                // å°†å½“å‰è¾¹åŠ å…¥åˆ°ç¯çš„è¾¹åˆ—è¡¨å’Œå·²è®¿é—®é›†åˆä¸­
                 current_loop_edges.push_back(const_cast<GraphEdge*>(current_edge));
                 visited_edges.insert(current_edge);
 
-                // È·¶¨ÏÂÒ»¸ö½Úµã
+                // ç¡®å®šä¸‹ä¸€ä¸ªèŠ‚ç‚¹
                 GraphNode* next_node = (current_edge->startNode == current_node)
                     ? current_edge->endNode
                     : current_edge->startNode;
 
-                // ÔÚÏÂÒ»¸ö½Úµã£¬ÕÒµ½³ıÁËÎÒÃÇ¸ÕÀ´µÄÄÇÌõ±ßÖ®ÍâµÄÎ¨Ò»Ò»Ìõ³öÂ·
-                // ÒòÎª validateGraph ÒÑ¾­È·±£ÁË¶ÈÎª2£¬ËùÒÔÕâ¸öÂß¼­ÊÇ°²È«µÄ
+                // åœ¨ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œæ‰¾åˆ°é™¤äº†æˆ‘ä»¬åˆšæ¥çš„é‚£æ¡è¾¹ä¹‹å¤–çš„å”¯ä¸€ä¸€æ¡å‡ºè·¯
+                // å› ä¸º validateGraph å·²ç»ç¡®ä¿äº†åº¦ä¸º2ï¼Œæ‰€ä»¥è¿™ä¸ªé€»è¾‘æ˜¯å®‰å…¨çš„
                 const GraphEdge* next_edge = (next_node->edges[0] == current_edge)
                     ? next_node->edges[1]
                     : next_node->edges[0];
 
-                // ¸üĞÂ×´Ì¬£¬ÎªÏÂÒ»´ÎÑ­»·×ö×¼±¸
+                // æ›´æ–°çŠ¶æ€ï¼Œä¸ºä¸‹ä¸€æ¬¡å¾ªç¯åšå‡†å¤‡
                 current_node = next_node;
                 current_edge = next_edge;
 
-                // ¼ì²éÊÇ·ñÒÑ¾­»Øµ½ÁË×·×ÙµÄÆğµã
+                // æ£€æŸ¥æ˜¯å¦å·²ç»å›åˆ°äº†è¿½è¸ªçš„èµ·ç‚¹
                 if (current_edge == start_edge) {
-                    // »·Â·±ÕºÏ£¡
-                    // ÓÃÊÕ¼¯µ½µÄÓĞĞò±ßÁĞ±í´´½¨Ò»¸öĞÂµÄ Loop ¶ÔÏó
+                    // ç¯è·¯é—­åˆï¼
+                    // ç”¨æ”¶é›†åˆ°çš„æœ‰åºè¾¹åˆ—è¡¨åˆ›å»ºä¸€ä¸ªæ–°çš„ Loop å¯¹è±¡
                     loops.push_back(std::make_unique<Loop>(current_loop_edges));
 
-                    // Ìø³ö while Ñ­»·£¬½áÊøµ±Ç°»·µÄ×·×Ù
+                    // è·³å‡º while å¾ªç¯ï¼Œç»“æŸå½“å‰ç¯çš„è¿½è¸ª
                     break;
                 }
 
-                // °²È«¼ì²é£¬·ÀÖ¹ÒòÒâÍâµÄÍ¼½á¹¹µ¼ÖÂÎŞÏŞÑ­»·
+                // å®‰å…¨æ£€æŸ¥ï¼Œé˜²æ­¢å› æ„å¤–çš„å›¾ç»“æ„å¯¼è‡´æ— é™å¾ªç¯
                 if (visited_edges.size() > allEdges.size()) {
                     throw std::runtime_error("Loop finding error: Graph structure is inconsistent.");
                 }
@@ -182,13 +182,13 @@ namespace BridgeWind{
     
 	GraphNode* TopologyAnalyzer::findOrCreateNode(const Point& p) {
 		auto it = nodeMap.find(p);
-		if (it != nodeMap.end()) {// Èç¹û½ÚµãÒÑ´æÔÚ£¬·µ»ØÆäÖ¸Õë
+		if (it != nodeMap.end()) {// å¦‚æœèŠ‚ç‚¹å·²å­˜åœ¨ï¼Œè¿”å›å…¶æŒ‡é’ˆ
 			return it->second.get(); 
 		}
-		else {// Èç¹û½Úµã²»´æÔÚ£¬´´½¨Ò»¸öĞÂµÄ½Úµã²¢´æ´¢ÔÚ nodeMap ÖĞ
+		else {// å¦‚æœèŠ‚ç‚¹ä¸å­˜åœ¨ï¼Œåˆ›å»ºä¸€ä¸ªæ–°çš„èŠ‚ç‚¹å¹¶å­˜å‚¨åœ¨ nodeMap ä¸­
 			auto newNode = std::make_unique<GraphNode>(p);
 			GraphNode* nodePtr = newNode.get();
-			nodeMap[p] = std::move(newNode);// ½«ĞÂ½Úµã´æ´¢µ½ nodeMap ÖĞ newNode±äÎªÁË¿ÕÖ¸Õë£¬×ªÒÆÁËËùÓĞÈ¨
+			nodeMap[p] = std::move(newNode);// å°†æ–°èŠ‚ç‚¹å­˜å‚¨åˆ° nodeMap ä¸­ newNodeå˜ä¸ºäº†ç©ºæŒ‡é’ˆï¼Œè½¬ç§»äº†æ‰€æœ‰æƒ
 			return nodePtr;
 		}
 	}
@@ -202,72 +202,72 @@ namespace BridgeWind{
      *                      sequentially to form a single closed loop.
      */
     Loop::Loop(const std::vector<GraphEdge*>& loop_edges_from_find)
-        : properties_calculated(false) // ³õÊ¼»¯»º´æ±êÖ¾
+        : properties_calculated(false) // åˆå§‹åŒ–ç¼“å­˜æ ‡å¿—
     {
-        // Loop ¹¹Ôìº¯ÊıµÄÖ÷ÒªÖ°ÔğÓĞÒÔÏÂÈıµã£º
-        // ´æ´¢±ß : ½ÓÊÕ²¢´æ´¢¹¹³É»·µÄËùÓĞ GraphEdge Ö¸Õë¡£
-        // ÅÅĞò½Úµã : ¸ù¾İ±ßµÄÁ¬½Ó¹ØÏµ£¬ÍÆµ¼³ö¹¹³É»·µÄ GraphNode µÄÕıÈ·Á¬ĞøË³Ğò£¬²¢´æ´¢ËüÃÇ¡£
-        // ³õÊ¼»¯ÊôĞÔ : ¿ÉÒÔÔÚ¹¹ÔìÊ±¾Í¼ÆËã²¢»º´æÒ»Ğ©»ù±¾ÊôĞÔ£¬Èç°üÎ§ºĞ£¬
-        // »òÕß½ö½öÊÇ½« properties_calculated ±êÖ¾ÉèÎª false£¬ÒÔ±ãÔÚÊ×´ÎĞèÒªÊ±ÔÙ½øĞĞ¡°ÀÁ¼ÓÔØ¡±¼ÆËã¡£
+        // Loop æ„é€ å‡½æ•°çš„ä¸»è¦èŒè´£æœ‰ä»¥ä¸‹ä¸‰ç‚¹ï¼š
+        // å­˜å‚¨è¾¹ : æ¥æ”¶å¹¶å­˜å‚¨æ„æˆç¯çš„æ‰€æœ‰ GraphEdge æŒ‡é’ˆã€‚
+        // æ’åºèŠ‚ç‚¹ : æ ¹æ®è¾¹çš„è¿æ¥å…³ç³»ï¼Œæ¨å¯¼å‡ºæ„æˆç¯çš„ GraphNode çš„æ­£ç¡®è¿ç»­é¡ºåºï¼Œå¹¶å­˜å‚¨å®ƒä»¬ã€‚
+        // åˆå§‹åŒ–å±æ€§ : å¯ä»¥åœ¨æ„é€ æ—¶å°±è®¡ç®—å¹¶ç¼“å­˜ä¸€äº›åŸºæœ¬å±æ€§ï¼Œå¦‚åŒ…å›´ç›’ï¼Œ
+        // æˆ–è€…ä»…ä»…æ˜¯å°† properties_calculated æ ‡å¿—è®¾ä¸º falseï¼Œä»¥ä¾¿åœ¨é¦–æ¬¡éœ€è¦æ—¶å†è¿›è¡Œâ€œæ‡’åŠ è½½â€è®¡ç®—ã€‚
         if (loop_edges_from_find.empty()) {
-            return; // ´¦Àí¿ÕÊäÈë
+            return; // å¤„ç†ç©ºè¾“å…¥
         }
 
-        // --- ²½Öè 1: ×¼±¸¹¤×÷ ---
+        // --- æ­¥éª¤ 1: å‡†å¤‡å·¥ä½œ ---
 
-        // ËäÈ»ÊäÈëÊÇÓĞĞòµÄ£¬µ«ÎÒÃÇÖ»°ÑËüµ±³ÉÒ»¸ö¼¯ºÏÀ´ÓÃ£¬ÒÔ±£Ö¤Âß¼­µÄ¶ÀÁ¢ĞÔºÍ½¡×³ĞÔ¡£
-        // Èç¹û±ßµÄÊıÁ¿ºÜÉÙ£¬ÏßĞÔËÑË÷Ò²¿ÉÒÔ¡£ÓÃ set ÊÇÎªÁËÀíÂÛÉÏµÄ¸ßĞ§¡£
+        // è™½ç„¶è¾“å…¥æ˜¯æœ‰åºçš„ï¼Œä½†æˆ‘ä»¬åªæŠŠå®ƒå½“æˆä¸€ä¸ªé›†åˆæ¥ç”¨ï¼Œä»¥ä¿è¯é€»è¾‘çš„ç‹¬ç«‹æ€§å’Œå¥å£®æ€§ã€‚
+        // å¦‚æœè¾¹çš„æ•°é‡å¾ˆå°‘ï¼Œçº¿æ€§æœç´¢ä¹Ÿå¯ä»¥ã€‚ç”¨ set æ˜¯ä¸ºäº†ç†è®ºä¸Šçš„é«˜æ•ˆã€‚
         std::unordered_set<const GraphEdge*> edge_pool(
             loop_edges_from_find.begin(),
             loop_edges_from_find.end()
         );
 
-        // --- ²½Öè 2: È·¶¨Ò»¸öÃ÷È·µÄÆğµãºÍÆğÊ¼·½Ïò ---
+        // --- æ­¥éª¤ 2: ç¡®å®šä¸€ä¸ªæ˜ç¡®çš„èµ·ç‚¹å’Œèµ·å§‹æ–¹å‘ ---
 
-        // ´ÓÊäÈëÁĞ±íµÄµÚÒ»Ìõ±ß¿ªÊ¼ÎÒÃÇµÄ×·×Ù
+        // ä»è¾“å…¥åˆ—è¡¨çš„ç¬¬ä¸€æ¡è¾¹å¼€å§‹æˆ‘ä»¬çš„è¿½è¸ª
         const GraphEdge* first_edge_in_path = loop_edges_from_find[0];
 
-        // ÈÎÒâÑ¡ÔñÒ»¸ö·½Ïò×÷ÎªÂ·¾¶µÄ¿ªÊ¼
+        // ä»»æ„é€‰æ‹©ä¸€ä¸ªæ–¹å‘ä½œä¸ºè·¯å¾„çš„å¼€å§‹
         GraphNode* start_node = first_edge_in_path->startNode;
         GraphNode* next_node_after_start = first_edge_in_path->endNode;
 
-        // --- ²½Öè 3: Ñ­»·×·×Ù£¬¹¹½¨ÓĞĞòµÄ½ÚµãºÍ±ßÁĞ±í ---
+        // --- æ­¥éª¤ 3: å¾ªç¯è¿½è¸ªï¼Œæ„å»ºæœ‰åºçš„èŠ‚ç‚¹å’Œè¾¹åˆ—è¡¨ ---
 
-        // ³õÊ¼»¯ÎÒÃÇµÄÓĞĞòÁĞ±í
+        // åˆå§‹åŒ–æˆ‘ä»¬çš„æœ‰åºåˆ—è¡¨
         this->nodes.push_back(start_node);
 
         GraphNode* current_node = start_node;
         const GraphEdge* current_edge = first_edge_in_path;
 
-        // ÎÒÃÇĞèÒªÑ­»· loop_edges_from_find.size() ´ÎÀ´×ßÍêÕû¸ö»·
+        // æˆ‘ä»¬éœ€è¦å¾ªç¯ loop_edges_from_find.size() æ¬¡æ¥èµ°å®Œæ•´ä¸ªç¯
         for (size_t i = 0; i < loop_edges_from_find.size(); ++i) {
-            // 1. ½«µ±Ç°ÕıÔÚ¡°×ß¡±µÄ±ß£¬Ìí¼Óµ½ÎÒÃÇ×Ô¼ºµÄÓĞĞò±ßÁĞ±íÖĞ
+            // 1. å°†å½“å‰æ­£åœ¨â€œèµ°â€çš„è¾¹ï¼Œæ·»åŠ åˆ°æˆ‘ä»¬è‡ªå·±çš„æœ‰åºè¾¹åˆ—è¡¨ä¸­
             this->edges.push_back(current_edge);
 
-            // 2. È·¶¨Â·¾¶µÄÏÂÒ»¸ö½Úµã
+            // 2. ç¡®å®šè·¯å¾„çš„ä¸‹ä¸€ä¸ªèŠ‚ç‚¹
             GraphNode* next_node = (current_edge->startNode == current_node)
                 ? current_edge->endNode
                 : current_edge->startNode;
 
-            // 3. Èç¹ûÏÂÒ»¸ö½Úµã²»ÊÇÂ·¾¶µÄÆğµã£¬¾Í½«Ëü¼ÓÈëµ½ÓĞĞò½ÚµãÁĞ±íÖĞ
-            //    (×îºóÒ»¸ö½Úµã»áÊÇÆğµã£¬ÎÒÃÇ²»ÔÚÑ­»·ÖĞÌí¼ÓËü)
+            // 3. å¦‚æœä¸‹ä¸€ä¸ªèŠ‚ç‚¹ä¸æ˜¯è·¯å¾„çš„èµ·ç‚¹ï¼Œå°±å°†å®ƒåŠ å…¥åˆ°æœ‰åºèŠ‚ç‚¹åˆ—è¡¨ä¸­
+            //    (æœ€åä¸€ä¸ªèŠ‚ç‚¹ä¼šæ˜¯èµ·ç‚¹ï¼Œæˆ‘ä»¬ä¸åœ¨å¾ªç¯ä¸­æ·»åŠ å®ƒ)
             if (next_node != start_node) {
                 this->nodes.push_back(next_node);
             }
 
-            // 4. Èç¹ûÒÑ¾­»Øµ½ÁËÆğµã£¬¿ÉÒÔÌáÇ°½áÊøÑ­»·£¨×÷ÎªÒ»ÖÖĞ£Ñé£©
+            // 4. å¦‚æœå·²ç»å›åˆ°äº†èµ·ç‚¹ï¼Œå¯ä»¥æå‰ç»“æŸå¾ªç¯ï¼ˆä½œä¸ºä¸€ç§æ ¡éªŒï¼‰
             if (next_node == start_node) {
-                // È·±£ÎÒÃÇÒÑ¾­ÓÃÍêÁËËùÓĞµÄ±ß
+                // ç¡®ä¿æˆ‘ä»¬å·²ç»ç”¨å®Œäº†æ‰€æœ‰çš„è¾¹
                 if (i == loop_edges_from_find.size() - 1) {
-                    break; // Õı³£½áÊø
+                    break; // æ­£å¸¸ç»“æŸ
                 }
                 else {
                     throw std::logic_error("Loop formed prematurely. Inconsistent edge set.");
                 }
             }
 
-            // 5. ÔÚ next_node ´¦£¬ÕÒµ½ÏÂÒ»ÌõÒª×ßµÄ±ß
-            //    (±ØĞëÊÇ³ıÁË current_edge Ö®ÍâµÄÄÇÌõ)
+            // 5. åœ¨ next_node å¤„ï¼Œæ‰¾åˆ°ä¸‹ä¸€æ¡è¦èµ°çš„è¾¹
+            //    (å¿…é¡»æ˜¯é™¤äº† current_edge ä¹‹å¤–çš„é‚£æ¡)
             if (next_node->edges.size() != 2) {
                 throw std::logic_error("Node degree is not 2 during loop construction.");
             }
@@ -276,21 +276,21 @@ namespace BridgeWind{
                 ? next_node->edges[1]
                 : next_node->edges[0];
 
-            // 6. ¼ì²éÕâÌõ±ßÊÇ·ñÔÚÎÒÃÇ±»¸æÖªµÄ±ß³ØÖĞ
+            // 6. æ£€æŸ¥è¿™æ¡è¾¹æ˜¯å¦åœ¨æˆ‘ä»¬è¢«å‘ŠçŸ¥çš„è¾¹æ± ä¸­
             if (edge_pool.count(next_edge) == 0) {
                 throw std::logic_error("Path tracing led to an edge not in the provided loop set.");
             }
 
-            // 7. ¸üĞÂ×´Ì¬£¬ÎªÏÂÒ»´Îµü´ú×ö×¼±¸
+            // 7. æ›´æ–°çŠ¶æ€ï¼Œä¸ºä¸‹ä¸€æ¬¡è¿­ä»£åšå‡†å¤‡
             current_node = next_node;
             current_edge = next_edge;
         }
 
-        // --- ²½Öè 4: ×îÖÕĞ£Ñé ---
+        // --- æ­¥éª¤ 4: æœ€ç»ˆæ ¡éªŒ ---
         if (this->nodes.size() != loop_edges_from_find.size() || this->edges.size() != loop_edges_from_find.size()) {
             throw std::logic_error("Failed to construct a valid loop. Node/edge count mismatch.");
         }
-		// --- ²½Öè 5: ¼ÆËã»·µÄ³¤¶È ---
+		// --- æ­¥éª¤ 5: è®¡ç®—ç¯çš„é•¿åº¦ ---
         double total_length = 0.0;
         for (const auto& edge : edges) {
             if (edge->type == GraphEdge::GeomType::LINE) {
@@ -303,8 +303,8 @@ namespace BridgeWind{
                 throw std::runtime_error("Unknown edge type in Loop::length()");
             }
         }
-		length = total_length; // ¼ÆËã²¢»º´æ»·µÄ×Ü³¤¶È
-		// --- ²½Öè 6: ¼ÆËã³¤¶È±ÈÀı ---
+		length = total_length; // è®¡ç®—å¹¶ç¼“å­˜ç¯çš„æ€»é•¿åº¦
+		// --- æ­¥éª¤ 6: è®¡ç®—é•¿åº¦æ¯”ä¾‹ ---
         for (const auto& edge : edges) {
             double edgeLength = 0.0;
             if (edge->type == GraphEdge::GeomType::LINE) {
@@ -332,7 +332,7 @@ namespace BridgeWind{
         }
     }
     double Loop::getLength() const {
-		return this->length; // ÕâÀï¼ÙÉè length ÒÑ¾­±»ÕıÈ·¼ÆËã²¢»º´æ
+		return this->length; // è¿™é‡Œå‡è®¾ length å·²ç»è¢«æ­£ç¡®è®¡ç®—å¹¶ç¼“å­˜
     }
     const std::vector<double>& Loop::getLengthRatios() const {
         return lengthRatios;
