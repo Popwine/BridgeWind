@@ -4,8 +4,8 @@ namespace BridgeWind {
         : QObject(parent)
     {
         // 在构造函数中创建并配置底层的QProcess对象
-        m_process = new QProcess(this);
-
+        m_process = new QProcess();
+        m_process->moveToThread(this->thread());
         // 【核心】将QProcess的内部信号连接到我们自己的私有槽函数上。
         // 这样，当QProcess发生事件时，我们的ProcessManager就能得到通知。
 
@@ -25,8 +25,19 @@ namespace BridgeWind {
 
     ProcessManager::~ProcessManager()
     {
-        // QProcess对象因为设置了parent为this，会在ProcessManager析构时被Qt自动删除，
-        // 所以这里通常不需要写 delete m_process;
+        // 3. 因为m_process没有parent了，我们必须手动删除它，否则会内存泄漏！
+        //    使用deleteLater()是线程安全的删除方式。
+        if (m_process) {
+            // 在删除前，确保所有连接都断开
+            m_process->disconnect();
+            // 尝试停止进程
+            if (m_process->state() != QProcess::NotRunning) {
+                m_process->terminate();
+                m_process->waitForFinished(1000);
+                m_process->kill();
+            }
+            m_process->deleteLater();
+        }
     }
 
     void ProcessManager::start(const QString& program, const QStringList& arguments, const QString& workingDir)

@@ -1,5 +1,6 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource prefix="/translations">
-<file alias="bridgewind_zh_CN.ts">C:/Projects/BridgeWind/out/build/x64-Debug/src/bridgewind_zh_CN.qm</file>
-</qresource>
+<!DOCTYPE RCC>
+<RCC version="1.0">
+	<qresource prefix="/translations">
+		<file alias="bridgewind_zh_CN.qm">../translations/bridgewind_zh_CN.ts</file>
+	</qresource>
 </RCC>

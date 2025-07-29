@@ -10,6 +10,7 @@ namespace BridgeWind
 {
     SolverService::SolverService(QObject* parent) : QObject(parent) {
         m_processManager = new ProcessManager(); // 在构造时创建
+        
 
         // 连接ProcessManager的信号到我们自己的信号
         connect(m_processManager, &ProcessManager::outputReady, this, &SolverService::logMessageReady);
@@ -17,7 +18,7 @@ namespace BridgeWind
         connect(m_processManager, &ProcessManager::errorOccurred, this, &SolverService::errorOccurred);
     }
 
-    void SolverService::run(const SimulationParameters& params) {
+    void SolverService::run(const BridgeWind::SimulationParameters& params) {
 		emit logMessageReady(tr("Preparing to run the solver..."));
 		// 1. 准备 Hypara 文件
         

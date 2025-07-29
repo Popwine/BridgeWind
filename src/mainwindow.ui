@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>495</height>
+    <width>1290</width>
+    <height>895</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Choose a project working Directory: </string>
           </property>
@@ -28,6 +33,11 @@
         </item>
         <item>
          <widget class="QLineEdit" name="workingDir">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>C:/Projects/bridge_wind_case_test/test1</string>
           </property>
@@ -35,6 +45,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="projectBrowseButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Browse...</string>
           </property>
@@ -46,6 +61,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Choose a DXF file: </string>
           </property>
@@ -53,6 +73,11 @@
         </item>
         <item>
          <widget class="QLineEdit" name="dxfDir">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>C:/Projects/bridge_wind_case_test/test1/Drawing1.dxf</string>
           </property>
@@ -60,6 +85,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="dxfBrowseButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Browse...</string>
           </property>
@@ -71,6 +101,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QPushButton" name="geometryAnalyzeButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Analyze Geomtry</string>
           </property>
@@ -78,6 +113,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="generateMeshButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Generate Mesh</string>
           </property>
@@ -85,6 +125,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="startSimulationButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Start Simulation</string>
           </property>
@@ -92,6 +137,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="stopSimulationButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Stop Simulation</string>
           </property>
@@ -101,10 +151,57 @@
       </item>
       <item>
        <widget class="QTextEdit" name="logViewer">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QVTKOpenGLNativeWidget" name="vtkRenderWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>800</width>
+          <height>800</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="displayMeshButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Display Mesh</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="displayContourButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Display Contour</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -115,13 +212,21 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>583</width>
-     <height>22</height>
+     <width>1290</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKOpenGLNativeWidget</class>
+   <extends>QWidget</extends>
+   <header>QVTKOpenGLNativeWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

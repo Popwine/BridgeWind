@@ -3,6 +3,7 @@
 #define GEO_GENERATOR_H
 #include "geometry.h"
 #include "topology_analyzer.h"
+#include "simulation_parameters.h"
 #include  <fstream>
 #define BW_GEO_RADIUS_MESH_NUM_VAR_NAME "Nr"
 #define BW_GEO_CIRCUM_GROWTH_RATE_VAR_NAME "Rc"
@@ -23,7 +24,7 @@ namespace BridgeWind{
 		GeoGenerator() = delete;
 		~GeoGenerator();
 		//只接受 Geometry 对象的引用
-		GeoGenerator(const TopologyAnalyzer& analyzer, const std::string& filename) ;
+		GeoGenerator(const TopologyAnalyzer& analyzer, const std::string& filename, const SimulationParameters& p);
 		std::string filename;
 		
 
@@ -41,13 +42,12 @@ namespace BridgeWind{
 		size_t wallArcCenterStartIndex = 0;
 		size_t farfieldPointStartIndex = 0;
 		size_t centerPointIndex = 0;
-		double fieldDiameter = 0.0;
+
+		double fieldDiameter = 50.0;
+		
 
 	public:
-		int radialMeshNumber = 90; // 径向网格数
-		int circumferentialMeshNumber = 360; // 周向网格数
-
-		double meshGrowthRate = 0.95; // 网格增长率，从外向到中心
+		SimulationParameters params;
 	private:
 		size_t getWallPointStartIndex() const { return wallPointStartIndex; };
 		size_t getWallArcCenterStartIndex() const { return wallArcCenterStartIndex; };

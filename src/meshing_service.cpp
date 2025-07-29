@@ -5,6 +5,7 @@
 #include "string_literals.h"
 #include "gmsh2cgns.h"
 
+
 namespace BridgeWind
 {
 	MeshingService::MeshingService(QObject* parent) :QObject(parent) {
@@ -21,11 +22,9 @@ namespace BridgeWind
 			FileUtils::createFolder(workdir / "grid");
 
 			emit progressUpdated(QString::fromStdString(Strings::GeneratingGeoFile));
-			GeoGenerator geoGen(*analyzer, (workdir / "grid" / "Bridge_Wind.geo").string());
+			GeoGenerator geoGen((*analyzer), (workdir / "grid" / "Bridge_Wind.geo").string(), params);
+			
 
-			geoGen.circumferentialMeshNumber = params.circumferentialMeshNumber;
-			geoGen.radialMeshNumber = params.radialMeshNumber;
-			geoGen.meshGrowthRate = params.radialMeshGrowthRate;
 			geoGen.generateGeoFile();
 			geoGen.finalize();
 			emit progressUpdated(QString::fromStdString(Strings::GeoFileGenerated));
@@ -47,6 +46,8 @@ namespace BridgeWind
 			emit progressUpdated(QString::fromStdString(Strings::CgnsFileGenerated + (workdir / "grid" / "Bridge_Wind.cgns").string()));
 
 
+
+			emit finished();
 		}
 		catch (const std::exception& e) {
 			emit errorOccurred(

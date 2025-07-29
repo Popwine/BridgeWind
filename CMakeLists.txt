@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.18)
 project(BridgeWind LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -14,6 +14,7 @@ endif()
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/hdf5-1.14.4-3-install")
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/CGNS-4.4.0-install")
 list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/libdxfrw-install")
+list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/VTK-9.4.2-install-debug/lib/cmake/vtk-9.4")
 
 set(Qt5_DIR "C:/DevTools/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
 # 1. 正常找到 HDF5。执行完这行，目标 HDF5::HDF5 就被定义了。
@@ -32,6 +33,27 @@ endif()
 # include("${CMAKE_CURRENT_LIST_DIR}/cgns-targets.cmake")
 find_package(CGNS REQUIRED)
 find_package(libdxfrw REQUIRED)
+
+
+find_package(VTK COMPONENTS
+    # --- 核心数据结构与算法 ---
+    CommonCore          # 基础核心库，例如 vtkObject
+    CommonDataModel     # 数据对象，如 vtkUnstructuredGrid, vtkPolyData, vtkPoints. [1]
+    CommonExecutionModel # 执行管线模型
+    FiltersCore         # 基础滤波器，vtkContourFilter 依赖它. [2]
+    FiltersGeneral      # 通用滤波器
+
+    # --- 渲染与交互 ---
+    RenderingCore       # 渲染核心，包含 vtkActor, vtkRenderer, vtkLookupTable 等. [3, 4]
+    RenderingOpenGL2    # OpenGL2 渲染后端 (您已包含)
+    GUISupportQt        # Qt GUI 支持 (您已包含)
+    InteractionStyle    # 交互样式 (您已包含)
+    RenderingAnnotation # 用于注释，例如 vtkScalarBarActor. [5]
+
+    # --- 可选，但建议保留 ---
+    IOXML               # 用于读写 XML 格式的 vtk 文件，调试时可能有用
+    IOCGNSReader        # 您已包含，用于读取 CGNS 文件
+REQUIRED)
 
 # 这一行让CMake在处理Qt的 .h 文件时能自动调用 moc, uic, rcc 等工具
 # 这对于使用信号和槽、.ui文件、资源文件至关重要

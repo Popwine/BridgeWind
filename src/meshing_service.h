@@ -19,7 +19,7 @@ namespace BridgeWind
 		MeshingService(QObject* parent = nullptr);
     signals:
         void progressUpdated(const QString& message);
-        void finished(const QString& cgnsFilePath); // 输出CGNS文件路径
+        void finished(); // 输出CGNS文件路径
         void errorOccurred(const QString& errorMessage);
 
     public slots:

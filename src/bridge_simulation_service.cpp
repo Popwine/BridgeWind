@@ -65,11 +65,9 @@ namespace BridgeWind
 			createFolder(workdir / "grid");
 
             emit progressUpdated(QString::fromStdString(Strings::GeneratingGeoFile));
-			GeoGenerator geoGen(analyzer, (workdir / "grid" / "Bridge_Wind.geo").string());
+			GeoGenerator geoGen(analyzer, (workdir / "grid" / "Bridge_Wind.geo").string(), params);
 
-            geoGen.circumferentialMeshNumber = params.circumferentialMeshNumber;
-			geoGen.radialMeshNumber = params.radialMeshNumber;
-			geoGen.meshGrowthRate = params.radialMeshGrowthRate;
+
 			geoGen.generateGeoFile();
 			geoGen.finalize();
             emit progressUpdated(QString::fromStdString(Strings::GeoFileGenerated));

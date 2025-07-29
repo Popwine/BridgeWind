@@ -223,5 +223,33 @@ namespace G2C {
         // 从 set 构造 vector 并返回
         return std::vector<size_t>(uniqueNodeVectorIndexes.begin(), uniqueNodeVectorIndexes.end());
     }
+    std::vector<std::vector<size_t>> Mesh::getQuadElementsIndexConnectivity() const {
+        static std::vector<std::vector<size_t>> empty;
+        int numQuad = getNumQuadElements();
+        if (numQuad > 0) {
+            std::vector<std::vector<size_t>> quadElements;
+            for (const auto& e : elements) {
+                if (e.type == 3) { // Assuming type 3 corresponds to quadrilateral elements
+                    if (e.nodesList.size() != 4) {
+                        throw std::runtime_error("Quad element does not have exactly 4 nodes.");
+                    }
 
+                    size_t index1 = nodeNumberToVectorIndex.at(e.nodesList[0]);
+                    size_t index2 = nodeNumberToVectorIndex.at(e.nodesList[1]);
+                    size_t index3 = nodeNumberToVectorIndex.at(e.nodesList[2]);
+                    size_t index4 = nodeNumberToVectorIndex.at(e.nodesList[3]);
+
+                    quadElements.emplace_back(std::vector<size_t>{ index1, index2, index3, index4 });
+
+                }
+            }
+            if (quadElements.size() != numQuad) {
+                throw std::runtime_error("Quad elements size does not match the expected number of quad elements.");
+            }
+            return quadElements;
+        }
+        else {
+            return empty;
+        }
+    }
 }

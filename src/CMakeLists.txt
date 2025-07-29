@@ -1,29 +1,7 @@
-﻿
-
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-
-set(QRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
-
-# 将编译后的.qm文件添加到资源文件(.qrc)中
-# 这段代码会动态生成 resources.qrc 文件的内容
-set(QRC_CONTENT "<!DOCTYPE RCC><RCC version=\"1.0\">\n<qresource prefix=\"/translations\">\n")
-foreach(TS_FILE ${TS_FILES})
-    # 从.ts文件名推导出.qm文件名
-    get_filename_component(TS_FILENAME ${TS_FILE} NAME_WE)
-    set(QM_FILE "${CMAKE_CURRENT_BINARY_DIR}/${TS_FILENAME}.qm")
-    # 把.qm文件路径加到.qrc内容里
-    set(QRC_CONTENT "${QRC_CONTENT}<file alias=\"${TS_FILENAME}.ts\">${QM_FILE}</file>\n")
-endforeach()
-set(QRC_CONTENT "${QRC_CONTENT}</qresource>\n</RCC>\n")
-
-# 将动态生成的内容写入.qrc文件
-file(WRITE ${QRC_FILE} "${QRC_CONTENT}")
-
-
-# --- 创建一个核心逻辑库 ---
-# 它包含了除UI以外的所有源文件
-add_library(BridgeWindCore STATIC
-    # 把所有相关的.cpp和.h文件都列在这里
+﻿# --- 收集所有需要扫描翻译的源文件 ---
+# <<< 修改点 1: 创建一个包含所有源文件的列表 >>>
+set(TRANSLATION_SOURCES
+    # 核心逻辑库的源文件
     vector2d.cpp vector2d.h
     mesh.cpp mesh.h
     gmsh_reader.cpp gmsh_reader.h
@@ -40,20 +18,53 @@ add_library(BridgeWindCore STATIC
     solver_service.cpp solver_service.h
     file_utils.cpp file_utils.h
     process_manager.cpp process_manager.h
+    flow_data_reader.h flow_data_reader.cpp
+    # UI库的源文件
+    mainwindow.cpp mainwindow.h mainwindow.ui
+    # 主程序的源文件
+    main_gui.cpp
 )
 
-# --- 为核心库统一设置包含目录和链接 ---
-# PUBLIC意味着链接了BridgeWindCore的目标也会自动获得这些属性
+# --- 正确调用翻译工具 ---
+# <<< 修改点 2: 使用源文件列表来调用 qt5_create_translation >>>
+# 注意第二个参数现在是 ${TRANSLATION_SOURCES}，它是一个完整的文件列表
+# 我们还需要把主 CMakeLists.txt 中定义的 TS_FILES 传进来
+qt5_create_translation(QM_FILES ${TRANSLATION_SOURCES} ${TS_FILES})
+
+
+# --- 创建一个核心逻辑库 ---
+add_library(BridgeWindCore STATIC
+    vector2d.cpp vector2d.h
+    mesh.cpp mesh.h
+    gmsh_reader.cpp gmsh_reader.h
+    gmsh2cgns.cpp gmsh2cgns.h
+    gmsh_generator.cpp gmsh_generator.h
+    geometry.cpp geometry.h
+    topology_analyzer.cpp topology_analyzer.h
+    geo_generator.cpp geo_generator.h
+    app_controller.cpp app_controller.h
+    hypara_generator.cpp hypara_generator.h
+    bridge_simulation_service.cpp bridge_simulation_service.h
+    geometry_analysis_service.cpp geometry_analysis_service.h
+    meshing_service.cpp meshing_service.h
+    solver_service.cpp solver_service.h
+    file_utils.cpp file_utils.h
+    process_manager.cpp process_manager.h
+    flow_data_reader.h flow_data_reader.cpp
+)
+
 target_include_directories(BridgeWindCore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}/autogen/include
+    # 注意：CMAKE_AUTOGEN_BUILD_DIR 是在顶层定义的，所以这里我们用 CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/autogen/include
 )
 
 target_link_libraries(BridgeWindCore PUBLIC
-    # 链接所有外部依赖
-    CGNS::cgns_shared   # HDF5会作为CGNS的依赖被自动链接
+    CGNS::cgns_shared
     libdxfrw::libdxfrw
-    Qt5::Core           # Service类需要QObject
+    Qt5::Core
+    hdf5::hdf5-shared
+    
 )
 
 
@@ -67,19 +78,34 @@ target_include_directories(BridgeWindUI PUBLIC
 )
 
 target_link_libraries(BridgeWindUI PUBLIC
-    BridgeWindCore      # UI依赖于核心逻辑
-    Qt5::Widgets        # UI需要Widgets
+    BridgeWindCore
+    Qt5::Widgets
+
+
+    VTK::CommonCore
+    VTK::CommonDataModel
+    VTK::CommonExecutionModel
+    VTK::FiltersCore
+    VTK::FiltersGeneral
+    VTK::RenderingCore
+    VTK::RenderingOpenGL2
+    VTK::GUISupportQt
+    VTK::InteractionStyle
+    VTK::RenderingAnnotation
+    VTK::IOXML
+    VTK::IOCGNSReader
 )
 
 
 # --- 创建最终的可执行文件 ---
+# <<< 修改点 3: 移除动态生成 .qrc 的逻辑，直接添加静态 .qrc 文件 >>>
 add_executable(BridgeWindApp
     main_gui.cpp
+    # 将静态的 .qrc 文件作为源文件添加
+    # CMAKE_AUTORCC 会自动处理它
+    resources.qrc
 )
-target_sources(BridgeWindApp PRIVATE
-    ${QRC_FILE} # 把资源文件也作为源文件添加
-    # ... 其他源文件
-)
+
 # 将UI库链接到可执行文件
 target_link_libraries(BridgeWindApp PRIVATE
     BridgeWindUI

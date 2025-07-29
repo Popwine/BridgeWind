@@ -23,7 +23,7 @@ namespace BridgeWind {
         void errorOccurred(const QString& errorMessage);
 
     public slots:
-        void run(const SimulationParameters& params);
+        void run(const BridgeWind::SimulationParameters& params);
         void stop(); // 新增的停止槽
 
     private:

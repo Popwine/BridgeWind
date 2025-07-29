@@ -100,6 +100,9 @@ public:
     Element getElementByIndex(size_t index) const{
         return elements[index];
     }
+	vector2d<double> getNodeByIndex(size_t index) const {
+		return nodes[index];
+	}
     
 
 
@@ -120,6 +123,7 @@ public:
     PhysicalName getPhysicalNameByIndex(size_t index) const;
     const std::vector<size_t> getNodeIndexesByPhysicalNameIndex(size_t index) const;
 
+    std::vector<std::vector<size_t>> getQuadElementsIndexConnectivity() const;
 
 
 
