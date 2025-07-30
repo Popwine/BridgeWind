@@ -1,6 +1,19 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 	<qresource prefix="/translations">
-		<file alias="bridgewind_zh_CN.qm">../translations/bridgewind_zh_CN.ts</file>
+		<!-- 我们不再通过 qrc 管理翻译文件，
+                     因为它们已经被 CMake 直接添加到可执行文件资源里了 -->
+		<!--<file alias="bridgewind_zh_CN.qm">../translations/bridgewind_zh_CN.ts</file>-->
+	</qresource>
+	<qresource prefix="/">
+		<file>styles/dark_theme.qss</file>
+		
+	</qresource>
+	<qresource prefix="/icons">
+		<file>../res/icons/welcome_dialog_close_icon.svg</file>
+		<file>../res/icons/welcome_dialog_new_project.svg</file>
+		<file>../res/icons/welcome_dialog_open_project.svg</file>
+		<file>../res/icons/default_project_icon.svg</file>
+
 	</qresource>
 </RCC>

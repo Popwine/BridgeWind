@@ -62,7 +62,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 # 查找Qt5的包。我们需要 Core 和 Widgets 模块来创建最基本的GUI应用。
 # REQUIRED 意味着如果找不到Qt5，CMake会报错并停止。
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets Svg REQUIRED)
 find_package(Qt5 COMPONENTS LinguistTools REQUIRED)
 set(TS_FILES translations/bridgewind_zh_CN.ts)
 
@@ -76,6 +76,6 @@ message(STATUS "Found CGNS: ${CGNS_FOUND}, Version: ${CGNS_VERSION_STRING}")
 message(STATUS "Found libdxfrw: ${libdxfrw_FOUND}, Version: ${libdxfrw_VERSION_STRING}")
 
 # 设置自动生成的文件存放目录
-set(CMAKE_AUTOGEN_BUILD_DIR "${CMAKE_BINARY_DIR}/autogen")
+# set(CMAKE_AUTOGEN_BUILD_DIR "${CMAKE_BINARY_DIR}/autogen")
 
 add_subdirectory(src)

@@ -56,7 +56,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
+    
+
+    explicit MainWindow(const QString& projectPath, QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -88,7 +90,7 @@ private:
     vtkNew<vtkPolyDataMapper> m_mapper;
     vtkNew<vtkCGNSReader> m_cgnsReader;
     Ui::MainWindow* ui; // 由 .ui 文件生成
-
+    QString m_projectPath;
     void setupUiConnections();
     void cleanupWorker(QThread*& thread, QObject*& worker); // 清理函数
 	void setupVtkRenderWindow();

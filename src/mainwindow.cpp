@@ -40,23 +40,23 @@
 #include <vtkTextProperty.h>
 
 
-MainWindow::MainWindow(QWidget* parent)
-	: QMainWindow(parent), ui(new Ui::MainWindow)
+
+MainWindow::MainWindow(const QString& projectPath, QWidget* parent) 
+:
+	m_projectPath(projectPath), QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	ui->setupUi(this); // 使用Qt Designer生成的UI设置函数
 	ui->generateMeshButton->setEnabled(false);
 	ui->startSimulationButton->setEnabled(false);
 	ui->stopSimulationButton->setEnabled(false);
-	
+	this->setWindowTitle("BridgeWind - " + m_projectPath);
 
 	qRegisterMetaType<std::shared_ptr<BridgeWind::TopologyAnalyzer>>("std::shared_ptr<BridgeWind::TopologyAnalyzer>");
 	qRegisterMetaType<BridgeWind::SimulationParameters>("BridgeWind::SimulationParameters");
-	
+
 	setupUiConnections();
 	setupVtkRenderWindow();
-	
 }
-
 void MainWindow::setupUiConnections()
 {
 	

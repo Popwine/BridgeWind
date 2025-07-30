@@ -19,8 +19,10 @@ set(TRANSLATION_SOURCES
     file_utils.cpp file_utils.h
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
+    ProjectHistoryManager.h ProjectHistoryManager.cpp
     # UI库的源文件
     mainwindow.cpp mainwindow.h mainwindow.ui
+    welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
     # 主程序的源文件
     main_gui.cpp
 )
@@ -51,12 +53,12 @@ add_library(BridgeWindCore STATIC
     file_utils.cpp file_utils.h
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
+    ProjectHistoryManager.h ProjectHistoryManager.cpp
 )
 
 target_include_directories(BridgeWindCore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    # 注意：CMAKE_AUTOGEN_BUILD_DIR 是在顶层定义的，所以这里我们用 CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}/autogen/include
+
 )
 
 target_link_libraries(BridgeWindCore PUBLIC
@@ -71,10 +73,15 @@ target_link_libraries(BridgeWindCore PUBLIC
 # --- 创建UI库 ---
 add_library(BridgeWindUI STATIC
     mainwindow.cpp mainwindow.h mainwindow.ui
+    welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
+     
+    
 )
 
 target_include_directories(BridgeWindUI PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+    "${CMAKE_CURRENT_BINARY_DIR}/BridgeWindUI_autogen/include"
+
 )
 
 target_link_libraries(BridgeWindUI PUBLIC
@@ -97,13 +104,12 @@ target_link_libraries(BridgeWindUI PUBLIC
 )
 
 
-# --- 创建最终的可执行文件 ---
-# <<< 修改点 3: 移除动态生成 .qrc 的逻辑，直接添加静态 .qrc 文件 >>>
+
 add_executable(BridgeWindApp
     main_gui.cpp
-    # 将静态的 .qrc 文件作为源文件添加
-    # CMAKE_AUTORCC 会自动处理它
     resources.qrc
+    ${QM_FILES}
+    
 )
 
 # 将UI库链接到可执行文件
