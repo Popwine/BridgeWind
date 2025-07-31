@@ -36,124 +36,38 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.ui" line="14"/>
+        <location filename="../mainwindow.ui" line="19"/>
         <source>MainWindow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="30"/>
-        <source>Choose a project working Directory: </source>
+        <location filename="../mainwindow.ui" line="437"/>
+        <source>Built-in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="42"/>
-        <source>C:/Projects/bridge_wind_case_test/test1</source>
+        <location filename="../mainwindow.ui" line="458"/>
+        <source>Import DXF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="54"/>
-        <location filename="../mainwindow.ui" line="94"/>
-        <source>Browse...</source>
+        <location filename="../mainwindow.ui" line="598"/>
+        <source>Section Type</source>
+        <translation type="unfinished">截面类型</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="216"/>
+        <source>Project Name will be shown here.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="70"/>
-        <source>Choose a DXF file: </source>
+        <location filename="../mainwindow.ui" line="324"/>
+        <source>Geometry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="82"/>
-        <source>C:/Projects/bridge_wind_case_test/test1/Drawing1.dxf</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="110"/>
-        <source>Analyze Geomtry</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="122"/>
-        <source>Generate Mesh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="134"/>
-        <source>Start Simulation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="146"/>
-        <source>Stop Simulation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="188"/>
-        <source>Display Mesh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="200"/>
-        <source>Display Contour</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="70"/>
-        <source>Choose a project working directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="85"/>
-        <source>Choose a DXF file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="87"/>
-        <source>DXF Files (*.dxf);;All Files (*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="127"/>
-        <source>Starting geometry analysis...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="166"/>
-        <source>Starting mesh generation...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="206"/>
-        <source>Preparing solver thread...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="233"/>
-        <source>Sending stop signal to the solver...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="247"/>
-        <source>[Warning] Solver is not currently running.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="260"/>
-        <source>Geometry analysis finished successfully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="269"/>
-        <source>Mesh generation finished successfully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="280"/>
-        <source>Solver finished.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="307"/>
-        <source>[CRITICAL ERROR] </source>
+        <location filename="../mainwindow.ui" line="345"/>
+        <source>Simulation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -167,47 +81,47 @@
     <message>
         <location filename="../newprojectdialog.ui" line="114"/>
         <source>New Project</source>
-        <translation type="unfinished"></translation>
+        <translation>新建项目</translation>
     </message>
     <message>
         <location filename="../newprojectdialog.ui" line="135"/>
         <source>Name your new project and choose a working directory to store all related documents.</source>
-        <translation type="unfinished"></translation>
+        <translation>为你的新项目命名，并选择一个工作目录来存放所有相关文件。</translation>
     </message>
     <message>
-        <location filename="../newprojectdialog.ui" line="189"/>
+        <location filename="../newprojectdialog.ui" line="192"/>
         <source>Project Name: </source>
-        <translation type="unfinished"></translation>
+        <translation>项目名称</translation>
     </message>
     <message>
-        <location filename="../newprojectdialog.ui" line="204"/>
+        <location filename="../newprojectdialog.ui" line="207"/>
         <source>Work Path: </source>
-        <translation type="unfinished"></translation>
+        <translation>工作目录</translation>
     </message>
     <message>
-        <location filename="../newprojectdialog.ui" line="303"/>
+        <location filename="../newprojectdialog.ui" line="306"/>
         <source>Browse...</source>
-        <translation type="unfinished"></translation>
+        <translation>浏览...</translation>
     </message>
     <message>
-        <location filename="../newprojectdialog.ui" line="358"/>
+        <location filename="../newprojectdialog.ui" line="364"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>确定</translation>
     </message>
     <message>
-        <location filename="../newprojectdialog.ui" line="376"/>
+        <location filename="../newprojectdialog.ui" line="385"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
     <message>
-        <location filename="../welcomedialog.cpp" line="234"/>
+        <location filename="../welcomedialog.cpp" line="235"/>
         <source>Choose new project work path</source>
-        <translation type="unfinished"></translation>
+        <translation>选择新项目的工作目录</translation>
     </message>
     <message>
-        <location filename="../welcomedialog.cpp" line="243"/>
+        <location filename="../welcomedialog.cpp" line="244"/>
         <source>Input error</source>
-        <translation type="unfinished"></translation>
+        <translation>输入信息错误</translation>
     </message>
 </context>
 <context>
@@ -225,7 +139,7 @@
     <message>
         <location filename="../welcomedialog.ui" line="118"/>
         <source>New Project</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">新建项目</translation>
     </message>
     <message>
         <location filename="../welcomedialog.ui" line="121"/>

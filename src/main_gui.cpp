@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     //defaultFont.setPointSize(12);
     defaultFont.setFamily("Microsoft YaHei UI");
     a.setFont(defaultFont);
-    QFile qssFile(":/styles/dark_theme.qss");
+    QFile qssFile(":/styles/default_theme.qss");
     if (qssFile.open(QFile::ReadOnly | QFile::Text)) {
         QString style = QLatin1String(qssFile.readAll());
         a.setStyleSheet(style);
@@ -30,24 +30,32 @@ int main(int argc, char* argv[])
     else {
         qWarning() << "Could not open QSS file";
     }
-    WelcomeDialog welcomeDialog;
-    
-    if (welcomeDialog.exec() == QDialog::Accepted) {
-        
-        QString projectPath = welcomeDialog.finalProjectPath();
-
-        // 2. 将路径传递给 MainWindow
-        MainWindow w(projectPath); // 需要修改 MainWindow 的构造函数
-        w.show();
-
-        // 5. 让应用程序进入事件循环
-        return a.exec();
-    }
-
-    else {
-       
-        return 0;
-    }
 
 
+
+
+    //WelcomeDialog welcomeDialog;
+    //
+    //if (welcomeDialog.exec() == QDialog::Accepted) {
+    //    
+    //    QString projectPath = welcomeDialog.finalProjectPath();
+
+    //    // 2. 将路径传递给 MainWindow
+    //    MainWindow w(projectPath); // 需要修改 MainWindow 的构造函数
+    //    w.show();
+
+    //    // 5. 让应用程序进入事件循环
+    //    return a.exec();
+    //}
+
+    //else {
+    //   
+    //    return 0;
+    //}
+
+    QString projectName = "虎门大桥抗风设计";
+    QString projectPath = "C:\\Projects\\Humen";
+    MainWindow w(projectName, projectPath); // 需要修改 MainWindow 的构造函数
+    w.show();
+    return a.exec();
 }

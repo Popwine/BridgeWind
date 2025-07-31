@@ -1,0 +1,218 @@
+
+WelcomeDialog QPushButton[class="welcome_button"]{
+    text-align: left;
+    background-color: transparent; 
+    border: none;
+    border-radius: 0;
+    color: black; 
+    padding-left: 30px;
+    padding-right: 30px;
+
+}
+WelcomeDialog QPushButton[class="welcome_button"]:hover{
+    background-color: #d6d8de; 
+
+
+}
+
+WelcomeDialog QPushButton#closeButton{
+    background-color: #d6d8de; 
+    border: none;
+    color: black; 
+
+}
+
+
+WelcomeDialog QDialog {
+    background-color: white;
+
+}
+
+WelcomeDialog QWidget#leftWidget {
+    background-color: #f5f8ff;
+    border-radius: 8px;
+}
+
+WelcomeDialog QWidget#welcomeBackgroundWidget {
+    background-color: white;
+    border-radius: 8px; /* 这里设置你想要的圆角大小 */
+    border: 1px solid #102961;
+}
+
+
+/* QListView#recentProjectsList{
+    padding:8px;
+} */
+WelcomeDialog QPushButton#closeButton{
+    image: url(:/icons/res/icons/welcome_dialog_close_icon.svg);
+    background-color: white; 
+    border: none;
+    color: black; 
+    padding: 10px;
+    border-radius: 8px;
+}
+WelcomeDialog QPushButton#closeButton:hover{
+    
+    background-color: #ddd; 
+
+}
+
+WelcomeDialog QWidget#listContainerWidget{
+    background-color: transparent;
+    
+}
+
+WelcomeDialog QListView#recentProjectsList{
+    border: none;
+}
+
+
+
+WelcomeDialog QListView {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    selection-background-color: #d6d8de;  /* 选中时的背景色 */
+
+    
+}
+
+NewProjectDialog QPushButton[style="common"]{
+    background-color: #F4F4F4;
+    border: 1px solid #BFBFBF;
+    border-radius: 4px;
+}
+NewProjectDialog QPushButton[style="common"]:hover{
+    background-color: #c2e4fa;
+    border: 1px solid #2f5e9c;
+    border-radius: 4px;
+}
+
+
+NewProjectDialog QLineEdit{
+    border: 1px solid #BFBFBF;
+    border-radius: 4px;
+}
+
+/* new Project Dialog------------- */
+
+
+MainWindow QWidget#backgroundWidget{
+    background-color: #e5e5ea;
+    border-radius: 8px; /* 这里设置你想要的圆角大小 */
+    border: 1px solid #102961;
+}
+
+MainWindow QWidget#leftWidget{
+    background-color: #e5e5ea;
+
+}
+MainWindow QWidget#rightWidget{
+    background-color: #f2f2f7;
+
+}
+MainWindow QWidget#centralwidget{
+    background-color: #e5e5ea;
+
+}
+
+MainWindow QWidget#titleWidget{
+    background-color: #e5e5ea;
+}
+
+
+MainWindow QWidget#toggleWidget{
+    background-color: #D8D8D8;
+    border: none;
+    border-radius: 9px;
+}
+
+
+MainWindow QWidget#toggleWidget QPushButton{
+    background-color: transparent;
+
+
+}
+MainWindow QWidget#toggleWidget QPushButton:checked{
+    background-color: #fff;
+    border: none;
+    border-radius: 6px;
+
+
+}
+
+
+QWidget#toggleGeoModeWidget QWidget#toggleGeoModeButtonWidget QPushButton{
+    background-color: transparent;
+}
+QWidget#toggleGeoModeWidget QWidget#toggleGeoModeButtonWidget QPushButton:checked{
+    background-color: transparent;
+    color: #0256FF;
+}
+
+QWidget#toggleGeoModeWidget QWidget#toggleLineWidget QPushButton{
+    background-color: #D8D8D8;
+    border-radius: 0px;
+}
+QWidget#toggleGeoModeWidget QWidget#toggleLineWidget QPushButton:checked{
+    background-color: #0256FF;
+
+}
+
+QStackedWidget#parameterStack QWidget{
+    background-color: transparent;
+    border: none;
+    
+}
+QStackedWidget#parameterStack QLineEdit{
+
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+/* QWidget#titleWidget QPushButton{
+    background-color: transparent;
+    border:none;
+    border-radius: 11;
+}
+
+QWidget#titleWidget QPushButton#closeButton:hover{
+    background-color: #ff3838;
+    border: 2px solid #be2828;
+}
+QWidget#titleWidget QPushButton#maximizeButton:hover{
+    background-color: #ffe864;
+    border: 2px solid #b3a348;
+}
+QWidget#titleWidget QPushButton#minimizeButton:hover{
+    background-color: #3ff42b;
+    border: 2px solid #33bc24;
+    
+} */
+
+QWidget#titleWidget QPushButton{
+    background-color: transparent;
+    border:none;
+
+}
+QWidget#titleWidget QPushButton#closeButton{
+    padding: 13px;
+    image: url(:/icons/res/icons/close.svg);
+}
+QWidget#titleWidget QPushButton#maximizeButton{
+    padding: 13px;
+    image: url(:/icons/res/icons/maximize.svg);
+}
+QWidget#titleWidget QPushButton#minimizeButton{
+    padding: 13px;
+    image: url(:/icons/res/icons/minimize.svg);
+    
+} 
+
+QWidget#titleWidget QPushButton:hover{
+
+    background-color: #bababe;
+}
+
+

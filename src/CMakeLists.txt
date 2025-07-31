@@ -20,6 +20,7 @@ set(TRANSLATION_SOURCES
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    section_definitions.h
     # UI库的源文件
     mainwindow.cpp mainwindow.h mainwindow.ui
     welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
@@ -54,6 +55,7 @@ add_library(BridgeWindCore STATIC
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    section_definitions.h
 )
 
 target_include_directories(BridgeWindCore PUBLIC
@@ -83,6 +85,7 @@ target_include_directories(BridgeWindUI PUBLIC
     "${CMAKE_CURRENT_BINARY_DIR}/BridgeWindUI_autogen/include"
 
 )
+target_link_libraries(BridgeWindUI PRIVATE dwmapi)
 
 target_link_libraries(BridgeWindUI PUBLIC
     BridgeWindCore

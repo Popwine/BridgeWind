@@ -225,6 +225,7 @@ NewProjectDialog::NewProjectDialog(QWidget* parent)
 	connect(ui->browseButton, &QPushButton::clicked, this, &NewProjectDialog::onBrowseButtonClicked);
 	connect(ui->okButton, &QPushButton::clicked, this, &NewProjectDialog::onOkButtonClicked);
 	connect(ui->cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+	connect(ui->closeButton, &QPushButton::clicked, this, &QDialog::reject);
 }
 QString NewProjectDialog::projectName() const { return ui->projectNameEdit->text(); }
 QString NewProjectDialog::workPath() const { return ui->workPathEdit->text(); }

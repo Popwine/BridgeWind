@@ -6,7 +6,7 @@
 		<!--<file alias="bridgewind_zh_CN.qm">../translations/bridgewind_zh_CN.ts</file>-->
 	</qresource>
 	<qresource prefix="/">
-		<file>styles/dark_theme.qss</file>
+		<file>styles/default_theme.qss</file>
 		
 	</qresource>
 	<qresource prefix="/icons">
@@ -14,6 +14,9 @@
 		<file>../res/icons/welcome_dialog_new_project.svg</file>
 		<file>../res/icons/welcome_dialog_open_project.svg</file>
 		<file>../res/icons/default_project_icon.svg</file>
+		<file>../res/icons/close.svg</file>
+		<file>../res/icons/maximize.svg</file>
+		<file>../res/icons/minimize.svg</file>
 
 	</qresource>
 </RCC>
