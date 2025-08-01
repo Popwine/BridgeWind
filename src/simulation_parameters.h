@@ -10,6 +10,8 @@ namespace BridgeWind{
 		Default, // 
 		UserDefined // 
 	};
+
+
     struct SimulationParameters {
         // 输入几何
         std::string dxfFilePath;

@@ -71,6 +71,9 @@ private slots:
     void onSetParametersButtonClicked();
     void onSetBuiltInModeButtonClicked();
     void onSetImportDxfModeButtonClicked();
+    void onGeoParameterEditingFinished();
+    void onDxfFileDropped(const QStringList& filePaths);
+    void onDxfFileBrowseButtonClicked();
 
 
     //void onApplyButtonClicked();
@@ -94,11 +97,17 @@ private:
     QPoint m_dragPosition;  // 记录鼠标按下时的位置
 
     QWidget* m_titleBar;    // 我们的自定义标题栏
+    BridgeWind::Geometry m_geometry;
     void setupUiConnections();
     void setupTooglePairs();
     void onMaximizeRestore();
     void setupModel();
     void setupUiFromModel();
+    void setupVtkRenderWindow();
+
+
+    void renderVtkWindowWithGeometry(const BridgeWind::Geometry& geometry);
+
     
 
     // 存储工作流中的中间产物

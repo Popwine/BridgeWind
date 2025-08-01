@@ -76,6 +76,7 @@ target_link_libraries(BridgeWindCore PUBLIC
 add_library(BridgeWindUI STATIC
     mainwindow.cpp mainwindow.h mainwindow.ui
     welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
+    FileDropWidget.h FileDropWidget.cpp
      
     
 )

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>857</width>
-    <height>537</height>
+    <width>785</width>
+    <height>692</height>
    </rect>
   </property>
   <property name="font">
@@ -270,7 +270,7 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>100</height>
+                 <height>70</height>
                 </size>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -287,7 +287,7 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>250</width>
+                    <width>300</width>
                     <height>48</height>
                    </size>
                   </property>
@@ -322,6 +322,27 @@
                      </property>
                      <property name="text">
                       <string>Geometry</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="setMeshingButton">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>36</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Meshing</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -377,7 +398,7 @@
                   <number>0</number>
                  </property>
                  <property name="bottomMargin">
-                  <number>0</number>
+                  <number>20</number>
                  </property>
                  <item>
                   <widget class="QWidget" name="toggleGeoModeWidget" native="true">
@@ -551,7 +572,7 @@
                     </font>
                    </property>
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>1</number>
                    </property>
                    <widget class="QWidget" name="page">
                     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -625,7 +646,153 @@
                      </item>
                     </layout>
                    </widget>
-                   <widget class="QWidget" name="page_2"/>
+                   <widget class="QWidget" name="page_2">
+                    <layout class="QVBoxLayout" name="verticalLayout_11">
+                     <item>
+                      <widget class="FileDropWidget" name="fileDropWidget" native="true">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>200</height>
+                        </size>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_10">
+                        <property name="leftMargin">
+                         <number>24</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>24</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>24</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>24</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="label">
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Please drag a  DXF file here</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                          <property name="wordWrap">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="label_3">
+                          <property name="font">
+                           <font>
+                            <pointsize>9</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Please ensure the geometry is a single, closed contour.</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                          <property name="wordWrap">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="label_4">
+                          <property name="font">
+                           <font>
+                            <pointsize>9</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>The unit is recommended to be meters.</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                          <property name="wordWrap">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QWidget" name="widget_7" native="true">
+                          <layout class="QHBoxLayout" name="horizontalLayout">
+                           <property name="leftMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QPushButton" name="dxfBrowseButton">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>36</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>150</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
+                             <property name="text">
+                              <string>Browse...</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QWidget" name="widget_6" native="true"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget_4" native="true">
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                    <item>
+                     <widget class="QPushButton" name="bottomSetMeshingButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>36</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>300</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Set Meshing</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                 </layout>
@@ -677,6 +844,12 @@
    <class>QVTKOpenGLNativeWidget</class>
    <extends>QWidget</extends>
    <header>QVTKOpenGLNativeWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FileDropWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">FileDropWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

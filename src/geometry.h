@@ -6,7 +6,9 @@
 #include "vector2d.h"
 #include "libdxfrw.h"
 #include "drw_interface.h"
+#include "section_definitions.h"
 #include <stdexcept>
+#include <cmath>
 #ifndef PI
 #define PI 3.14159265358979323846264338
 #define BW_GEOMETRY_EPSILON 1e-8 
@@ -97,9 +99,19 @@ namespace BridgeWind {
         Point getEndPoint() const;
 		Point getCenterPoint() const;
         double length() const;
+        double getRealAngle() const;
         
 	};
+    class VtkFormatArc {
+    public:
 
+        Point center;
+        Point p1;
+        Point p2;
+        int resolution;
+        VtkFormatArc(const Point& c, const Point& p_1, const Point& p_2, int r) :center(c), p1(p_1), p2(p_2), resolution(r) {}
+
+    };
 	class Geometry {
     public:
 		Geometry();
@@ -132,6 +144,21 @@ namespace BridgeWind {
         bool isIntersectionExist() const;
         double getBoundingBoxWidth() const;
         double getBoundingBoxHeight() const;
+
+        void clear();
+
+        void resetAsCircle(double radius);
+        void resetAsRectangle(double width, double height);
+        void resetAsChamferedRectangle(double width, double height, double radius);
+        void resetAsStreamlinedBoxGirder(
+            double total_width, 
+            double total_height, 
+            double bottom_width,
+            double slope, 
+            double a1_degree,
+            double a2_degree);
+
+        std::vector<VtkFormatArc> getVtkFormatArcs() const;
         
 	};
 	

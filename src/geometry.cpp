@@ -209,6 +209,7 @@ namespace BridgeWind {
     }
 
     void Geometry::loadFromDXF(const std::string& dxfFilePath) {
+        clear();
         DXFReader reader;
         dxfRW fileReader(dxfFilePath.c_str());
 
@@ -363,6 +364,171 @@ namespace BridgeWind {
     double Geometry::getBoundingBoxHeight() const {
         return boundingBox.topRight.y - boundingBox.bottomLeft.y;
     };
+
+    void Geometry::clear() {
+        lines.clear();
+        arcs.clear();
+
+        boundingBox = Rectangle(Point(0, 0), Point(0, 0));
+        isBoundingBoxReal = false;
+    }
+
+    void Geometry::resetAsCircle(double radius) {
+        clear();
+        arcs.emplace_back(Point(0,0), radius, 0, 2 * PI);
+    }
+    void Geometry::resetAsRectangle(double width, double height) {
+
+
+        Line line1(Point(0          , height / 2    ), Point(-width / 2 , height / 2    ));
+        Line line2(Point(-width / 2 , height / 2    ), Point(-width / 2 , -height / 2   ));
+        Line line3(Point(-width / 2 , -height / 2   ), Point(0          , -height / 2   ));
+        Line line4(Point(0          , -height / 2   ), Point(width / 2  , -height / 2   ));
+        Line line5(Point(width / 2  , -height / 2   ), Point(width / 2  , height / 2    ));
+        Line line6(Point(width / 2  , height / 2    ), Point(0          , height / 2    ));
+        lines.push_back(line1);
+        lines.push_back(line2);
+        lines.push_back(line3);
+        lines.push_back(line4);
+        lines.push_back(line5);
+        lines.push_back(line6);
+
+
+    }
+    void Geometry::resetAsChamferedRectangle(double w, double h, double r) {
+        Point p1(0          , h / 2 );
+        Point p2(-w / 2 + r , h / 2 );
+
+        Point p3(-w / 2, h / 2 - r);
+        Point p4(-w / 2, -h / 2 + r);
+
+        Point p5(-w / 2 + r, -h / 2);
+        Point p6(0, -h / 2);
+        Point p7(w / 2 - r, -h / 2);
+
+        Point p8(w / 2, -h / 2 + r);
+        Point p9(w / 2, h / 2 - r);
+
+        Point p10(w / 2 - r, h / 2);
+        
+
+        Point c1(-w / 2 + r, h / 2 - r);
+        Point c2(-w / 2 + r, -h / 2 + r);
+        Point c3(w / 2 - r, -h / 2 + r);
+        Point c4(w / 2 - r, h / 2 - r);
+
+
+        lines.emplace_back(p1, p2);
+        lines.emplace_back(p3, p4);
+        lines.emplace_back(p5, p6);
+        lines.emplace_back(p6, p7);
+        lines.emplace_back(p8, p9);
+        lines.emplace_back(p10, p1);
+
+
+        arcs.emplace_back(c1, r, 0.5 * PI, 1.0 * PI);
+        arcs.emplace_back(c2, r, 1.0 * PI, 1.5 * PI);
+        arcs.emplace_back(c3, r, 1.5 * PI, 0.0 * PI);
+        arcs.emplace_back(c4, r, 0.0 * PI, 0.5 * PI);
+
+        
+
+
+
+    }
+    void Geometry::resetAsStreamlinedBoxGirder(
+        double total_width,
+        double total_height,
+        double bottom_width,
+        double slope,
+        double a1_degree,
+        double a2_degree)
+    {
+        double a1 = a1_degree / 180 * PI;
+        double a2 = a2_degree / 180 * PI;
+
+        Point p1(0, 0);
+        Point p2(bottom_width / 2, 0);
+        Point p3(total_width / 2, (total_width - bottom_width) / 2 * std::tan(a2));
+        
+        Line auxiliaryLine(p3, PI - a1, total_width * 100);// 辅助射线1
+        Line auxiliaryTopLine(Point(0, total_height), Point(total_width * 100, total_height - total_width * 100 * slope * 0.01));
+
+        auto inters = getIntersectionPoints(auxiliaryLine, auxiliaryTopLine);
+        Point p4;
+        if (inters.size() == 1) {
+            p4 = inters[0];
+        }
+        Point p5(0, total_height);
+        Point p6(-p4.x, p4.y);
+        Point p7(-p3.x, p3.y);
+        Point p8(-p2.x, p2.y);
+
+        lines.emplace_back(p1, p2);
+        lines.emplace_back(p2, p3);
+        lines.emplace_back(p3, p4);
+        lines.emplace_back(p4, p5);
+        lines.emplace_back(p5, p6);
+        lines.emplace_back(p6, p7);
+        lines.emplace_back(p7, p8);
+        lines.emplace_back(p8, p1);
+
+
+
+
+
+    }
+    std::vector<VtkFormatArc> Geometry::getVtkFormatArcs() const {
+        std::vector<VtkFormatArc> vtkArcs;
+        for (const auto& arc : arcs) {
+            double angle = arc.getRealAngle();
+            if (angle > 0.99 * PI) {//大于180度时, 划分为3个弧
+                double oneThirdRealAngle = angle / 3.0;
+                double startAngle = arc.startAngle;
+                double midAngle1 = arc.startAngle + oneThirdRealAngle;
+                double midAngle2 = arc.startAngle + oneThirdRealAngle * 2;
+                double endAngle = arc.endAngle;
+                formatAngle(midAngle1);
+                formatAngle(midAngle2);
+                
+                Arc arc1(arc.center, arc.radius, startAngle, midAngle1);
+                Arc arc2(arc.center, arc.radius, midAngle1, midAngle2);
+                Arc arc3(arc.center, arc.radius, midAngle2, endAngle);
+
+
+                vtkArcs.emplace_back(
+                    arc1.center,
+                    arc1.getStartPoint(),
+                    arc1.getEndPoint(),
+                    static_cast<int>(arc.getRealAngle() / PI * 180)//设置分辨率为1度
+                );
+                vtkArcs.emplace_back(
+                    arc2.center,
+                    arc2.getStartPoint(),
+                    arc2.getEndPoint(),
+                    static_cast<int>(arc.getRealAngle() / PI * 180)//设置分辨率为1度
+                );
+                vtkArcs.emplace_back(
+                    arc3.center,
+                    arc3.getStartPoint(),
+                    arc3.getEndPoint(),
+                    static_cast<int>(arc.getRealAngle() / PI * 180)//设置分辨率为1度
+                );
+            }
+            else {//小于180度，直接获取
+                vtkArcs.emplace_back(
+                    arc.center,
+                    arc.getStartPoint(),
+                    arc.getEndPoint(),
+                    static_cast<int>(arc.getRealAngle() / PI * 180)//设置分辨率为1度
+                );
+            }
+        }
+
+        return vtkArcs;
+    }
+
+
     Arc::Arc(const Point& c, double r, double sa, double ea) : center(c), radius(r), startAngle(sa), endAngle(ea) {
         if (radius <= 0) {
             throw std::invalid_argument("Radius must be positive.");
@@ -476,6 +642,16 @@ namespace BridgeWind {
 		}
 		return radius * angleDifference; // 弧长公式
 	}
+
+    double Arc::getRealAngle() const {
+        
+        if (startAngle <= endAngle) {
+            return endAngle - startAngle;
+        }
+        else {
+            return 2 * PI - startAngle + endAngle;
+        }
+    }
     Line::Line(const Point& b, const Point& e) : begin(b), end(e) {
         if (std::fabs(b.x - e.x) < BW_GEOMETRY_EPSILON && std::fabs(b.y - e.y) < BW_GEOMETRY_EPSILON) {
             throw std::invalid_argument("Line cannot have zero length.");

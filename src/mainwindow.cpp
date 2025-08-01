@@ -1,6 +1,6 @@
 ﻿#include "mainwindow.h"
 
-#include "bridge_simulation_service.h" // 包含头文件
+#include "bridge_simulation_service.h" 
 
 #include "flow_data_reader.h"
 
@@ -20,6 +20,8 @@
 #include <QButtonGroup>
 #include <QMouseEvent>
 #include <QWidget>
+#include <QMap> 
+#include <QMessageBox>
 
 #include <vtkNew.h>
 #include <vtkPoints.h>
@@ -41,6 +43,10 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkTextProperty.h>
+#include <vtkTextActor.h>
+#include <vtkLineSource.h>
+#include <vtkArcSource.h>
+#include <vtkAppendPolyData.h>
 
 #if defined(Q_OS_WIN)
 #include <windows.h>
@@ -75,11 +81,14 @@ MainWindow::MainWindow(const QString& projectName, const QString& projectPath, Q
     onSectionTypeChanged(0);
 
     ui->projectNameLable->setText(projectName);
+    m_currentParams.workingDirectory = projectPath.toStdString();
+
+
 
 
     setupTooglePairs();
     
-
+    setupVtkRenderWindow();
 
 
 
@@ -90,7 +99,14 @@ MainWindow::MainWindow(const QString& projectName, const QString& projectPath, Q
 void MainWindow::setupModel()
 {
     m_sectionDefs.append({
-        SectionTypes::Circle,
+        SectionTypes::Undefined, //id
+        "section_undefined", "Select a section",
+        {
+            
+        }
+        });
+    m_sectionDefs.append({
+        SectionTypes::Circle, //id
         "section_circle", "Circle",
         {
             {"param_diameters", "Diameter D(m)", 1.0}
@@ -112,7 +128,20 @@ void MainWindow::setupModel()
         {
             {"param_width", "Width W(m)", 4.0},
             {"param_height", "Height H(m)", 2.0},
-            {"param_chamfered_radius", "Chamfered Radius R(m)", 0.1}
+            {"param_chamfered_radius", "Chamfered Radius R(m)", 0.2}
+        }
+        });
+
+    m_sectionDefs.append({
+        SectionTypes::StreamlinedBoxGirder,
+        "section_streamlined_box_girder", "Streamlined Box Girder",
+        {
+            {"param_total_width", "Total Width B(m)", 12},
+            {"param_total_height", "Total Height H(m)", 1.5},
+            {"param_bottom_width", "Bottom Width B1(m)", 8},
+            {"param_slope", "Top Slope i(%)", 2},
+            {"param_angle_1", "Angle 1 a1(°)", 30},
+            {"param_angle_2", "Angle 2 a2(°)", 20},
         }
         });
 }
@@ -145,7 +174,7 @@ void MainWindow::setupUiFromModel()
 
             label->setFont(font);
             lineEdit->setFont(font);
-
+            connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::onGeoParameterEditingFinished);
 
             // 设置验证器，只允许输入浮点数
             lineEdit->setValidator(new QDoubleValidator(0, 1e9, 4, this));
@@ -164,8 +193,90 @@ void MainWindow::setupUiFromModel()
         ui->parameterStack->addWidget(scrollArea);
     }
 }
+void MainWindow::setupVtkRenderWindow() {
+    
 
 
+    vtkRenderWindow* renderWindow = ui->vtkRenderWidget->renderWindow();
+
+    // --- 3. 创建 Mapper 和 Actor ---
+
+    vtkNew<vtkTextActor> actor;
+    
+    actor->SetInput("BridgeWind v0.0\nChoose a section to start.");
+    vtkTextProperty* textProperty = actor->GetTextProperty();
+    textProperty->SetFontSize(24);
+    textProperty->SetFontFamilyToCourier();
+    textProperty->SetColor(0.7, 0.7, 0.7); // 黄色
+
+    textProperty->SetJustificationToCentered(); // 水平居中对齐
+    textProperty->SetVerticalJustificationToTop(); // 垂直顶部对齐
+
+    // --- 3. 设置文本在窗口中的位置 ---
+    // (x, y) 像素坐标，原点在左下角
+    actor->SetPosition(250, 350);
+    // --- 4. 将 Actor 添加到 Renderer ---
+    // 使用我们之前在 .h 文件中声明的成员变量 m_renderer
+    m_renderer->AddActor(actor);
+    m_renderer->SetBackground(0.949, 0.949, 0.969); // 设置背景色
+
+    // --- 5. 将 Renderer 添加到 RenderWindow ---
+    // 这是将 VTK 管线连接到 Qt 控件的关键一步
+    renderWindow->AddRenderer(m_renderer);
+
+    // --- 6. (可选但推荐) 设置 2D 交互方式 ---
+    vtkNew<vtkInteractorStyleImage> style;
+    renderWindow->GetInteractor()->SetInteractorStyle(style);
+
+    // --- 7. 重置相机视角并渲染 ---
+    m_renderer->ResetCamera();
+    renderWindow->Render();
+}
+void MainWindow::renderVtkWindowWithGeometry(const BridgeWind::Geometry& geometry) {
+
+    vtkNew<vtkAppendPolyData> appendFilter;
+
+
+
+    for (const auto& line : geometry.lines) {
+        vtkNew<vtkLineSource> lineSource;
+        lineSource->SetPoint1(line.begin.x, line.begin.y, 0);
+        lineSource->SetPoint2(line.end.x, line.end.y, 0);
+        appendFilter->AddInputConnection(lineSource->GetOutputPort());
+    }
+    auto vtkArcs = geometry.getVtkFormatArcs();
+    for (const auto& vArc : vtkArcs) {
+        vtkNew<vtkArcSource> arcSource;
+        arcSource->SetCenter(vArc.center.x, vArc.center.y, 0);
+        arcSource->SetPoint1(vArc.p1.x, vArc.p1.y, 0);
+        arcSource->SetPoint2(vArc.p2.x, vArc.p2.y, 0);
+        arcSource->SetResolution(vArc.resolution);
+        appendFilter->AddInputConnection(arcSource->GetOutputPort());
+    }
+
+    vtkRenderWindow* renderWindow = ui->vtkRenderWidget->renderWindow();
+
+
+
+    vtkNew<vtkPolyDataMapper> combinedMapper;
+    combinedMapper->SetInputConnection(appendFilter->GetOutputPort());
+
+    vtkNew<vtkActor> combinedActor;
+    combinedActor->SetMapper(combinedMapper);
+    combinedActor->GetProperty()->SetColor(0, 0, 0);
+    combinedActor->GetProperty()->SetLineWidth(2);
+
+    // --- 4. 渲染 ---
+
+    m_renderer->SetBackground(0.949, 0.949, 0.969);
+    m_renderer->RemoveAllViewProps();
+    m_renderer->AddActor(combinedActor); // 只需添加这一个 Actor
+
+    renderWindow->AddRenderer(m_renderer);
+    m_renderer->ResetCamera();
+    renderWindow->Render();
+
+}
 void MainWindow::setupUiConnections()
 {
     // 连接 sectionTypeComboBox
@@ -184,15 +295,20 @@ void MainWindow::setupUiConnections()
 
     connect(ui->sectionTypeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
         this, &MainWindow::onSectionTypeChanged);
+
     connect(ui->setGeometryButton, &QPushButton::clicked, this, &MainWindow::onSetGeometryButtonClicked);
     connect(ui->setBuiltInModeButton, &QPushButton::clicked, this, &MainWindow::onSetBuiltInModeButtonClicked);
     connect(ui->setImportDxfModeButton, &QPushButton::clicked, this, &MainWindow::onSetImportDxfModeButtonClicked);
     connect(ui->setParametersButton, &QPushButton::clicked, this, &MainWindow::onSetParametersButtonClicked);
+
+    connect(ui->fileDropWidget, &FileDropWidget::filesDropped, this, &MainWindow::onDxfFileDropped);
+    connect(ui->dxfBrowseButton, &QPushButton::clicked, this, &MainWindow::onDxfFileBrowseButtonClicked);
 }
 
 void MainWindow::setupTooglePairs() {
     QButtonGroup* toggleGroupGeoOrSim = new QButtonGroup(this);
     toggleGroupGeoOrSim->addButton(ui->setGeometryButton);
+    toggleGroupGeoOrSim->addButton(ui->setMeshingButton);
     toggleGroupGeoOrSim->addButton(ui->setParametersButton);
     // 设置为互斥模式
     toggleGroupGeoOrSim->setExclusive(true);
@@ -315,6 +431,7 @@ void MainWindow::onSectionTypeChanged(int index)
 
     ui->parameterStack->setCurrentIndex(index);
     qDebug() << "setCurrentIndex: " << index;
+    onGeoParameterEditingFinished();
 }
 
 void MainWindow::onSetGeometryButtonClicked() {
@@ -332,3 +449,181 @@ void MainWindow::onSetImportDxfModeButtonClicked() {
     ui->setImportDxfModeButtonLine->setChecked(true);
 }
 
+
+void MainWindow::onGeoParameterEditingFinished() {
+    try {
+
+
+        qDebug() << "Parameter editing finished. Updating values...";
+
+        // 1. 获取当前选中的截面索引
+        int currentIndex = ui->sectionTypeComboBox->currentIndex();
+        if (currentIndex < 0) {
+            qDebug() << "No section selected.";
+            return; // 如果没有有效的选项，则直接返回
+        }
+
+        // 2. 从模型中获取当前截面的定义
+        const SectionDef& currentDef = m_sectionDefs[currentIndex];
+        qDebug() << "Current Section:" << currentDef.nameComment;
+
+        // 3. 从 QStackedWidget 中获取当前的页面 (它是一个 QScrollArea)
+        QScrollArea* scrollArea = qobject_cast<QScrollArea*>(ui->parameterStack->widget(currentIndex));
+        if (!scrollArea) {
+            qDebug() << "Error: Could not find QScrollArea at index" << currentIndex;
+            return;
+        }
+
+        // 4. 从 QScrollArea 中获取其内容 QWidget
+        QWidget* contentWidget = scrollArea->widget();
+        if (!contentWidget) {
+            qDebug() << "Error: ScrollArea has no content widget";
+            return;
+        }
+
+        // 5. 在内容 QWidget 中查找所有的 QLineEdit 子控件
+        // findChildren 会返回一个列表，其顺序与添加时的顺序一致
+        QList<QLineEdit*> lineEdits = contentWidget->findChildren<QLineEdit*>();
+
+        // 安全检查：确保找到的 LineEdit 数量与模型中的参数数量一致
+        if (lineEdits.count() != currentDef.parameters.count()) {
+            qDebug() << "Error: Mismatch between found LineEdits and parameter definitions!";
+            return;
+        }
+
+        // 6. 遍历 QLineEdit 列表，提取数据并与参数键关联
+        // 使用 QMap 来存储 "参数键 -> 值" 的映射
+        QMap<QString, double> currentParameters;
+        for (int i = 0; i < lineEdits.count(); ++i) {
+            const ParameterDef& paramDef = currentDef.parameters[i]; // 获取对应的参数定义
+            QLineEdit* lineEdit = lineEdits[i];                      // 获取对应的输入框
+
+            QString key = QString::fromUtf8(paramDef.key); // 从模型获取key
+            bool ok;
+            double value = lineEdit->text().toDouble(&ok); // 从UI获取text并转为double
+
+            if (ok) {
+                currentParameters.insert(key, value);
+            }
+        }
+
+        // 7. (演示) 打印所有获取到的参数和值
+        qDebug() << "--- Collected Parameters ---";
+        for (auto it = currentParameters.constBegin(); it != currentParameters.constEnd(); ++it) {
+            qDebug() << it.key() << ":" << it.value();
+        }
+        qDebug() << "--------------------------";
+
+
+
+
+
+        m_geometry.clear();
+        if (currentDef.id == SectionTypes::Undefined) {
+            return;
+        }
+        else if (currentDef.id == SectionTypes::Circle) {
+
+            m_geometry.resetAsCircle(currentParameters["param_diameters"]);
+
+        }
+        else if (currentDef.id == SectionTypes::Rectangle) {
+            m_geometry.resetAsRectangle(
+                currentParameters["param_width"],
+                currentParameters["param_height"]
+            );
+        }
+        else if (currentDef.id == SectionTypes::ChamferedRectangle) {
+            m_geometry.resetAsChamferedRectangle(
+                currentParameters["param_width"],
+                currentParameters["param_height"],
+                currentParameters["param_chamfered_radius"]
+            );
+        }
+        else if (currentDef.id == SectionTypes::StreamlinedBoxGirder) {
+            m_geometry.resetAsStreamlinedBoxGirder(
+                currentParameters["param_total_width"],
+                currentParameters["param_total_height"],
+                currentParameters["param_bottom_width"],
+                currentParameters["param_slope"],
+                currentParameters["param_angle_1"],
+                currentParameters["param_angle_2"]
+            );
+        }
+        renderVtkWindowWithGeometry(m_geometry);
+    }
+    catch (const std::invalid_argument& e) {
+        QMessageBox::critical(this, tr("Error"), QString("An invalid parameter error occurred: %1").arg(e.what()));
+    }
+    catch (const std::exception& e) {
+        // 其他标准异常
+        QMessageBox::critical(this, tr("Error"), QString("Exception occurred: %1").arg(e.what()));
+    }
+    catch (...) {
+        // 未知异常
+        QMessageBox::critical(this, tr("Error"), tr("Unknown Error"));
+    }
+
+}
+
+
+void MainWindow::onDxfFileDropped(const QStringList& filePaths) {
+    try {
+
+        if (filePaths.size() == 1) {
+            QString filePath = filePaths[0];
+            m_geometry.clear();
+            m_geometry.loadFromDXF(filePath.toStdString());
+            renderVtkWindowWithGeometry(m_geometry);
+        }
+        else if (filePaths.size() > 1){
+            throw std::runtime_error("Please don't drop more than one file.");
+        }
+        else if (filePaths.size() == 0) {
+            throw std::runtime_error("No file was dropped.");
+        }
+
+    }
+    catch (const std::invalid_argument& e) {
+        QMessageBox::critical(this, tr("Error"), QString("An invalid parameter error occurred: %1").arg(e.what()));
+    }
+    catch (const std::exception& e) {
+        // 其他标准异常
+        QMessageBox::critical(this, tr("Error"), QString("Exception occurred: %1").arg(e.what()));
+    }
+    catch (...) {
+        // 未知异常
+        QMessageBox::critical(this, tr("Error"), tr("Unknown Error"));
+    }
+}
+void MainWindow::onDxfFileBrowseButtonClicked() {
+
+
+
+        
+    try {
+
+        QString dxfFilePath = QFileDialog::getOpenFileName(
+            this,
+            tr("Choose a DXF file"),
+            m_projectPath,
+            tr("DXF Files (*.dxf);;All Files (*)")
+        );
+        m_geometry.clear();
+        m_geometry.loadFromDXF(dxfFilePath.toStdString());
+        renderVtkWindowWithGeometry(m_geometry);
+
+    }
+    catch (const std::invalid_argument& e) {
+        QMessageBox::critical(this, tr("Error"), QString("An invalid parameter error occurred: %1").arg(e.what()));
+    }
+    catch (const std::exception& e) {
+        // 其他标准异常
+        QMessageBox::critical(this, tr("Error"), QString("Exception occurred: %1").arg(e.what()));
+    }
+    catch (...) {
+        // 未知异常
+        QMessageBox::critical(this, tr("Error"), tr("Unknown Error"));
+    }
+
+}

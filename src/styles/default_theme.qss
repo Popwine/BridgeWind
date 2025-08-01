@@ -171,6 +171,8 @@ QStackedWidget#parameterStack QLineEdit{
     border-radius: 3px;
 }
 
+
+
 /* QWidget#titleWidget QPushButton{
     background-color: transparent;
     border:none;
@@ -216,3 +218,19 @@ QWidget#titleWidget QPushButton:hover{
 }
 
 
+QWidget#fileDropWidget QPushButton{
+        background-color: #F4F4F4;
+    border: 1px solid #BFBFBF;
+    border-radius: 10px;
+
+}
+QWidget#fileDropWidget QPushButton:hover{
+    background-color: #c2e4fa;
+    border: 1px solid #2f5e9c;  
+    border-radius: 10px;
+    
+}
+QWidget#fileDropWidget QLable{
+    color: #767676;
+    
+}

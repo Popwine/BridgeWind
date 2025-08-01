@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     //    return 0;
     //}
 
-    QString projectName = "虎门大桥抗风设计";
+    QString projectName = "示例工程";
     QString projectPath = "C:\\Projects\\Humen";
     MainWindow w(projectName, projectPath); // 需要修改 MainWindow 的构造函数
     w.show();

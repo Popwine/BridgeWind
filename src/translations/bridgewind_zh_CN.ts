@@ -41,19 +41,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="437"/>
-        <source>Built-in</source>
+        <location filename="../mainwindow.ui" line="345"/>
+        <source>Meshing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="458"/>
+        <source>Built-in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="479"/>
         <source>Import DXF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="598"/>
+        <location filename="../mainwindow.ui" line="619"/>
         <source>Section Type</source>
         <translation type="unfinished">截面类型</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="680"/>
+        <source>Please drag a  DXF file here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="698"/>
+        <source>Please ensure the geometry is a single, closed contour.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="716"/>
+        <source>The unit is recommended to be meters.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="756"/>
+        <source>Browse...</source>
+        <translation type="unfinished">浏览...</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="791"/>
+        <source>Set Meshing</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="216"/>
@@ -66,8 +96,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="345"/>
+        <location filename="../mainwindow.ui" line="366"/>
         <source>Simulation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="556"/>
+        <location filename="../mainwindow.cpp" line="560"/>
+        <location filename="../mainwindow.cpp" line="564"/>
+        <location filename="../mainwindow.cpp" line="588"/>
+        <location filename="../mainwindow.cpp" line="592"/>
+        <location filename="../mainwindow.cpp" line="596"/>
+        <location filename="../mainwindow.cpp" line="618"/>
+        <location filename="../mainwindow.cpp" line="622"/>
+        <location filename="../mainwindow.cpp" line="626"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="564"/>
+        <location filename="../mainwindow.cpp" line="596"/>
+        <location filename="../mainwindow.cpp" line="626"/>
+        <source>Unknown Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="608"/>
+        <source>Choose a DXF file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="610"/>
+        <source>DXF Files (*.dxf);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
