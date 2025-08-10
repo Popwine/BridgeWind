@@ -26,6 +26,7 @@ public:
 	~WelcomeDialog();
 public:
 	QString finalProjectPath() const;
+	QString finalProjectName() const;
 protected:
 	
 	void mousePressEvent(QMouseEvent* event) override;
@@ -34,9 +35,11 @@ private:
 	Ui::WelcomeDialog* ui;
 	QPoint m_dragPosition;
 	QString m_finalProjectPath;
+	QString m_finalProjectName;
 	ProjectHistoryManager* m_historyManager;
 private slots:
 	void onNewProjectButtonClicked();
+	void onRecentProjectClicked(const QModelIndex& index);
 };
 
 #include <QStyledItemDelegate>

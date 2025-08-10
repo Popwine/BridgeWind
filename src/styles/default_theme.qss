@@ -103,14 +103,12 @@ MainWindow QWidget#backgroundWidget{
     border: 1px solid #102961;
 }
 
-MainWindow QWidget#leftWidget{
+MainWindow QWidget#leftWidget,
+MainWindow QWidget#rightWidget{
     background-color: #e5e5ea;
 
 }
-MainWindow QWidget#rightWidget{
-    background-color: #f2f2f7;
 
-}
 MainWindow QWidget#centralwidget{
     background-color: #e5e5ea;
 
@@ -164,13 +162,21 @@ QStackedWidget#parameterStack QWidget{
     border: none;
     
 }
-QStackedWidget#parameterStack QLineEdit{
+QStackedWidget#stepStack QLineEdit,
+QWidget#scrollAreaWidgetContents QLineEdit{
 
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 3px;
+    
 }
+QStackedWidget#stepStack QLineEdit:disabled,
+QWidget#scrollAreaWidgetContents QLineEdit:disabled{
 
+    background-color: transparent;
+
+    
+}
 
 
 /* QWidget#titleWidget QPushButton{
@@ -233,4 +239,147 @@ QWidget#fileDropWidget QPushButton:hover{
 QWidget#fileDropWidget QLable{
     color: #767676;
     
+}
+
+
+QWidget#meshingPage QScrollArea,
+QWidget#simulaionPage QScrollArea,
+QWidget#rightWidget QScrollArea{
+    background-color: transparent;
+    border: none;
+}
+QWidget#meshingPage QWidget#scrollAreaWidgetContents,
+QWidget#simulaionPage QWidget#scrollAreaWidgetContents_2,
+QWidget#rightWidget QWidget#scrollAreaWidgetContents_3{
+    background-color: transparent;
+    border: none;
+}
+
+QSplitter::handle {
+    background-color: transparent;
+}
+QSplitter::handle:hover {
+    background-color: #007ACC; /* 变为蓝色以提供反馈 */
+}
+
+/* 鼠标按下句柄时 (虽然不常用，但可以设置) */
+QSplitter::handle:pressed {
+    background-color: #005A9E; /* 变为更深的蓝色 */
+}
+
+MainWindow QTextEdit#logViewer{
+    background-color: transparent;
+    border: none;
+}
+
+QProgressBar {
+    border: none; 
+
+    background-color: transparent; 
+
+
+}
+
+QProgressBar::chunk {
+    background-color: #05cc97; 
+    border-radius: 5px; 
+}
+
+QPushButton#rightDensityButton, 
+QPushButton#rightMeshButton, 
+QPushButton#rightPressureButton, 
+QPushButton#rightVelocityMagnitudeButton, 
+QPushButton#rightXVelocityButton, 
+QPushButton#rightYVelocityButton
+{
+    border: 2px solid #BFBFBF;
+    border-radius: 10px;
+}
+
+QPushButton#rightDensityButton:hover, 
+QPushButton#rightMeshButton:hover, 
+QPushButton#rightPressureButton:hover, 
+QPushButton#rightVelocityMagnitudeButton:hover, 
+QPushButton#rightXVelocityButton:hover, 
+QPushButton#rightYVelocityButton:hover
+{
+
+    border: 2px solid #69a5cd;
+    border-radius: 10px;
+}
+QPushButton#rightDensityButton:checked, 
+QPushButton#rightMeshButton:checked, 
+QPushButton#rightPressureButton:checked, 
+QPushButton#rightVelocityMagnitudeButton:checked, 
+QPushButton#rightXVelocityButton:checked, 
+QPushButton#rightYVelocityButton:checked
+{
+
+    border: 2px solid #007ACC;
+    border-radius: 10px;
+}
+QWidget#leftWidget QPushButton#bottomSetMeshingButton,
+QWidget#leftWidget QPushButton#bottomSetSimulaionButton,
+QWidget#leftWidget QPushButton#startOrStopSimulationButton{
+    background-color: #3662EC;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+QWidget#leftWidget QPushButton#bottomSetMeshingButton:hover,
+QWidget#leftWidget QPushButton#bottomSetSimulaionButton:hover,
+QWidget#leftWidget QPushButton#startOrStopSimulationButton:hover{
+    background-color: #6889ec;
+
+}
+
+
+
+QScrollBar:vertical,
+QScrollBar:horizontal{
+    border: none; /* 移除边框 */
+    background: transparent; /* 滚动条背景色 (凹槽) */
+    width: 12px; /* 滚动条宽度 */
+    margin: 0px; /* 移除外边距 */
+}
+
+/* 滚动条滑块 (handle) 的样式 */
+QScrollBar::handle:vertical,
+QScrollBar::handle:horizontal{
+    background: #acacac; /* 滑块颜色 */
+    border-radius: 6px; /* 滑块圆角 */
+    min-height: 25px; /* 滑块最小高度 */
+}
+
+/* 鼠标悬停在滑块上的样式 */
+QScrollBar::handle:vertical:hover,
+QScrollBar::handle:horizontal:hover{
+    background: #808080; /* 悬停时颜色变亮 */
+}
+
+/* 鼠标按住滑块时的样式 */
+QScrollBar::handle:vertical:pressed,
+QScrollBar::handle:horizontal:pressed{
+    background: #4c4c4c; /* 按住时颜色更亮 */
+}
+
+/* 向上和向下的箭头按钮样式 */
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{
+    border: none;
+    background: none;
+    height: 0px; /* 将箭头区域高度设置为0，实现隐藏效果 */
+}
+
+/* 滚动条凹槽的样式 (通常被 handle 和 page 覆盖) */
+/* 在这个例子中，我们将背景设置在 QScrollBar:vertical 上，所以这里不需要特别设置 */
+QScrollBar::groove:vertical,
+QScrollBar::groove:horizontal{
+    background: transparent;
+}
+
+/* 定义滑块下方和上方的区域，通常不需要单独设置 */
+QScrollBar::add-page:vertical,  QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal,  QScrollBar::sub-page:horizontal{
+    background: none;
 }

@@ -49,7 +49,7 @@ WelcomeDialog::WelcomeDialog(QWidget* parent)
 	ProjectItemDelegate* delegate = new ProjectItemDelegate(this);
 	listView->setItemDelegate(delegate);
 	listView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
+	connect(listView, &QListView::clicked, this, &WelcomeDialog::onRecentProjectClicked);
 
 
 
@@ -63,7 +63,9 @@ WelcomeDialog::~WelcomeDialog() {
 QString WelcomeDialog::finalProjectPath() const {
 	return m_finalProjectPath;
 }
-
+QString WelcomeDialog::finalProjectName() const {
+	return m_finalProjectName;
+}
 void WelcomeDialog::mousePressEvent(QMouseEvent* event) {
 	if (event->button() == Qt::LeftButton) {
 
@@ -98,18 +100,35 @@ void WelcomeDialog::onNewProjectButtonClicked() {
 		// 1. 从对话框获取结果
 		QString name = newDialog.projectName();
 		QString path = newDialog.workPath();
-		QString projectFullPath = path + "/" + name; // 假设项目文件夹是 path/name
+		QString projectFullPath = path ; // 假设项目文件夹是 path/name
 
 		// 2. 更新历史记录
 		m_historyManager->addProject(name, projectFullPath);
 
 		// 3. 【关键】设置结果并关闭自己，通知 main 函数
+
 		m_finalProjectPath = projectFullPath; // 需要在 .h 中添加 m_finalProjectPath 成员
+		m_finalProjectName = name;
 		this->accept();
 	}
 }
 
+void WelcomeDialog::onRecentProjectClicked(const QModelIndex& index)
+{
+	// 1. 从模型中获取数据
+	// 使用您之前定义的 Role 来获取对应的项目名和路径
+	QString name = index.data(ProjectNameRole).toString();
+	QString path = index.data(ProjectPathRole).toString();
 
+	qDebug() << "Clicked on recent project:" << name << "at path:" << path;
+
+	// 2. 设置最终结果，这和 onNewProjectButtonClicked 里的逻辑一样
+	m_finalProjectName = name;
+	m_finalProjectPath = path;
+
+	// 3. 调用 accept() 来关闭欢迎对话框，并通知主窗口操作成功
+	this->accept();
+}
 ProjectItemDelegate::ProjectItemDelegate(QObject* parent) {
 
 }

@@ -4,6 +4,7 @@
 #include <stdexcept> // for std::runtime_error
 #include <functional> // for std::function
 #include <utility> // for std::move
+#include <fstream>
 
 namespace { // 使用匿名命名空间来隐藏实现细节
 
@@ -249,11 +250,16 @@ namespace BridgeWind {
         m_flow_groups.clear(); // 每次加载时清空旧数据
 
         try {
+            
+
             std::string flowFilePath = (m_workdir / "results" / "flow_0.dat").string();
             H5Resource file(H5Fopen(flowFilePath.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT), H5Fclose);
             if (file < 0) {
+                
                 throw std::runtime_error("Failed to open HDF5 flow file: " + flowFilePath);
+                
             }
+            
             std::cout << "Successfully opened flow file: " << flowFilePath << std::endl;
 
             int group_count = 0;

@@ -21,16 +21,16 @@ namespace BridgeWind
 
 			FileUtils::createFolder(workdir / "grid");
 
-			emit progressUpdated(QString::fromStdString(Strings::GeneratingGeoFile));
+			emit progressUpdated(QString::fromStdString(Strings::GeneratingGeoFile), 1);
 			GeoGenerator geoGen((*analyzer), (workdir / "grid" / "Bridge_Wind.geo").string(), params);
 			
 
 			geoGen.generateGeoFile();
 			geoGen.finalize();
-			emit progressUpdated(QString::fromStdString(Strings::GeoFileGenerated));
+			emit progressUpdated(QString::fromStdString(Strings::GeoFileGenerated), 20);
 
 			// 4. 调用Gmsh生成.msh
-			emit progressUpdated(QString::fromStdString(Strings::GeneratingMesh));
+			emit progressUpdated(QString::fromStdString(Strings::GeneratingMesh), 21);
 			GmshController gmshController(
 				(workdir / "grid" / "Bridge_Wind.geo").string(),
 				(workdir / "grid" / "Bridge_Wind.msh").string()
@@ -38,12 +38,12 @@ namespace BridgeWind
 			gmshController.generateMesh();
 
 			// 5. 转换为.cgns
-			emit progressUpdated(QString::fromStdString(Strings::ConvertingToCgns));
+			emit progressUpdated(QString::fromStdString(Strings::ConvertingToCgns), 41);
 			G2C::convertGmshToCgns(
 				(workdir / "grid" / "Bridge_Wind.msh").string(),
 				(workdir / "grid" / "Bridge_Wind.cgns").string()
 			);
-			emit progressUpdated(QString::fromStdString(Strings::CgnsFileGenerated + (workdir / "grid" / "Bridge_Wind.cgns").string()));
+			emit progressUpdated(QString::fromStdString(Strings::CgnsFileGenerated + (workdir / "grid" / "Bridge_Wind.cgns").string()), 100);
 
 
 

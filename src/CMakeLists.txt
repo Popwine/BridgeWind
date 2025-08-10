@@ -20,6 +20,7 @@ set(TRANSLATION_SOURCES
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    aspectratiobutton.h aspectratiobutton.cpp
     section_definitions.h
     # UI库的源文件
     mainwindow.cpp mainwindow.h mainwindow.ui
@@ -33,7 +34,7 @@ set(TRANSLATION_SOURCES
 # 注意第二个参数现在是 ${TRANSLATION_SOURCES}，它是一个完整的文件列表
 # 我们还需要把主 CMakeLists.txt 中定义的 TS_FILES 传进来
 qt5_create_translation(QM_FILES ${TRANSLATION_SOURCES} ${TS_FILES})
-
+install(FILES ${QM_FILES} DESTINATION bin/translations)
 
 # --- 创建一个核心逻辑库 ---
 add_library(BridgeWindCore STATIC
@@ -55,6 +56,7 @@ add_library(BridgeWindCore STATIC
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    ProjectSaveManager.h ProjectSaveManager.cpp
     section_definitions.h
 )
 
@@ -77,6 +79,7 @@ add_library(BridgeWindUI STATIC
     mainwindow.cpp mainwindow.h mainwindow.ui
     welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
     FileDropWidget.h FileDropWidget.cpp
+    aspectratiobutton.h aspectratiobutton.cpp
      
     
 )
@@ -120,3 +123,4 @@ add_executable(BridgeWindApp
 target_link_libraries(BridgeWindApp PRIVATE
     BridgeWindUI
 )
+

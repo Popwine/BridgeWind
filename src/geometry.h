@@ -138,6 +138,8 @@ namespace BridgeWind {
         bool isGE(double a, double b) const;
 		bool isLE(double a, double b) const;
 
+        bool isEmpty();
+
 		double getEpsilon() const { return epsilon; }
         std::vector<Point> getAllIntersectionPoints() const;
         std::vector<Point> getAllIntersectionPointsNoEndPoints() const;
@@ -147,7 +149,7 @@ namespace BridgeWind {
 
         void clear();
 
-        void resetAsCircle(double radius);
+        void resetAsCircle(double diameter);
         void resetAsRectangle(double width, double height);
         void resetAsChamferedRectangle(double width, double height, double radius);
         void resetAsStreamlinedBoxGirder(
@@ -159,7 +161,7 @@ namespace BridgeWind {
             double a2_degree);
 
         std::vector<VtkFormatArc> getVtkFormatArcs() const;
-        
+
 	};
 	
 

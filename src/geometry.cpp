@@ -305,7 +305,12 @@ namespace BridgeWind {
     bool Geometry::isLE(double a, double b) const {
         return isEQ(a, b) || isLT(a, b);
     }
-
+    bool Geometry::isEmpty() {
+        if (lines.empty() && arcs.empty()) {
+            return true;
+        }
+        return false;
+    }
     std::vector<Point> Geometry::getAllIntersectionPoints() const {
         std::vector<Point> intersectionPoints;
         
@@ -373,9 +378,15 @@ namespace BridgeWind {
         isBoundingBoxReal = false;
     }
 
-    void Geometry::resetAsCircle(double radius) {
+    void Geometry::resetAsCircle(double diameter) {
         clear();
-        arcs.emplace_back(Point(0,0), radius, 0, 2 * PI);
+        double radius = diameter / 2;
+        arcs.emplace_back(Point(0, 0), radius, 0.0 * PI, 0.5 * PI);
+        arcs.emplace_back(Point(0, 0), radius, 0.5 * PI, 1.0 * PI);
+        arcs.emplace_back(Point(0, 0), radius, 1.0 * PI, 1.5 * PI);
+        arcs.emplace_back(Point(0, 0), radius, 1.5 * PI, 0.0 * PI);
+        isBoundingBoxReal = true;
+        boundingBox = Rectangle(Point(-radius, -radius), Point(radius, radius));
     }
     void Geometry::resetAsRectangle(double width, double height) {
 
@@ -392,7 +403,8 @@ namespace BridgeWind {
         lines.push_back(line4);
         lines.push_back(line5);
         lines.push_back(line6);
-
+        isBoundingBoxReal = true;
+        boundingBox = Rectangle(Point(-width / 2, -height / 2), Point(width / 2, height / 2));
 
     }
     void Geometry::resetAsChamferedRectangle(double w, double h, double r) {
@@ -430,8 +442,8 @@ namespace BridgeWind {
         arcs.emplace_back(c2, r, 1.0 * PI, 1.5 * PI);
         arcs.emplace_back(c3, r, 1.5 * PI, 0.0 * PI);
         arcs.emplace_back(c4, r, 0.0 * PI, 0.5 * PI);
-
-        
+        isBoundingBoxReal = true;
+        boundingBox = Rectangle(Point(-w / 2, -h / 2), Point(w / 2, h / 2));
 
 
 
@@ -464,6 +476,16 @@ namespace BridgeWind {
         Point p7(-p3.x, p3.y);
         Point p8(-p2.x, p2.y);
 
+        p1.y = p1.y - total_height / 2;
+        p2.y = p2.y - total_height / 2;
+        p3.y = p3.y - total_height / 2;
+        p4.y = p4.y - total_height / 2;
+        p5.y = p5.y - total_height / 2;
+        p6.y = p6.y - total_height / 2;
+        p7.y = p7.y - total_height / 2;
+        p8.y = p8.y - total_height / 2;
+
+
         lines.emplace_back(p1, p2);
         lines.emplace_back(p2, p3);
         lines.emplace_back(p3, p4);
@@ -473,7 +495,8 @@ namespace BridgeWind {
         lines.emplace_back(p7, p8);
         lines.emplace_back(p8, p1);
 
-
+        isBoundingBoxReal = true;
+        boundingBox = Rectangle(Point(-total_width / 2, 0), Point(total_width / 2, total_height));
 
 
 

@@ -45,7 +45,7 @@ namespace BridgeWind
         }
         emit progressUpdated(QString::fromStdString(Strings::SolverStarted));
 
-        emit solverFinished(); // 全部成功
+        //emit solverFinished(); // 全部成功
 
 
 
@@ -69,9 +69,34 @@ namespace BridgeWind
             FileUtils::createFolder(workdir / "bin");
             // 从模板加载 Hypara 文件
             BridgeWind::HyparaGenerator hyparaGen("PHengLEI_template/bin");
+            //设置速度模式为4-直接指定速度
+            hyparaGen.cfdParaSubsonic.set<int>("inflowParaType", 0);
+
             // ----------从 params 中设置 Hypara 文件的参数----------
-            hyparaGen.cfdParaSubsonic.set<double>("refReNumber", params.refReNumber);
             hyparaGen.partition.set<int>("maxproc", params.maxproc);
+            hyparaGen.cfdParaSubsonic.set<double>("physicalTimeStep", params.physicalTimeStep);
+            hyparaGen.cfdParaSubsonic.set<int>("maxSimuStep", params.maxSimuStep);
+            hyparaGen.cfdParaSubsonic.set<int>("intervalStepFlow", params.intervalStepFlow);
+            hyparaGen.cfdParaSubsonic.set<int>("intervalStepPlot", params.intervalStepPlot);
+            hyparaGen.cfdParaSubsonic.set<int>("intervalStepForce", params.intervalStepForce);
+            hyparaGen.cfdParaSubsonic.set<int>("intervalStepRes", params.intervalStepRes);
+            //hyparaGen.cfdParaSubsonic.set<double>("refDimensionalVelocity", params.refDimensionalVelocity);
+            //hyparaGen.cfdParaSubsonic.set<double>("refDimensionalTemperature", params.refDimensionalTemperature);
+            //hyparaGen.cfdParaSubsonic.set<double>("refDimensionalDensity", params.refDimensionalDensity);
+            hyparaGen.cfdParaSubsonic.set<double>("refReNumber", params.refReNumber);
+            hyparaGen.cfdParaSubsonic.set<double>("refMachNumber", params.refMachNumber);
+            hyparaGen.cfdParaSubsonic.set<double>("forceReferenceLength", params.forceReferenceLength);
+            hyparaGen.cfdParaSubsonic.set<double>("forceReferenceArea", params.forceReferenceArea);
+            hyparaGen.cfdParaSubsonic.set<double>("forceReferenceLengthSpanWise", params.forceReferenceLengthSpanWise);
+
+            if (params.viscousModel == viscousModel::Laminar) {
+                hyparaGen.cfdParaSubsonic.set<int>("viscousType", 1);
+                hyparaGen.cfdParaSubsonic.set<std::string>("viscousName", "laminar");
+            }
+            if (params.viscousModel == viscousModel::SSTKOmega) {
+                hyparaGen.cfdParaSubsonic.set<int>("viscousType", 4);
+                hyparaGen.cfdParaSubsonic.set<std::string>("viscousName", "2eq-kw-menter-sst");
+            }
 
             std::filesystem::path original_grid_file(
                 hyparaGen.partition.get<std::string>(
@@ -117,6 +142,10 @@ namespace BridgeWind
             FileUtils::copyFile(
                 "PHengLEI_template/PHengLEIv3d0.exe",
                 workdir / "PHengLEIv3d0.exe"
+            );
+            FileUtils::copyFile(
+                "PHengLEI_template/tecio.dll",
+                workdir / "tecio.dll"
             );
 		}
         catch (const std::exception& e) {

@@ -5,6 +5,7 @@ dlls/
 .vs/
 res/
 bin/
+Release_Package/
 
 CMakeCache.txt
 *.vcxproj*

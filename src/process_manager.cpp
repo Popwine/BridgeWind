@@ -51,17 +51,41 @@ namespace BridgeWind {
 
     void ProcessManager::stop()
     {
-        // 首先尝试优雅地终止进程
-        m_process->terminate();
-
-        // QProcess的terminate在Windows上可能无效，所以我们增加一个等待和强制杀死机制
-        // 等待最多3秒，看进程是否能自己结束
-        if (!m_process->waitForFinished(3000))
-        {
-            // 如果3秒后还没结束，就强制杀死它
-            emit outputReady(tr("[ERROR] The process cannot be terminated normally and will be forced to end.\n"));
-            m_process->kill();
+        // 确保我们有一个有效且正在运行的进程对象
+        // (请将 m_process 替换为您 QProcess 成员变量的实际名称)
+        if (!m_process || m_process->state() != QProcess::Running) {
+            return;
         }
+
+        // 获取我们启动的进程(mpiexec.exe)的ID (PID)
+        qint64 pid = m_process->processId();
+        if (pid == 0) {
+            return; // 没有PID，无法继续
+        }
+
+        emit outputReady(QString("Stopping process tree with root PID: %1").arg(pid));
+
+#if defined(Q_OS_WIN)
+        // 在Windows上，我们使用系统命令 taskkill 来终止进程及其整个进程树
+        // /F: 强制终止进程。
+        // /T: 终止指定的进程以及由它启动的任何子进程。这是最关键的参数！
+        // /PID: 指定要终止的进程的PID。
+        QString command = QString("taskkill /F /T /PID %1").arg(pid);
+
+        // 同步执行这个命令，确保它执行完毕
+        QProcess::execute(command);
+
+#else
+        // 在 Linux/macOS 上，可以通过向负的进程组ID发送信号来杀死整个进程组
+        // 这假设 QProcess 在一个新的会话中启动了进程，通常是这样的。
+        QString command = QString("kill -9 -%1").arg(pid);
+        QProcess::execute(command);
+#endif
+
+        // 作为备用方案，我们仍然可以调用 QProcess 的 kill，尽管 taskkill 应该已经处理了所有事情。
+        m_process->kill();
+        // 短暂等待，以确保进程状态更新
+        m_process->waitForFinished(1000);
     }
 
     // --- 私有槽函数的实现 ---

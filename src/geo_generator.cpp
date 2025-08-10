@@ -24,16 +24,16 @@ namespace BridgeWind
 	GeoGenerator::GeoGenerator(const TopologyAnalyzer& a, const std::string& f, const SimulationParameters& p)
 		: analyzer(a), filename(f), ofs(f), writtedWallPoints(), writtedFarfieldPoints(), params(p)
 	{
-		if (params.filedSizeDefineMethod == filedSizeDefineMethod::Default) {
+		if (params.fieldSizeDefineMethod == fieldSizeDefineMethod::Default) {
 			fieldDiameter = std::max(
 				analyzer.getSourceGeometry()->getBoundingBoxWidth(),
 				analyzer.getSourceGeometry()->getBoundingBoxHeight()
 			) * 50.0;
 		}
-		else if (params.filedSizeDefineMethod == filedSizeDefineMethod::UserDefined) {
+		else if (params.fieldSizeDefineMethod == fieldSizeDefineMethod::UserDefined) {
 			fieldDiameter = params.userDefinedFieldDiameter;
 		}
-		else if (params.filedSizeDefineMethod == filedSizeDefineMethod::DiameterToMaxSizeRatio) {
+		else if (params.fieldSizeDefineMethod == fieldSizeDefineMethod::DiameterToMaxSizeRatio) {
 			fieldDiameter = std::max(
 				analyzer.getSourceGeometry()->getBoundingBoxWidth(),
 				analyzer.getSourceGeometry()->getBoundingBoxHeight()
