@@ -6,7 +6,7 @@ RequestExecutionLevel admin
 ;Target "amd64-unicode"
 ; --- 基础信息 ---
 Name "BridgeWind"
-OutFile "BridgeWind-1.0.0-Setup.exe"  ; 这是最终生成的安装包文件名
+OutFile "BridgeWind-1.0.1-Setup.exe"  ; 这是最终生成的安装包文件名
 InstallDir "$PROGRAMFILES64\BridgeWind" ; 默认安装路径
 RequestExecutionLevel admin ; 请求管理员权限
 

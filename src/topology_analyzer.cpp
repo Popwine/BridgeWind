@@ -20,7 +20,8 @@ namespace BridgeWind{
             if (startNode == endNode) continue;
 
             // 使用带参数的构造函数，并采用更安全的指针获取方式
-            auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &line);
+            auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &line, line.meshDensityNumber);
+            //std::cout << newEdge->meshDensityNumber << std::endl;
             GraphEdge* rawEdgePtr = newEdge.get();
 
             startNode->edges.push_back(rawEdgePtr);
@@ -40,13 +41,16 @@ namespace BridgeWind{
             // 完整的圆在这里被过滤掉
             if (startNode == endNode) continue;
 
-            auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &arc);
+            auto newEdge = std::make_unique<GraphEdge>(startNode, endNode, &arc, arc.meshDensityNumber);
+            //std::cout << newEdge->meshDensityNumber << std::endl;
             GraphEdge* rawEdgePtr = newEdge.get();
 
             startNode->edges.push_back(rawEdgePtr);
             endNode->edges.push_back(rawEdgePtr);
             allEdges.push_back(std::move(newEdge));
         }
+
+        
     }
     void TopologyAnalyzer::analyze() {
         if (sourceGeometry->isIntersectionExist()) {
@@ -170,13 +174,13 @@ namespace BridgeWind{
             }
         }
     }
-	GraphEdge::GraphEdge(GraphNode* s, GraphNode* e, const Line* l)
-		: startNode(s), endNode(e), type(GeomType::LINE) {
+	GraphEdge::GraphEdge(GraphNode* s, GraphNode* e, const Line* l, double meshDensity)
+		: startNode(s), endNode(e), type(GeomType::LINE), meshDensityNumber(meshDensity) {
 		geometry.line_ptr = l;
 	}
 
-	GraphEdge::GraphEdge(GraphNode* s, GraphNode* e, const Arc* a)
-		: startNode(s), endNode(e), type(GeomType::ARC) {
+	GraphEdge::GraphEdge(GraphNode* s, GraphNode* e, const Arc* a, double meshDensity)
+		: startNode(s), endNode(e), type(GeomType::ARC), meshDensityNumber(meshDensity) {
 		geometry.arc_ptr = a;
 	}
     
@@ -292,31 +296,39 @@ namespace BridgeWind{
         }
 		// --- 步骤 5: 计算环的长度 ---
         double total_length = 0.0;
+        double total_length_abstract = 0.0;
         for (const auto& edge : edges) {
             if (edge->type == GraphEdge::GeomType::LINE) {
                 total_length += edge->geometry.line_ptr->length();
+                total_length_abstract += edge->geometry.line_ptr->length() * edge->meshDensityNumber;
             }
             else if (edge->type == GraphEdge::GeomType::ARC) {
                 total_length += edge->geometry.arc_ptr->length();
+                total_length_abstract += edge->geometry.arc_ptr->length() * edge->meshDensityNumber;
             }
             else {
                 throw std::runtime_error("Unknown edge type in Loop::length()");
             }
         }
 		length = total_length; // 计算并缓存环的总长度
+        lengthAbstract = total_length_abstract;
 		// --- 步骤 6: 计算长度比例 ---
         for (const auto& edge : edges) {
             double edgeLength = 0.0;
+            double edgeLengthAbstract = 0.0;
             if (edge->type == GraphEdge::GeomType::LINE) {
                 edgeLength = edge->geometry.line_ptr->length();
+                edgeLengthAbstract = edge->geometry.line_ptr->length() * edge->meshDensityNumber;
             }
             else if (edge->type == GraphEdge::GeomType::ARC) {
                 edgeLength = edge->geometry.arc_ptr->length();
+                edgeLengthAbstract = edge->geometry.arc_ptr->length() * edge->meshDensityNumber;
             }
             else {
                 throw std::runtime_error("Unknown edge type in GeoGenerator::generateGeoFileSingleLoop");
             }
             this->lengthRatios.push_back(edgeLength / this->getLength());
+            this->lengthRatiosAbstract.push_back(edgeLengthAbstract / this->getLengthAbstract());
         }
     }
     void Loop::print() const{
@@ -334,7 +346,13 @@ namespace BridgeWind{
     double Loop::getLength() const {
 		return this->length; // 这里假设 length 已经被正确计算并缓存
     }
+    double Loop::getLengthAbstract() const {
+        return this->lengthAbstract;
+    }
     const std::vector<double>& Loop::getLengthRatios() const {
         return lengthRatios;
+    }
+    const std::vector<double>& Loop::getLengthRatiosAbstract() const {
+        return lengthRatiosAbstract;
     }
 }

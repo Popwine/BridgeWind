@@ -383,3 +383,11 @@ QScrollBar::add-page:vertical,  QScrollBar::sub-page:vertical,
 QScrollBar::add-page:horizontal,  QScrollBar::sub-page:horizontal{
     background: none;
 }
+
+QPushButton#generateMeshButton{
+    background-color: #2db333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+

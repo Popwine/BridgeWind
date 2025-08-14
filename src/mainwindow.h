@@ -170,6 +170,7 @@ private:
 
     BridgeWind::FlowDataReader m_flowDataReader;
     int lastFlowLoadedIter = 0;
+    bool isMeshGenerated = false;
 };
 
 

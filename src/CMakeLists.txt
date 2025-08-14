@@ -118,7 +118,11 @@ add_executable(BridgeWindApp
     ${QM_FILES}
     
 )
-
+if(WIN32)
+    target_sources(BridgeWindApp PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/icon.rc
+    )
+endif()
 # 将UI库链接到可执行文件
 target_link_libraries(BridgeWindApp PRIVATE
     BridgeWindUI

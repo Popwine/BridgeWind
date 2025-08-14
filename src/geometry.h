@@ -28,7 +28,8 @@ namespace BridgeWind {
         //bool operator<(const Point& other) const;
         bool operator==(const Point& other) const;
         double distanceTo(const Point& other) const;
-
+        void translate(double dx, double dy); // 上一个问题添加的
+        void rotate(const Point& center, double angle); // 新增：angle为弧度
     };
     /**
      * @brief A custom comparator for Point objects, designed for use with std::map.
@@ -65,14 +66,16 @@ namespace BridgeWind {
     public:
 		Point begin;
 		Point end;
-        Line(const Point& b, const Point& e);
-        Line(const Point& begin, double angle, double length);
+        Line(const Point& b, const Point& e, double meshDensity = 1.0);
+        Line(const Point& begin, double angle, double length, double meshDensity = 1.0);
 	    void printCADCommand() const;
         double distanceToPoint(const Point& p) const ;
         Point getPerpendicularFoot(const Point& p) const;
         double angle() const;
         double length() const;
         bool isOnLine(const Point& p) const;
+        double meshDensityNumber;
+        void rotate(const Point& center, double angle);
     };
 
     class Rectangle {
@@ -91,7 +94,7 @@ namespace BridgeWind {
 		double radius;
 		double startAngle; // in radians
 		double endAngle;   // in radians
-        Arc(const Point& c, double r, double sa, double ea);
+        Arc(const Point& c, double r, double sa, double ea, double meshDensity = 1.0);
         bool isInArc(double angle) const;
 		bool isOnArc(const Point& p) const;
         Rectangle getBoundingBox() const;
@@ -100,7 +103,8 @@ namespace BridgeWind {
 		Point getCenterPoint() const;
         double length() const;
         double getRealAngle() const;
-        
+        double meshDensityNumber;
+        void rotate(const Point& centerOfRotation, double angle);
 	};
     class VtkFormatArc {
     public:
@@ -158,10 +162,23 @@ namespace BridgeWind {
             double bottom_width,
             double slope, 
             double a1_degree,
-            double a2_degree);
-
+            double a2_degree,
+            double attack_angle = 0.0);
+        void resetAsCantileverBoxGirder(
+                double total_width,
+                double bottom_width,
+                double total_height,
+                double cantilever_thickness,
+                double slope,
+                double angle,
+                double attack_angle = 0.0);
         std::vector<VtkFormatArc> getVtkFormatArcs() const;
 
+        Point getCenterByLineMass() const;
+        void translate(double dx, double dy);
+        void resetOrigin(const Point& newOrigin);
+        void rotate(const Point& center, double angle);
+        void reCalculateBoundingBox();
 	};
 	
 

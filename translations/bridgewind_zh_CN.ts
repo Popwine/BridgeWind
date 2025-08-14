@@ -251,162 +251,163 @@
         <translation>攻角(°):</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1456"/>
+        <location filename="../src/mainwindow.ui" line="1459"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1468"/>
+        <location filename="../src/mainwindow.ui" line="1471"/>
         <source>Viscous model:</source>
         <translation>湍流模型:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1481"/>
+        <location filename="../src/mainwindow.ui" line="1484"/>
         <source>Laminar</source>
         <translation>层流</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1486"/>
+        <location filename="../src/mainwindow.ui" line="1489"/>
         <source>SST k-omega</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1545"/>
+        <location filename="../src/mainwindow.ui" line="1548"/>
         <source>Start Simulation</source>
         <translation>开始模拟</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1763"/>
+        <location filename="../src/mainwindow.ui" line="1766"/>
         <source>Mesh</source>
         <translation>网格</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1785"/>
+        <location filename="../src/mainwindow.ui" line="1788"/>
         <source>Pressure contour</source>
         <translation>压力图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1807"/>
+        <location filename="../src/mainwindow.ui" line="1810"/>
         <source>X velocity contour</source>
         <translation>X方向速度图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1829"/>
+        <location filename="../src/mainwindow.ui" line="1832"/>
         <source>Y velocity contour</source>
         <translation>Y方向速度图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1851"/>
+        <location filename="../src/mainwindow.ui" line="1854"/>
         <source>Velocity magnitude contour</source>
         <translation>速度大小图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1873"/>
+        <location filename="../src/mainwindow.ui" line="1876"/>
         <source>Density contour</source>
         <translation>密度图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="452"/>
+        <location filename="../src/mainwindow.cpp" line="474"/>
         <source>Showing mesh...</source>
         <translation>正在显示网格...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="463"/>
+        <location filename="../src/mainwindow.cpp" line="485"/>
         <source>Mesh loaded successfully</source>
         <translation>成功载入网格</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="474"/>
+        <location filename="../src/mainwindow.cpp" line="496"/>
         <source>Parsed points to vtk successfully.</source>
         <translation>成功将点解析到vtk。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="485"/>
+        <location filename="../src/mainwindow.cpp" line="507"/>
         <source>Parsed cells to vtk successfully.</source>
         <translation>成功将单元解析到vtk。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="517"/>
+        <location filename="../src/mainwindow.cpp" line="539"/>
         <source>Displayed mesh in vtk successfully.</source>
         <translation>成功将网格显示到vtk。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="549"/>
+        <location filename="../src/mainwindow.cpp" line="571"/>
         <source>Warning: Cannot calculate velocity without geometry.</source>
         <translation>警告：在未设置几何图形时，无法计算实际速度。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="575"/>
+        <location filename="../src/mainwindow.cpp" line="597"/>
         <source>Warning: Cannot calculate Reynolds number without geometry.</source>
         <translation>警告：在未设置几何图形时，无法计算雷诺数。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="901"/>
+        <location filename="../src/mainwindow.cpp" line="923"/>
         <source>Window is closing, attempting to stop the running simulation...</source>
         <translation>正在关闭窗口，尝试停止计算...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="913"/>
+        <location filename="../src/mainwindow.cpp" line="935"/>
         <source>Worker thread did not stop gracefully, forcing termination.</source>
         <translation>工作线程未被优雅地退出，正在强制退出。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="917"/>
+        <location filename="../src/mainwindow.cpp" line="939"/>
         <source>Simulation stopped.</source>
         <translation>模拟结束。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1144"/>
-        <location filename="../src/mainwindow.cpp" line="1148"/>
-        <location filename="../src/mainwindow.cpp" line="1152"/>
-        <location filename="../src/mainwindow.cpp" line="1176"/>
-        <location filename="../src/mainwindow.cpp" line="1180"/>
-        <location filename="../src/mainwindow.cpp" line="1184"/>
-        <location filename="../src/mainwindow.cpp" line="1206"/>
-        <location filename="../src/mainwindow.cpp" line="1210"/>
-        <location filename="../src/mainwindow.cpp" line="1214"/>
+        <location filename="../src/mainwindow.cpp" line="1054"/>
+        <location filename="../src/mainwindow.cpp" line="1185"/>
+        <location filename="../src/mainwindow.cpp" line="1189"/>
+        <location filename="../src/mainwindow.cpp" line="1193"/>
+        <location filename="../src/mainwindow.cpp" line="1217"/>
+        <location filename="../src/mainwindow.cpp" line="1221"/>
+        <location filename="../src/mainwindow.cpp" line="1225"/>
+        <location filename="../src/mainwindow.cpp" line="1247"/>
+        <location filename="../src/mainwindow.cpp" line="1251"/>
+        <location filename="../src/mainwindow.cpp" line="1255"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1152"/>
-        <location filename="../src/mainwindow.cpp" line="1184"/>
-        <location filename="../src/mainwindow.cpp" line="1214"/>
+        <location filename="../src/mainwindow.cpp" line="1193"/>
+        <location filename="../src/mainwindow.cpp" line="1225"/>
+        <location filename="../src/mainwindow.cpp" line="1255"/>
         <source>Unknown Error</source>
         <translation>未知错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1196"/>
+        <location filename="../src/mainwindow.cpp" line="1237"/>
         <source>Choose a DXF file</source>
         <translation>选择一个DXF文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1198"/>
+        <location filename="../src/mainwindow.cpp" line="1239"/>
         <source>DXF Files (*.dxf);;All Files (*)</source>
         <translation>DXF文件 (*.dxf);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1242"/>
+        <location filename="../src/mainwindow.cpp" line="1286"/>
         <source>Starting mesh generation...</source>
         <translation>开始生成网格...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1285"/>
+        <location filename="../src/mainwindow.cpp" line="1329"/>
         <source>Preparing solver thread...</source>
         <translation>正在准备求解器线程...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1417"/>
+        <location filename="../src/mainwindow.cpp" line="1462"/>
         <source>Mesh generation finished successfully.</source>
         <translation>成功生成网格。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1428"/>
+        <location filename="../src/mainwindow.cpp" line="1473"/>
         <source>[CRITICAL ERROR] </source>
         <translation>[严重错误] </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1439"/>
+        <location filename="../src/mainwindow.cpp" line="1484"/>
         <source>Solver finished.</source>
         <translation>求解器求解完成。</translation>
     </message>

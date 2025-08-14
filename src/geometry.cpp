@@ -15,6 +15,19 @@ namespace {
 		}
 		return true; // 所有线段和圆弧都已使用
     }
+    BridgeWind::Point getArcCentroid(const BridgeWind::Arc& arc) {
+        double angle_span = arc.getRealAngle();
+
+        // 避免除以零：如果弧长为零，其质心可视为其起点（或圆心，取决于定义）
+        if (std::abs(angle_span) < BW_GEOMETRY_EPSILON) {
+            return arc.getStartPoint();
+        }
+
+        double centroid_x = arc.center.x + arc.radius * (sin(arc.endAngle) - sin(arc.startAngle)) / angle_span;
+        double centroid_y = arc.center.y + arc.radius * (cos(arc.startAngle) - cos(arc.endAngle)) / angle_span;
+
+        return BridgeWind::Point(centroid_x, centroid_y);
+    }
 }
 namespace BridgeWind {
     Point::Point(Point p, double dis, double angle)
@@ -44,7 +57,24 @@ namespace BridgeWind {
     double Point::distanceTo(const Point& other) const {
         return std::sqrt((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y));
     };
+    void Point::translate(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
 
+    void Point::rotate(const Point& center, double angle) {
+        // 1. 将坐标系平移到以旋转中心为原点
+        double translatedX = x - center.x;
+        double translatedY = y - center.y;
+        
+        // 2. 执行旋转
+        double rotatedX = translatedX * cos(angle) - translatedY * sin(angle);
+        double rotatedY = translatedX * sin(angle) + translatedY * cos(angle);
+
+        // 3. 将坐标系平移回去
+        x = rotatedX + center.x;
+        y = rotatedY + center.y;
+    }
     bool PointCmp::operator()(const Point& a, const Point& b) const {
         // 1. Compare x-coordinates
         // Is 'a.x' definitively to the left of 'b.x's tolerance interval?
@@ -431,17 +461,17 @@ namespace BridgeWind {
 
 
         lines.emplace_back(p1, p2);
-        lines.emplace_back(p3, p4);
+        lines.emplace_back(p3, p4, 3);
         lines.emplace_back(p5, p6);
         lines.emplace_back(p6, p7);
-        lines.emplace_back(p8, p9);
+        lines.emplace_back(p8, p9, 3);
         lines.emplace_back(p10, p1);
 
 
-        arcs.emplace_back(c1, r, 0.5 * PI, 1.0 * PI);
-        arcs.emplace_back(c2, r, 1.0 * PI, 1.5 * PI);
-        arcs.emplace_back(c3, r, 1.5 * PI, 0.0 * PI);
-        arcs.emplace_back(c4, r, 0.0 * PI, 0.5 * PI);
+        arcs.emplace_back(c1, r, 0.5 * PI, 1.0 * PI, 5);
+        arcs.emplace_back(c2, r, 1.0 * PI, 1.5 * PI, 5);
+        arcs.emplace_back(c3, r, 1.5 * PI, 0.0 * PI, 5);
+        arcs.emplace_back(c4, r, 0.0 * PI, 0.5 * PI, 5);
         isBoundingBoxReal = true;
         boundingBox = Rectangle(Point(-w / 2, -h / 2), Point(w / 2, h / 2));
 
@@ -454,7 +484,8 @@ namespace BridgeWind {
         double bottom_width,
         double slope,
         double a1_degree,
-        double a2_degree)
+        double a2_degree,
+        double attack_angle)
     {
         double a1 = a1_degree / 180 * PI;
         double a2 = a2_degree / 180 * PI;
@@ -486,21 +517,70 @@ namespace BridgeWind {
         p8.y = p8.y - total_height / 2;
 
 
+        lines.emplace_back(p1, p2, 0.7);
+        lines.emplace_back(p2, p3);
+        lines.emplace_back(p3, p4, 5.0);
+        lines.emplace_back(p4, p5, 0.7);
+        lines.emplace_back(p5, p6, 0.7);
+        lines.emplace_back(p6, p7, 5.0);
+        lines.emplace_back(p7, p8);
+        lines.emplace_back(p8, p1, 0.7);
+
+        isBoundingBoxReal = true;
+        
+        this->resetOrigin(this->getCenterByLineMass());
+        this->rotate(Point(0, 0), - attack_angle / 180.0 * PI);
+        reCalculateBoundingBox();
+    }
+    void Geometry::resetAsCantileverBoxGirder(
+        double total_width,
+        double bottom_width,
+        double total_height,
+        double cantilever_thickness,
+        double slope,
+        double angle,
+        double attack_angle) 
+    {
+
+        double a = angle / 180 * PI;
+        
+        Point p1(0, 0);
+        Point p2(bottom_width / 2.0, 0);
+        double bottomSlopeHeight = total_height - (total_width / 2.0 * slope / 100.0 + cantilever_thickness);
+        Point p3(
+            bottom_width / 2.0 + bottomSlopeHeight / tan(a),
+            bottomSlopeHeight
+        );
+        Point p4(total_width / 2.0, bottomSlopeHeight);
+        Point p5(total_width / 2.0, bottomSlopeHeight + cantilever_thickness);
+        Point p6(0, total_height);
+        Point p7(-p5.x, p5.y);
+        Point p8(-p4.x, p4.y);
+        Point p9(-p3.x, p3.y);
+        Point p10(-p2.x, p2.y);
+
+
         lines.emplace_back(p1, p2);
         lines.emplace_back(p2, p3);
         lines.emplace_back(p3, p4);
-        lines.emplace_back(p4, p5);
+        lines.emplace_back(p4, p5, 40);
         lines.emplace_back(p5, p6);
         lines.emplace_back(p6, p7);
-        lines.emplace_back(p7, p8);
-        lines.emplace_back(p8, p1);
+        lines.emplace_back(p7, p8, 40);
+        lines.emplace_back(p8, p9);
+        lines.emplace_back(p9, p10);
+        lines.emplace_back(p10, p1);
 
         isBoundingBoxReal = true;
-        boundingBox = Rectangle(Point(-total_width / 2, 0), Point(total_width / 2, total_height));
+        
 
-
-
+        this->resetOrigin(this->getCenterByLineMass());
+        this->rotate(Point(0, 0), -attack_angle / 180.0 * PI);
+        
+        reCalculateBoundingBox();
+        
     }
+    
     std::vector<VtkFormatArc> Geometry::getVtkFormatArcs() const {
         std::vector<VtkFormatArc> vtkArcs;
         for (const auto& arc : arcs) {
@@ -550,9 +630,167 @@ namespace BridgeWind {
 
         return vtkArcs;
     }
+    Point Geometry::getCenterByLineMass() const{
+        double x_moment = 0.0;
+        double y_moment = 0.0;
+        double total_length = 0.0;
 
+        // --- 1. 处理所有直线 ---
+        for (const auto& line : lines) {
+            double length = line.length();
+            if (length > 0) {
+                // 直线的质心是其中点
+                double mid_x = (line.begin.x + line.end.x) / 2.0;
+                double mid_y = (line.begin.y + line.end.y) / 2.0;
 
-    Arc::Arc(const Point& c, double r, double sa, double ea) : center(c), radius(r), startAngle(sa), endAngle(ea) {
+                // 累加力矩和总长度
+                x_moment += length * mid_x;
+                y_moment += length * mid_y;
+                total_length += length;
+            }
+        }
+
+        // --- 2. 处理所有圆弧 ---
+        for (const auto& arc : arcs) {
+            double length = arc.length();
+            if (length > 0) {
+                // 计算圆弧自身的质心
+                Point arc_centroid = getArcCentroid(arc); // 使用我们上面定义的辅助函数
+
+                // 累加力矩和总长度
+                x_moment += length * arc_centroid.x;
+                y_moment += length * arc_centroid.y;
+                total_length += length;
+            }
+        }
+
+        // --- 3. 计算最终质心 ---
+        // 避免除以零
+        if (total_length < BW_GEOMETRY_EPSILON) {
+            // 如果几何体为空或总长度为零，返回原点或一个有意义的默认点
+            return Point(0.0, 0.0);
+        }
+
+        // 计算加权平均值
+        return Point(x_moment / total_length, y_moment / total_length);
+    }
+    void Geometry::translate(double dx, double dy) {
+        // 1. 平移所有直线
+        for (auto& line : lines) {
+            line.begin.translate(dx, dy);
+            line.end.translate(dx, dy);
+        }
+
+        // 2. 平移所有圆弧
+        for (auto& arc : arcs) {
+            // 圆弧只需要平移其圆心
+            arc.center.translate(dx, dy);
+        }
+
+        // 3. 平移包围盒 (Bounding Box)
+        if (isBoundingBoxReal) {
+            boundingBox.bottomLeft.translate(dx, dy);
+            boundingBox.topRight.translate(dx, dy);
+        }
+    }
+    void Geometry::resetOrigin(const Point& newOrigin) {
+        // 要将 newOrigin 点变为新的 (0,0)，
+        // 意味着整个坐标系需要向左移动 newOrigin.x，向下移动 newOrigin.y。
+        // 这等同于将所有点平移 (-newOrigin.x, -newOrigin.y)。
+        double dx = -newOrigin.x;
+        double dy = -newOrigin.y;
+
+        translate(dx, dy);
+    }
+    void Geometry::rotate(const Point& center, double angle) {
+        // 1. 旋转所有直线
+        for (auto& line : lines) {
+            line.rotate(center, angle);
+        }
+
+        // 2. 旋转所有圆弧
+        for (auto& arc : arcs) {
+            arc.rotate(center, angle);
+        }
+
+        // 3. 更新包围盒
+        // 旋转操作会使原来的轴对齐包围盒失效，必须重新计算。
+        // 这是与平移操作最大的不同。
+        if (isBoundingBoxReal) {
+            // 先重置包围盒状态
+            isBoundingBoxReal = false;
+
+            // 重新遍历所有元素，用它们的“新”状态来重建包围盒
+            // (为了避免代码重复，最好是写一个私有的 updateBoundingBox(element) 函数)
+            // 这里为了演示，我们直接写出逻辑：
+
+            // 用第一个元素初始化包围盒
+            if (!lines.empty()) {
+                boundingBox = Rectangle(lines[0].begin, lines[0].end);
+                isBoundingBoxReal = true;
+            }
+            else if (!arcs.empty()) {
+                boundingBox = arcs[0].getBoundingBox();
+                isBoundingBoxReal = true;
+            }
+
+            // 遍历并更新包围盒
+            for (const auto& line : lines) {
+                // （这部分逻辑可以封装到 Geometry::add_... 方法中以复用）
+                boundingBox.bottomLeft.x = std::min(boundingBox.bottomLeft.x, std::min(line.begin.x, line.end.x));
+                boundingBox.bottomLeft.y = std::min(boundingBox.bottomLeft.y, std::min(line.begin.y, line.end.y));
+                boundingBox.topRight.x = std::max(boundingBox.topRight.x, std::max(line.begin.x, line.end.x));
+                boundingBox.topRight.y = std::max(boundingBox.topRight.y, std::max(line.begin.y, line.end.y));
+            }
+
+            for (const auto& arc : arcs) {
+                Rectangle arcBBox = arc.getBoundingBox();
+                boundingBox.bottomLeft.x = std::min(boundingBox.bottomLeft.x, arcBBox.bottomLeft.x);
+                boundingBox.bottomLeft.y = std::min(boundingBox.bottomLeft.y, arcBBox.bottomLeft.y);
+                boundingBox.topRight.x = std::max(boundingBox.topRight.x, arcBBox.topRight.x);
+                boundingBox.topRight.y = std::max(boundingBox.topRight.y, arcBBox.topRight.y);
+            }
+        }
+    }
+    void Geometry::reCalculateBoundingBox() {
+        // 1. 先重置状态
+        isBoundingBoxReal = false;
+
+        // 如果几何体为空，则包围盒为零，直接返回
+        if (lines.empty() && arcs.empty()) {
+            boundingBox = Rectangle(Point(0, 0), Point(0, 0));
+            return;
+        }
+
+        // 2. 用第一个有效的几何元素来初始化包围盒
+        if (!lines.empty()) {
+            boundingBox = Rectangle(lines[0].begin, lines[0].end);
+            isBoundingBoxReal = true;
+        }
+        else { // 走到这里说明 arcs 必不为空
+            boundingBox = arcs[0].getBoundingBox();
+            isBoundingBoxReal = true;
+        }
+
+        // 3. 遍历所有直线，扩展包围盒
+        // (如果用第一条线初始化了，可以从第二条线开始，但从头开始更简单且无害)
+        for (const auto& line : lines) {
+            boundingBox.bottomLeft.x = std::min(boundingBox.bottomLeft.x, std::min(line.begin.x, line.end.x));
+            boundingBox.bottomLeft.y = std::min(boundingBox.bottomLeft.y, std::min(line.begin.y, line.end.y));
+            boundingBox.topRight.x = std::max(boundingBox.topRight.x, std::max(line.begin.x, line.end.x));
+            boundingBox.topRight.y = std::max(boundingBox.topRight.y, std::max(line.begin.y, line.end.y));
+        }
+
+        // 4. 遍历所有圆弧，扩展包围盒
+        for (const auto& arc : arcs) {
+            Rectangle arcBBox = arc.getBoundingBox();
+            boundingBox.bottomLeft.x = std::min(boundingBox.bottomLeft.x, arcBBox.bottomLeft.x);
+            boundingBox.bottomLeft.y = std::min(boundingBox.bottomLeft.y, arcBBox.bottomLeft.y);
+            boundingBox.topRight.x = std::max(boundingBox.topRight.x, arcBBox.topRight.x);
+            boundingBox.topRight.y = std::max(boundingBox.topRight.y, arcBBox.topRight.y);
+        }
+    }
+    Arc::Arc(const Point& c, double r, double sa, double ea, double meshDensity) : center(c), radius(r), startAngle(sa), endAngle(ea), meshDensityNumber(meshDensity) {
         if (radius <= 0) {
             throw std::invalid_argument("Radius must be positive.");
         }
@@ -675,17 +913,30 @@ namespace BridgeWind {
             return 2 * PI - startAngle + endAngle;
         }
     }
-    Line::Line(const Point& b, const Point& e) : begin(b), end(e) {
+    void Arc::rotate(const Point& centerOfRotation, double angle) {
+        // 1. 旋转圆弧自身的圆心
+        center.rotate(centerOfRotation, angle);
+
+        // 2. 旋转角度
+        startAngle += angle;
+        endAngle += angle;
+
+        // 3. 将角度规范化到 [0, 2π) 范围内
+        formatAngle(startAngle);
+        formatAngle(endAngle);
+    }
+    Line::Line(const Point& b, const Point& e, double meshDensity) : begin(b), end(e), meshDensityNumber(meshDensity){
         if (std::fabs(b.x - e.x) < BW_GEOMETRY_EPSILON && std::fabs(b.y - e.y) < BW_GEOMETRY_EPSILON) {
             throw std::invalid_argument("Line cannot have zero length.");
         }
     }
-    Line::Line(const Point& begin, double angle, double length) :
+    Line::Line(const Point& begin, double angle, double length, double meshDensity) :
 		begin(begin) ,
         end(
             begin.x + length * cos(angle),
             begin.y + length * sin(angle)
-        )
+        ), 
+        meshDensityNumber(meshDensity)
     {
 		if (length < BW_GEOMETRY_EPSILON) {
 			throw std::invalid_argument("Length must be positive.");
@@ -742,6 +993,11 @@ namespace BridgeWind {
         }
         double dotProduct = (p.x - begin.x) * (end.x - begin.x) + (p.y - begin.y) * (end.y - begin.y);
         return dotProduct >= 0 && dotProduct <= length() * length(); // 点在线段上
+    }
+    void Line::rotate(const Point& center, double angle) {
+        // 分别旋转直线的起点和终点
+        begin.rotate(center, angle);
+        end.rotate(center, angle);
     }
     void Rectangle::printCADCommand() const {
 		Line line1(bottomLeft, Point(topRight.x, bottomLeft.y));

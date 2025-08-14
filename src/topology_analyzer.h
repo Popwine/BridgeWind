@@ -28,10 +28,11 @@ namespace BridgeWind {
         } geometry;
         bool visited_forward = false;
         bool visited_backward = false;
-        GraphEdge(GraphNode* s, GraphNode* e, const Line* l);
+        GraphEdge(GraphNode* s, GraphNode* e, const Line* l, double meshDensity = 1.0);
 
-        GraphEdge(GraphNode* s, GraphNode* e, const Arc* a);
+        GraphEdge(GraphNode* s, GraphNode* e, const Arc* a, double meshDensity = 1.0);
         
+        double meshDensityNumber;
     };
 
     class Loop {
@@ -41,15 +42,19 @@ namespace BridgeWind {
         std::vector<const GraphEdge*> edges;
         std::vector<double> lengthRatios;
         double length;
+        std::vector<double> lengthRatiosAbstract;
+        double lengthAbstract;
     public:
         explicit Loop(const std::vector<GraphEdge*>& orderedd_edges);
         double getArea() const;
         void print() const;
         double getLength() const;
+        double getLengthAbstract() const;
         size_t segmentCount() const { return edges.size(); };
         const std::vector<const GraphNode*>& getNodes() const { return nodes; }
 		const std::vector<const GraphEdge*>& getEdges() const { return edges; }
         const std::vector<double>& getLengthRatios() const;
+        const std::vector<double>& getLengthRatiosAbstract() const;
     };
 
     class TopologyAnalyzer {

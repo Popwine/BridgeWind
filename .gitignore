@@ -3,10 +3,12 @@ build/
 out/
 dlls/
 .vs/
-res/
+res/test_case/
+res/test_service/
+res/meshes/
 bin/
 Release_Package/
-
+Release_Package*/
 CMakeCache.txt
 *.vcxproj*
 *.sln*
@@ -17,6 +19,6 @@ CMakeCache.txt
 *.dll
 *.lib
 *.obj
-
+.aps
 # mesh file
 *.cgns

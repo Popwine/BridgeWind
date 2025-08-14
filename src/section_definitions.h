@@ -15,7 +15,8 @@ public:
         Circle = 100,  
         Rectangle = 200, 
         ChamferedRectangle = 300,
-        StreamlinedBoxGirder = 400
+        StreamlinedBoxGirder = 400,
+        CantileverBoxGirder = 401
     };
     Q_ENUM(Type) // 注册枚举
 private:

@@ -836,8 +836,8 @@
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>380</width>
-                       <height>403</height>
+                       <width>352</width>
+                       <height>362</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1202,8 +1202,8 @@
                         <property name="geometry">
                          <rect>
                           <x>0</x>
-                          <y>0</y>
-                          <width>345</width>
+                          <y>-202</y>
+                          <width>317</width>
                           <height>582</height>
                          </rect>
                         </property>
@@ -1447,6 +1447,9 @@
                          </item>
                          <item>
                           <widget class="QLineEdit" name="attackAngelEdit">
+                           <property name="enabled">
+                            <bool>false</bool>
+                           </property>
                            <property name="font">
                             <font>
                              <pointsize>10</pointsize>
@@ -1747,7 +1750,7 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>266</width>
+                   <width>215</width>
                    <height>612</height>
                   </rect>
                  </property>

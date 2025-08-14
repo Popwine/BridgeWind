@@ -216,14 +216,30 @@ void MainWindow::setupModel()
         SectionTypes::StreamlinedBoxGirder,
         "section_streamlined_box_girder", "Streamlined Box Girder",
         {
-            {"param_total_width", "Total Width B(m)", 12},
-            {"param_total_height", "Total Height H(m)", 1.5},
-            {"param_bottom_width", "Bottom Width B1(m)", 8},
-            {"param_slope", "Top Slope i(%)", 2},
-            {"param_angle_1", "Angle 1 a1(°)", 30},
-            {"param_angle_2", "Angle 2 a2(°)", 20},
+            {"param_total_width", "Total Width B(m)", 0.41},
+            {"param_total_height", "Total Height H(m)", 0.04384},
+            {"param_bottom_width", "Bottom Width B1(m)", 0.23},
+            {"param_slope", "Top Slope i(%)", 2.0},
+            {"param_angle_1", "Angle 1 a1(°)", 51.9343},
+            {"param_angle_2", "Angle 2 a2(°)", 14.574},
+            {"param_attack_angle", "Attack Angle(°)", 0.0}
         }
         });
+
+    m_sectionDefs.append({
+        SectionTypes::CantileverBoxGirder,
+        "section_cantilever_box_girder", "Cantilever Box Girder",
+        {
+            {"param_total_width", "Total Width B(m)", 0.45},
+            {"param_bottom_width", "Bottom Width B1(m)", 0.1554},
+            {"param_total_height", "Total Height H(m)", 0.07},
+            {"param_cantilever_thickness", "Cantilever Thickness t(m)", 0.004},
+            {"param_slope", "Top Slope i(%)", 2.0},
+            {"param_angle", "Angle a(°)", 38.906535},
+            {"param_attack_angle", "Attack Angle(°)", 0}
+        }
+        });
+
 }
 
 // 步骤 3.2: 根据数据模型动态创建UI
@@ -257,7 +273,13 @@ void MainWindow::setupUiFromModel()
             connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::onGeoParameterEditingFinished);
 
             // 设置验证器，只允许输入浮点数
-            lineEdit->setValidator(new QDoubleValidator(0, 1e9, 4, this));
+            if (param.key == "param_attack_angle") {
+                lineEdit->setValidator(new QDoubleValidator(-180, 180, 10, this));
+            }
+            else {
+                lineEdit->setValidator(new QDoubleValidator(0, 1e9, 10, this));
+            }
+            
            
             vBoxLayout->addWidget(label);
             vBoxLayout->addWidget(lineEdit);
@@ -283,7 +305,7 @@ void MainWindow::setupVtkRenderWindow() {
 
     vtkNew<vtkTextActor> actor;
     
-    actor->SetInput("BridgeWind v0.0\nChoose a section to start.");
+    actor->SetInput("BridgeWind-1.0.1\nChoose a section to start.");
     vtkTextProperty* textProperty = actor->GetTextProperty();
     textProperty->SetFontSize(24);
     textProperty->SetFontFamilyToCourier();
@@ -1021,10 +1043,16 @@ void MainWindow::onSetMeshingButtonClicked() {
     ui->stepStack->setCurrentIndex(1);
 }
 void MainWindow::onSetParametersButtonClicked() {
-    ui->setParametersButton->setChecked(true);
-    this->onOneOfTheVelocitySettingsChanged();
-    this->onTimeStepChanged();
-    ui->stepStack->setCurrentIndex(2);
+    if (isMeshGenerated) {
+        ui->setParametersButton->setChecked(true);
+        this->onOneOfTheVelocitySettingsChanged();
+        this->onTimeStepChanged();
+        ui->stepStack->setCurrentIndex(2);
+    }
+    else {
+        ui->setMeshingButton->setChecked(true);
+        QMessageBox::critical(this, tr("Error"), QString("Please generate mesh first."));
+    }
 }
 void MainWindow::onSetBuiltInModeButtonClicked() {
     ui->geometryModeStack->setCurrentIndex(0);
@@ -1135,7 +1163,20 @@ void MainWindow::onGeoParameterEditingFinished() {
                 currentParameters["param_bottom_width"],
                 currentParameters["param_slope"],
                 currentParameters["param_angle_1"],
-                currentParameters["param_angle_2"]
+                currentParameters["param_angle_2"],
+                currentParameters["param_attack_angle"]
+            );
+        }
+        else if (currentDef.id == SectionTypes::CantileverBoxGirder) {
+            m_geometry.resetAsCantileverBoxGirder(
+                currentParameters["param_total_width"],
+                currentParameters["param_bottom_width"],
+                currentParameters["param_total_height"],
+                currentParameters["param_cantilever_thickness"],
+                currentParameters["param_slope"],
+                currentParameters["param_angle"],
+                currentParameters["param_attack_angle"]
+
             );
         }
         renderVtkWindowWithGeometry(m_geometry);
@@ -1219,6 +1260,7 @@ void MainWindow::onDxfFileBrowseButtonClicked() {
 void MainWindow::onGenerateMeshButtonClicked() {
     saveAndCheckMeshParameters();
 
+
     executeSafely(this, [&]() {
         if (m_geometry.isEmpty()) {
             throw std::runtime_error("Geoetry is Empty.");
@@ -1227,6 +1269,8 @@ void MainWindow::onGenerateMeshButtonClicked() {
         auto analyzer = std::make_shared<BridgeWind::TopologyAnalyzer>(ptrGeo);
 
         try {
+            //!!!!!!!!把原点设置为了线质心
+            ptrGeo->resetOrigin(ptrGeo->getCenterByLineMass());
             analyzer->analyze();
         }
         catch (const std::exception& e) {
@@ -1414,6 +1458,7 @@ void MainWindow::appendLogMessageAndUpDateProgressBar(const QString& message, in
 }
 void MainWindow::onMeshingFinished()
 {
+    isMeshGenerated = true;
     appendLogMessage(tr("Mesh generation finished successfully."));
 
 

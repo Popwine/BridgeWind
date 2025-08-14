@@ -15,6 +15,7 @@
 		<file>../res/images/y_velocity_background.png</file>
 	</qresource>
 	<qresource prefix="/icons">
+		<file>../res/icons/app_icon.ico</file>
 		<file>../res/icons/welcome_dialog_close_icon.svg</file>
 		<file>../res/icons/welcome_dialog_new_project.svg</file>
 		<file>../res/icons/welcome_dialog_open_project.svg</file>
