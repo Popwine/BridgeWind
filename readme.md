@@ -1,4 +1,4 @@
-# 桥风智绘 - 桥梁断面风场模拟分析平台
+# 桥风智绘 - 基于国产CFD开源软件的智能桥梁抗风设计平台
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
