@@ -123,7 +123,9 @@
 
 **1. 克隆 BridgeWind 仓库**
 ```bash
-git clone https://github.com/your-username/BridgeWind.git
+git clone https://osredm.com/p70941386/BridgeWind
+# 或者
+git clone https://github.com/Popwine/BridgeWind.git
 ```
 
 **2. 手动修改 `src/CMakeLists.txt`**
