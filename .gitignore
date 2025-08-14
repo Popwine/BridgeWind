@@ -19,6 +19,6 @@ CMakeCache.txt
 *.dll
 *.lib
 *.obj
-.aps
+*.aps
 # mesh file
 *.cgns
