@@ -3,6 +3,20 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **BridgeWind** 是一款专为桥梁工程领域设计的二维断面风场计算流体动力学（CFD）模拟软件。它提供了一个从几何建模、网格生成到流场求解和后处理可视化的端到端集成解决方案，旨在帮助工程师和研究人员高效、准确地分析桥梁断面的空气动力学性能。
+## 软件下载与使用
+下载 Windows x64 安装包：
+https://osredm.com/p70941386/BridgeWind/releases/download/1.0.1/BridgeWind-1.0.1-Setup.exe
+
+## 🏗️ 从源码编译 (Building from Source)
+
+我们欢迎社区开发者参与 BridgeWind 的开发。由于项目和其依赖项的特殊性，从源码编译需要进行一系列手动配置。
+
+**重要提示**: 当前项目的 CMake 构建系统尚在完善中，依赖于开发者手动编译第三方库并直接修改项目中的 `CMakeLists.txt` 文件来指定路径。
+
+为了帮助您顺利完成编译，我们准备了一份详细的、分步骤的编译指南。**在开始前，请务必仔细查阅：**
+
+➡️ **[详细编译指南 (BUILDING.md)](./BUILDING.md)**
+
 
 ## 核心特性
 
