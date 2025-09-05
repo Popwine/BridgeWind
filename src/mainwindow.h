@@ -111,6 +111,8 @@ private slots:
 
     void onTimeStepChanged();
 
+	void onSettingsButtonClicked();
+
     
 signals:
     void iterUpdated(int iter);

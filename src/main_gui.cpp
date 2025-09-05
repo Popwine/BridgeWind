@@ -19,6 +19,39 @@ int main(int argc, char* argv[])
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
+
+    // --- 添加资源路径打印代码 ---
+    qDebug() << "--- Listing all available resources ---";
+    QDirIterator it(":", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        qDebug() << it.next();
+    }
+    qDebug() << "------------------------------------";
+    // --- 打印代码结束 ---
+
+    QTranslator translator;
+
+    // --- 主要解决方案：从文件系统加载 ---
+    // 获取可执行文件所在的目录 (例如 C:/.../bin)
+    QString appDir = QApplication::applicationDirPath();
+    // 构建翻译文件夹的完整路径 (例如 C:/.../bin/translations)
+    QString translationsDir = appDir;
+
+    qDebug() << "Searching for translations in:" << translationsDir;
+
+    // 使用 load 的高级版本，它会自动组合路径和文件名
+    // 它会在 translationsDir 目录里寻找 bridgewind_zh_CN.qm
+    if (translator.load(QLocale("zh_CN"), QLatin1String("bridgewind"), QLatin1String("_"), translationsDir)) {
+        a.installTranslator(&translator);
+        qDebug() << "Successfully loaded and installed Chinese translation from file system.";
+    }
+    else {
+        qWarning() << "Failed to load translation from file system path:" << translationsDir;
+        qWarning() << "Please ensure 'translations/bridgewind_zh_CN.qm' exists relative to the executable.";
+    }
+
+
+
     a.setWindowIcon(QIcon(":/icons/res/icons/app_icon.ico"));
     QFont defaultFont = QApplication::font();
     //defaultFont.setPointSize(12);

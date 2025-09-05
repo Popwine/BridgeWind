@@ -25,6 +25,7 @@ set(TRANSLATION_SOURCES
     # UI库的源文件
     mainwindow.cpp mainwindow.h mainwindow.ui
     welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
+    settingsdialog.cpp settingsdialog.h settingsdialog.ui
     # 主程序的源文件
     main_gui.cpp
 )
@@ -78,6 +79,7 @@ target_link_libraries(BridgeWindCore PUBLIC
 add_library(BridgeWindUI STATIC
     mainwindow.cpp mainwindow.h mainwindow.ui
     welcomedialog.cpp welcomedialog.h welcomedialog.ui newprojectdialog.ui
+    settingsdialog.cpp settingsdialog.h settingsdialog.ui
     FileDropWidget.h FileDropWidget.cpp
     aspectratiobutton.h aspectratiobutton.cpp
      
@@ -86,7 +88,7 @@ add_library(BridgeWindUI STATIC
 
 target_include_directories(BridgeWindUI PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    "${CMAKE_CURRENT_BINARY_DIR}/BridgeWindUI_autogen/include"
+    "${CMAKE_CURRENT_BINARY_DIR}/BridgeWindUI_autogen/include"s
 
 )
 target_link_libraries(BridgeWindUI PRIVATE dwmapi)

@@ -13,6 +13,7 @@
 		<file>../res/images/velocity_magnitude_background.png</file>
 		<file>../res/images/x_velocity_background.png</file>
 		<file>../res/images/y_velocity_background.png</file>
+		
 	</qresource>
 	<qresource prefix="/icons">
 		<file>../res/icons/app_icon.ico</file>
@@ -23,7 +24,7 @@
 		<file>../res/icons/close.svg</file>
 		<file>../res/icons/maximize.svg</file>
 		<file>../res/icons/minimize.svg</file>
-		
+		<file>../res/icons/settings.svg</file>
 
 	</qresource>
 

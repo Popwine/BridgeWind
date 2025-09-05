@@ -217,6 +217,11 @@ QWidget#titleWidget QPushButton#minimizeButton{
     image: url(:/icons/res/icons/minimize.svg);
     
 } 
+QWidget#titleWidget QPushButton#settingsButton{
+    padding: 11px;
+    image: url(:/icons/res/icons/settings.svg);
+    
+} 
 
 QWidget#titleWidget QPushButton:hover{
 

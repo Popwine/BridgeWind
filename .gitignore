@@ -9,6 +9,7 @@ res/meshes/
 bin/
 Release_Package/
 Release_Package*/
+3rdPartyInstall/
 CMakeCache.txt
 *.vcxproj*
 *.sln*

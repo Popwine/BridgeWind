@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BridgeWind</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="maximumSize">
@@ -92,6 +92,25 @@
               <width>0</width>
               <height>40</height>
              </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="settingsButton">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
@@ -391,7 +410,7 @@
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_4">
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -1202,8 +1221,8 @@
                         <property name="geometry">
                          <rect>
                           <x>0</x>
-                          <y>-202</y>
-                          <width>317</width>
+                          <y>0</y>
+                          <width>267</width>
                           <height>582</height>
                          </rect>
                         </property>

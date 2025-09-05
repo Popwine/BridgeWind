@@ -12,27 +12,27 @@ else()
 endif()
 # 首先，为 Debug 版本设置路径
 if(CMAKE_BUILD_TYPE MATCHES "Debug" OR CMAKE_CONFIGURATION_TYPES MATCHES "Debug")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/libdxfrw-install") # 指向你的 Debug 版本
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/VTK-9.4.2-install-debug/lib/cmake/vtk-9.4")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/hdf5-1.14.4-3-install")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/CGNS-4.4.0-install")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/libdxfrw-install") # 指向你的 Debug 版本
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/VTK-9.4.2-install-debug/lib/cmake/vtk-9.4")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/hdf5-1.14.4-3-install")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/CGNS-4.4.0-install")
 endif()
 
 # 然后，为 Release 版本设置路径
 if(CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_CONFIGURATION_TYPES MATCHES "Release")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/libdxfrw-install-release") # 指向你刚刚创建的 Release 版本
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/VTK-9.4.2-install-release/lib/cmake/vtk-9.4")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/hdf5-1.14.4-3-install-release")
-    list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/CGNS-4.4.0-install-release")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/libdxfrw-install-release") # 指向你刚刚创建的 Release 版本
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/VTK-9.4.2-install-release/lib/cmake/vtk-9.4")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/hdf5-1.14.4-3-install-release")
+    list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/CGNS-4.4.0-install-release")
 endif()
 
 
 
 
 
-#set(Qt5_DIR "C:/DevTools/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
-list(APPEND CMAKE_PREFIX_PATH "C:/DevTools/Qt/Qt5.14.2/5.14.2/msvc2017_64")
-set(Qt5_DIR "C:/DevTools/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
+#set(Qt5_DIR "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
+list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64")
+set(Qt5_DIR "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
 # 1. 正常找到 HDF5。执行完这行，目标 HDF5::HDF5 就被定义了。
 find_package(HDF5 REQUIRED)
 

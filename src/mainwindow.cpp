@@ -3,6 +3,7 @@
 #include "bridge_simulation_service.h" 
 
 #include "flow_data_reader.h"
+#include "settingsdialog.h"
 
 #include <filesystem>
 #include <algorithm> 
@@ -180,63 +181,63 @@ void MainWindow::setupModel()
 {
     m_sectionDefs.append({
         SectionTypes::Undefined, //id
-        "section_undefined", "Select a section",
+        "section_undefined", QT_TR_NOOP("Select a section"),
         {
-            
+
         }
         });
     m_sectionDefs.append({
         SectionTypes::Circle, //id
-        "section_circle", "Circle",
+        "section_circle", QT_TR_NOOP("Circle"),
         {
-            {"param_diameters", "Diameter D(m)", 1.0}
+            {"param_diameters", QT_TR_NOOP("Diameter D(m)"), 1.0}
         }
         });
 
     m_sectionDefs.append({
         SectionTypes::Rectangle,
-        "section_rectangle", "Rectangle",
+        "section_rectangle", QT_TR_NOOP("Rectangle"),
         {
-            {"param_width", "Width W(m)", 8.0},
-            {"param_height", "Height H(m)", 2.0}
+            {"param_width", QT_TR_NOOP("Width W(m)"), 8.0},
+            {"param_height", QT_TR_NOOP("Height H(m)"), 2.0}
         }
         });
 
     m_sectionDefs.append({
         SectionTypes::ChamferedRectangle,
-        "section_chamfered_rectangle", "Chamfered Rectangle",
+        "section_chamfered_rectangle", QT_TR_NOOP("Chamfered Rectangle"),
         {
-            {"param_width", "Width W(m)", 4.0},
-            {"param_height", "Height H(m)", 2.0},
-            {"param_chamfered_radius", "Chamfered Radius R(m)", 0.2}
+            {"param_width", QT_TR_NOOP("Width W(m)"), 4.0},
+            {"param_height", QT_TR_NOOP("Height H(m)"), 2.0},
+            {"param_chamfered_radius", QT_TR_NOOP("Chamfered Radius R(m)"), 0.2}
         }
         });
 
     m_sectionDefs.append({
         SectionTypes::StreamlinedBoxGirder,
-        "section_streamlined_box_girder", "Streamlined Box Girder",
+        "section_streamlined_box_girder", QT_TR_NOOP("Streamlined Box Girder"),
         {
-            {"param_total_width", "Total Width B(m)", 0.41},
-            {"param_total_height", "Total Height H(m)", 0.04384},
-            {"param_bottom_width", "Bottom Width B1(m)", 0.23},
-            {"param_slope", "Top Slope i(%)", 2.0},
-            {"param_angle_1", "Angle 1 a1(°)", 51.9343},
-            {"param_angle_2", "Angle 2 a2(°)", 14.574},
-            {"param_attack_angle", "Attack Angle(°)", 0.0}
+            {"param_total_width", QT_TR_NOOP("Total Width B(m)"), 0.41},
+            {"param_total_height", QT_TR_NOOP("Total Height H(m)"), 0.04384},
+            {"param_bottom_width", QT_TR_NOOP("Bottom Width B1(m)"), 0.23},
+            {"param_slope", QT_TR_NOOP("Top Slope i(%)"), 2.0},
+            {"param_angle_1", QT_TR_NOOP("Angle 1 a1(°)"), 51.9343},
+            {"param_angle_2", QT_TR_NOOP("Angle 2 a2(°)"), 14.574},
+            {"param_attack_angle", QT_TR_NOOP("Attack Angle(°)"), 0.0}
         }
         });
 
     m_sectionDefs.append({
         SectionTypes::CantileverBoxGirder,
-        "section_cantilever_box_girder", "Cantilever Box Girder",
+        "section_cantilever_box_girder", QT_TR_NOOP("Cantilever Box Girder"),
         {
-            {"param_total_width", "Total Width B(m)", 0.45},
-            {"param_bottom_width", "Bottom Width B1(m)", 0.1554},
-            {"param_total_height", "Total Height H(m)", 0.07},
-            {"param_cantilever_thickness", "Cantilever Thickness t(m)", 0.004},
-            {"param_slope", "Top Slope i(%)", 2.0},
-            {"param_angle", "Angle a(°)", 38.906535},
-            {"param_attack_angle", "Attack Angle(°)", 0}
+            {"param_total_width", QT_TR_NOOP("Total Width B(m)"), 0.45},
+            {"param_bottom_width", QT_TR_NOOP("Bottom Width B1(m)"), 0.1554},
+            {"param_total_height", QT_TR_NOOP("Total Height H(m)"), 0.07},
+            {"param_cantilever_thickness", QT_TR_NOOP("Cantilever Thickness t(m)"), 0.004},
+            {"param_slope", QT_TR_NOOP("Top Slope i(%)"), 2.0},
+            {"param_angle", QT_TR_NOOP("Angle a(°)"), 38.906535},
+            {"param_attack_angle", QT_TR_NOOP("Attack Angle(°)"), 0}
         }
         });
 
@@ -878,7 +879,7 @@ void MainWindow::setupUiConnections()
     connect(ui->velocityValueEdit, &QLineEdit::textEdited, this, &MainWindow::onOneOfTheVelocitySettingsChanged);
     connect(ui->reynoldsNumberEdit, &QLineEdit::textEdited, this, &MainWindow::onOneOfTheVelocitySettingsChanged);
     connect(ui->timeStepEdit, &QLineEdit::textEdited, this, &MainWindow::onTimeStepChanged);
-
+	connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::onSettingsButtonClicked);
 }
 
 void MainWindow::setupToogleGroups() {
@@ -1606,4 +1607,9 @@ void MainWindow::onRenderOptionChanged() {
 void MainWindow::onTimeStepChanged() {
     double realTimeStep = ui->timeStepEdit->text().toDouble() * m_currentParams.forceReferenceLength / m_currentParams.refDimensionalVelocity;
     ui->realTimeStepEdit->setText(QString::number(realTimeStep));
+}
+
+void MainWindow::onSettingsButtonClicked() {
+	SettingsDialog settingsDialog(this);
+	settingsDialog.exec();
 }
