@@ -20,6 +20,7 @@ set(TRANSLATION_SOURCES
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    SettingsManager.h SettingsManager.cpp
     aspectratiobutton.h aspectratiobutton.cpp
     section_definitions.h
     # UI库的源文件
@@ -39,6 +40,7 @@ install(FILES ${QM_FILES} DESTINATION bin/translations)
 
 # --- 创建一个核心逻辑库 ---
 add_library(BridgeWindCore STATIC
+    "${CMAKE_BINARY_DIR}/src/version.h"
     vector2d.cpp vector2d.h
     mesh.cpp mesh.h
     gmsh_reader.cpp gmsh_reader.h
@@ -57,6 +59,7 @@ add_library(BridgeWindCore STATIC
     process_manager.cpp process_manager.h
     flow_data_reader.h flow_data_reader.cpp
     ProjectHistoryManager.h ProjectHistoryManager.cpp
+    SettingsManager.h SettingsManager.cpp
     ProjectSaveManager.h ProjectSaveManager.cpp
     section_definitions.h
 )
@@ -115,6 +118,7 @@ target_link_libraries(BridgeWindUI PUBLIC
 
 
 add_executable(BridgeWindApp
+    WIN32
     main_gui.cpp
     resources.qrc
     ${QM_FILES}
@@ -123,6 +127,7 @@ add_executable(BridgeWindApp
 if(WIN32)
     target_sources(BridgeWindApp PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/icon.rc
+        "${CMAKE_BINARY_DIR}/src/version.rc"
     )
 endif()
 # 将UI库链接到可执行文件

@@ -15,7 +15,8 @@ WelcomeDialog QPushButton[class="welcome_button"]:hover{
 
 }
 
-WelcomeDialog QPushButton#closeButton{
+WelcomeDialog QPushButton#closeButton,
+WelcomeDialog QPushButton#smallSettingsButton{
     background-color: #d6d8de; 
     border: none;
     color: black; 
@@ -23,7 +24,7 @@ WelcomeDialog QPushButton#closeButton{
 }
 
 
-WelcomeDialog QDialog {
+WelcomeDialog {
     background-color: white;
 
 }
@@ -44,14 +45,23 @@ WelcomeDialog QWidget#welcomeBackgroundWidget {
     padding:8px;
 } */
 WelcomeDialog QPushButton#closeButton{
-    image: url(:/icons/res/icons/welcome_dialog_close_icon.svg);
+    image: url(:/icons/res/icons/close.svg);
     background-color: white; 
     border: none;
     color: black; 
-    padding: 10px;
+    padding: 13px;
     border-radius: 8px;
 }
-WelcomeDialog QPushButton#closeButton:hover{
+WelcomeDialog QPushButton#smallSettingsButton{
+    image: url(:/icons/res/icons/settings.svg);
+    background-color: white; 
+    border: none;
+    color: black; 
+    padding: 11px;
+    border-radius: 8px;
+}
+WelcomeDialog QPushButton#closeButton:hover,
+WelcomeDialog QPushButton#smallSettingsButton:hover{
     
     background-color: #ddd; 
 
@@ -396,3 +406,16 @@ QPushButton#generateMeshButton{
     border-radius: 6px;
 }
 
+SettingsDialog{
+    background-color: #e5e5ea;
+}
+
+SettingsDialog QWidget#scrollAreaWidgetContents{
+    background-color: transparent;
+    
+}
+SettingsDialog QScrollArea#scrollArea{
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}

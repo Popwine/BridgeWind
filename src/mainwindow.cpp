@@ -32,6 +32,7 @@
 #include <QString>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QSettings>
 
 #include <vtkNew.h>
 #include <vtkPoints.h>
@@ -104,7 +105,10 @@ namespace {
     }
 }
 
-MainWindow::MainWindow(const QString& projectName, const QString& projectPath, QWidget* parent)
+MainWindow::MainWindow(
+    const QString& projectName,
+    const QString& projectPath,
+    QWidget* parent)
 :
     m_projectName(projectName), 
     m_projectPath(projectPath), 
@@ -306,7 +310,10 @@ void MainWindow::setupVtkRenderWindow() {
 
     vtkNew<vtkTextActor> actor;
     
-    actor->SetInput("BridgeWind-1.0.1\nChoose a section to start.");
+    actor->SetInput(
+        (QString("BridgeWind-") 
+            + QCoreApplication::applicationVersion() 
+            + "\nChoose a section to start.").toStdString().c_str());
     vtkTextProperty* textProperty = actor->GetTextProperty();
     textProperty->SetFontSize(24);
     textProperty->SetFontFamilyToCourier();
@@ -1031,6 +1038,7 @@ void MainWindow::onSectionTypeChanged(int index)
 
     ui->parameterStack->setCurrentIndex(index);
     qDebug() << "setCurrentIndex: " << index;
+    std::cout << "setCurrentIndex: " << index;
     onGeoParameterEditingFinished();
 }
 void MainWindow::onFieldSizeMethodChanged(int index) {
@@ -1610,6 +1618,13 @@ void MainWindow::onTimeStepChanged() {
 }
 
 void MainWindow::onSettingsButtonClicked() {
-	SettingsDialog settingsDialog(this);
-	settingsDialog.exec();
+    
+    // 2. 创建对话框实例，传入当前语言
+    SettingsDialog dialog( this);
+
+    
+
+    // 4. 以模态方式显示对话框
+    dialog.exec();
 }
+

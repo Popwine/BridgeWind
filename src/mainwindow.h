@@ -5,6 +5,8 @@
 #include <QThread>
 #include <QMetaType>
 #include <QCloseEvent>
+#include <QTranslator>
+
 
 #include <memory>
 
@@ -16,6 +18,7 @@
 #include "section_definitions.h"
 #include "ui_mainwindow.h"
 #include "flow_data_reader.h"
+#include "SettingsManager.h"
 
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkCGNSReader.h>
@@ -69,7 +72,10 @@ class MainWindow : public QMainWindow
 public:
     
 
-    explicit MainWindow(const QString& projectName, const QString& projectPath, QWidget* parent = nullptr);
+    explicit MainWindow(
+        const QString& projectName, 
+        const QString& projectPath, 
+        QWidget* parent = nullptr);
     ~MainWindow();
 protected:
     void closeEvent(QCloseEvent* event) override;
@@ -158,6 +164,7 @@ private:
     void renderVtkWindowByRenderOption();
     void updateVtkWdindowWithContourByCurrentOption();
     void renderContourPlot(vtkUnstructuredGrid* uGridWithData);
+
     // 存储工作流中的中间产物
     std::shared_ptr<BridgeWind::TopologyAnalyzer> m_analyzerResult;
     
@@ -173,6 +180,7 @@ private:
     BridgeWind::FlowDataReader m_flowDataReader;
     int lastFlowLoadedIter = 0;
     bool isMeshGenerated = false;
+	QTranslator m_translator;
 };
 
 

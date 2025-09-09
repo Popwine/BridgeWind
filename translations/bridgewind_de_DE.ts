@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.1" language="de_DE">
 <context>
     <name>BridgeWind::ProcessManager</name>
     <message>
         <location filename="../src/process_manager.cpp" line="107"/>
         <source>[Error] </source>
-        <translation>[错误] </translation>
+        <translation>[Fehler] </translation>
     </message>
 </context>
 <context>
@@ -14,89 +14,85 @@
     <message>
         <location filename="../src/solver_service.cpp" line="22"/>
         <source>Preparing to run the solver...</source>
-        <translation>准备启动求解器...</translation>
+        <translation>Vorbereitung zum Starten des Solvers...</translation>
     </message>
     <message>
         <location filename="../src/solver_service.cpp" line="56"/>
         <source>Attempting to stop the solver...</source>
-        <translation>尝试停止求解器...</translation>
+        <translation>Versuche, den Solver zu stoppen...</translation>
     </message>
     <message>
         <location filename="../src/solver_service.cpp" line="207"/>
         <source>Starting solver: </source>
-        <translation>正在启动求解器: </translation>
+        <translation>Solver wird gestartet: </translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>MainWindow</source>
-        <translation type="vanished">主窗口</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="19"/>
         <source>BridgeWind</source>
-        <translation>桥风智绘</translation>
+        <translation>BridgeWind</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="242"/>
         <source>Project Name will be shown here.</source>
-        <translation>项目名称将在此处显示。</translation>
+        <translation>Projektname wird hier angezeigt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="350"/>
         <source>Geometry</source>
-        <translation>几何定义</translation>
+        <translation>Geometrie</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="371"/>
         <source>Meshing</source>
-        <translation>网格设置</translation>
+        <translation>Vernetzung</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="392"/>
         <source>Simulation</source>
-        <translation>计算参数</translation>
+        <translation>Simulation</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="484"/>
         <source>Built-in</source>
-        <translation>内置断面</translation>
+        <translation>Vordefiniert</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="505"/>
         <source>Import DXF</source>
-        <translation>导入DXF</translation>
+        <translation>DXF importieren</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="645"/>
         <source>Section Type</source>
-        <translation>截面类型</translation>
+        <translation>Profiltyp</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="706"/>
         <source>Please drag a  DXF file here</source>
-        <translation>请将DXF文件拖放至此处</translation>
+        <translation>Bitte ziehen Sie eine DXF-Datei hierher</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="724"/>
         <source>Please ensure the geometry is a single, closed contour.</source>
-        <translation>请确保图形为单一、封闭轮廓。</translation>
+        <translation>Stellen Sie sicher, dass die Geometrie eine einzelne, geschlossene Kontur ist.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="742"/>
         <source>The unit is recommended to be meters.</source>
-        <translation>建议单位为米。</translation>
+        <translation>Die empfohlene Einheit ist Meter.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="782"/>
         <source>Browse...</source>
-        <translation>浏览...</translation>
+        <translation>Durchsuchen...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="822"/>
         <source>Set Meshing</source>
-        <translation>设置网格</translation>
+        <translation>Vernetzung einstellen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="825"/>
@@ -106,7 +102,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="886"/>
         <source>Circumferential mesh number:</source>
-        <translation>周向网格分段数:</translation>
+        <translation>Umfangs-Netzelemente:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="898"/>
@@ -116,7 +112,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="910"/>
         <source>Radial mesh number:</source>
-        <translation>径向网格分段数:</translation>
+        <translation>Radiale Netzelemente:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="922"/>
@@ -126,7 +122,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="934"/>
         <source>Radial Growth Rate:</source>
-        <translation>径向网格生长率:</translation>
+        <translation>Radiale Wachstumsrate:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="946"/>
@@ -136,17 +132,17 @@
     <message>
         <location filename="../src/mainwindow.ui" line="958"/>
         <source>Determination method of field size:</source>
-        <translation>流场大小决定方法:</translation>
+        <translation>Bestimmungsmethode der Feldgröße:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="971"/>
         <source>N times the size of the object</source>
-        <translation>N倍的断面大小</translation>
+        <translation>N-fache Objektgröße</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="976"/>
         <source>Customize</source>
-        <translation>自定义大小</translation>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1026"/>
@@ -162,22 +158,22 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1078"/>
         <source>FieldSize (m):</source>
-        <translation>流场大小(m):</translation>
+        <translation>Feldgröße (m):</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1159"/>
         <source>Generate Mesh</source>
-        <translation>生成网格</translation>
+        <translation>Netz generieren</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1189"/>
         <source>Set Simulaion Parameters</source>
-        <translation>设置计算参数</translation>
+        <translation>Simulationsparameter festlegen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1238"/>
         <source>Number of CPUs:</source>
-        <translation>CPU数量:</translation>
+        <translation>Anzahl der CPUs:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1250"/>
@@ -187,7 +183,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1262"/>
         <source>Nondimensional time step:</source>
-        <translation>无量纲时间步:</translation>
+        <translation>Dimensionsloser Zeitschritt:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1274"/>
@@ -197,12 +193,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1286"/>
         <source>Time step (s):</source>
-        <translation>时间步(s):</translation>
+        <translation>Zeitschritt (s):</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1313"/>
         <source>Max time step:</source>
-        <translation>最大时间步:</translation>
+        <translation>Maximaler Zeitschritt:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1325"/>
@@ -212,7 +208,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1337"/>
         <source>Save and Plot time step interval:</source>
-        <translation>保存并绘制流场图的时间步间隔:</translation>
+        <translation>Speicher- &amp; Plot-Intervall:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1349"/>
@@ -222,12 +218,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1364"/>
         <source>The software will record and output lift, drag, residuals, and other information every specified number of time steps.</source>
-        <translation>软件会每隔多少时间步记录并输出升力、阻力、残差等信息。</translation>
+        <translation>Die Software wird Auftrieb, Widerstand, Residuen und weitere Informationen in jedem angegebenen Zeitschrittintervall aufzeichnen und ausgeben.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1367"/>
         <source>Record time step interval:</source>
-        <translation>记录的时间步间隔:</translation>
+        <translation>Aufzeichnungsintervall:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1379"/>
@@ -237,12 +233,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1391"/>
         <source>Set velocity using absolute value (m/s):</source>
-        <translation>绝对速度(m/s):</translation>
+        <translation>Geschwindigkeit (Absolutwert, m/s):</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1424"/>
         <source>Set velocity via Reynolds number:</source>
-        <translation>根据雷诺数设置速度:</translation>
+        <translation>Geschwindigkeit über Reynolds-Zahl:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1439"/>
@@ -252,7 +248,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1463"/>
         <source>Attack Angle (°):</source>
-        <translation>攻角(°):</translation>
+        <translation>Anstellwinkel (°):</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1478"/>
@@ -262,204 +258,204 @@
     <message>
         <location filename="../src/mainwindow.ui" line="1490"/>
         <source>Viscous model:</source>
-        <translation>湍流模型:</translation>
+        <translation>Turbulenzmodell:</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1503"/>
         <source>Laminar</source>
-        <translation>层流</translation>
+        <translation>Laminar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1508"/>
         <source>SST k-omega</source>
-        <translation></translation>
+        <translation>SST k-omega</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1567"/>
         <source>Start Simulation</source>
-        <translation>开始模拟</translation>
+        <translation>Simulation starten</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1785"/>
         <source>Mesh</source>
-        <translation>网格</translation>
+        <translation>Netz</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1807"/>
         <source>Pressure contour</source>
-        <translation>压力图</translation>
+        <translation>Druckkontur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1829"/>
         <source>X velocity contour</source>
-        <translation>X方向速度图</translation>
+        <translation>X-Geschwindigkeitskontur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1851"/>
         <source>Y velocity contour</source>
-        <translation>Y方向速度图</translation>
+        <translation>Y-Geschwindigkeitskontur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1873"/>
         <source>Velocity magnitude contour</source>
-        <translation>速度大小图</translation>
+        <translation>Geschwindigkeitsbetrag-Kontur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1895"/>
         <source>Density contour</source>
-        <translation>密度图</translation>
+        <translation>Dichtekontur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="188"/>
         <source>Select a section</source>
-        <translation>选择一个截面</translation>
+        <translation>Profil auswählen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="195"/>
         <source>Circle</source>
-        <translation>圆</translation>
+        <translation>Kreis</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="197"/>
         <source>Diameter D(m)</source>
-        <translation>直径 D(m)</translation>
+        <translation>Durchmesser D(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="203"/>
         <source>Rectangle</source>
-        <translation>矩形</translation>
+        <translation>Rechteck</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="205"/>
         <location filename="../src/mainwindow.cpp" line="214"/>
         <source>Width W(m)</source>
-        <translation>宽度 W(m)</translation>
+        <translation>Breite W(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="206"/>
         <location filename="../src/mainwindow.cpp" line="215"/>
         <source>Height H(m)</source>
-        <translation>高度 H(m)</translation>
+        <translation>Höhe H(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="212"/>
         <source>Chamfered Rectangle</source>
-        <translation>倒角矩形</translation>
+        <translation>Abgefastes Rechteck</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="216"/>
         <source>Chamfered Radius R(m)</source>
-        <translation>倒角半径 R(m)</translation>
+        <translation>Fasenradius R(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="222"/>
         <source>Streamlined Box Girder</source>
-        <translation>流线型箱梁</translation>
+        <translation>Stromlinienförmiger Hohlkasten</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="224"/>
         <location filename="../src/mainwindow.cpp" line="238"/>
         <source>Total Width B(m)</source>
-        <translation>总宽度 B(m)</translation>
+        <translation>Gesamtbreite B(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="225"/>
         <location filename="../src/mainwindow.cpp" line="240"/>
         <source>Total Height H(m)</source>
-        <translation>总高度 H(m)</translation>
+        <translation>Gesamthöhe H(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="226"/>
         <location filename="../src/mainwindow.cpp" line="239"/>
         <source>Bottom Width B1(m)</source>
-        <translation>底板宽度 B1(m)</translation>
+        <translation>Bodenbreite B1(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="227"/>
         <location filename="../src/mainwindow.cpp" line="242"/>
         <source>Top Slope i(%)</source>
-        <translation>顶板横坡 i(%)</translation>
+        <translation>Deckenneigung i(%)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="228"/>
         <source>Angle 1 a1(°)</source>
-        <translation>角1 a1(°)</translation>
+        <translation>Winkel 1 a1(°)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="229"/>
         <source>Angle 2 a2(°)</source>
-        <translation>角2 a2(°)</translation>
+        <translation>Winkel 2 a2(°)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="230"/>
         <location filename="../src/mainwindow.cpp" line="244"/>
         <source>Attack Angle(°)</source>
-        <translation>攻角(°)</translation>
+        <translation>Anstellwinkel(°)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="236"/>
         <source>Cantilever Box Girder</source>
-        <translation>悬臂箱梁</translation>
+        <translation>Freitragender Hohlkasten</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="241"/>
         <source>Cantilever Thickness t(m)</source>
-        <translation>悬臂厚度 t(m)</translation>
+        <translation>Kragarmdicke t(m)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="243"/>
         <source>Angle a(°)</source>
-        <translation>角 a(°)</translation>
+        <translation>Winkel a(°)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Showing mesh...</source>
-        <translation>正在显示网格...</translation>
+        <translation>Netz wird angezeigt...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="493"/>
         <source>Mesh loaded successfully</source>
-        <translation>成功载入网格</translation>
+        <translation>Netz erfolgreich geladen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="504"/>
         <source>Parsed points to vtk successfully.</source>
-        <translation>成功将点解析到vtk。</translation>
+        <translation>Punkte erfolgreich nach VTK umgewandelt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="515"/>
         <source>Parsed cells to vtk successfully.</source>
-        <translation>成功将单元解析到vtk。</translation>
+        <translation>Zellen erfolgreich nach VTK umgewandelt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="547"/>
         <source>Displayed mesh in vtk successfully.</source>
-        <translation>成功将网格显示到vtk。</translation>
+        <translation>Netz erfolgreich in VTK angezeigt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="579"/>
         <source>Warning: Cannot calculate velocity without geometry.</source>
-        <translation>警告：在未设置几何图形时，无法计算实际速度。</translation>
+        <translation>Warnung: Geschwindigkeit kann nicht ohne Geometrie berechnet werden.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="605"/>
         <source>Warning: Cannot calculate Reynolds number without geometry.</source>
-        <translation>警告：在未设置几何图形时，无法计算雷诺数。</translation>
+        <translation>Warnung: Reynolds-Zahl kann nicht ohne Geometrie berechnet werden.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="931"/>
         <source>Window is closing, attempting to stop the running simulation...</source>
-        <translation>正在关闭窗口，尝试停止计算...</translation>
+        <translation>Fenster wird geschlossen, versuche laufende Simulation zu stoppen...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="943"/>
         <source>Worker thread did not stop gracefully, forcing termination.</source>
-        <translation>工作线程未被优雅地退出，正在强制退出。</translation>
+        <translation>Arbeitsthread wurde nicht ordnungsgemäß beendet, Beendigung wird erzwungen.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="947"/>
         <source>Simulation stopped.</source>
-        <translation>模拟结束。</translation>
+        <translation>Simulation gestoppt.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1063"/>
@@ -473,49 +469,49 @@
         <location filename="../src/mainwindow.cpp" line="1260"/>
         <location filename="../src/mainwindow.cpp" line="1264"/>
         <source>Error</source>
-        <translation>错误</translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1202"/>
         <location filename="../src/mainwindow.cpp" line="1234"/>
         <location filename="../src/mainwindow.cpp" line="1264"/>
         <source>Unknown Error</source>
-        <translation>未知错误</translation>
+        <translation>Unbekannter Fehler</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1246"/>
         <source>Choose a DXF file</source>
-        <translation>选择一个DXF文件</translation>
+        <translation>DXF-Datei auswählen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1248"/>
         <source>DXF Files (*.dxf);;All Files (*)</source>
-        <translation>DXF文件 (*.dxf);;所有文件 (*)</translation>
+        <translation>DXF-Dateien (*.dxf);;Alle Dateien (*)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1295"/>
         <source>Starting mesh generation...</source>
-        <translation>开始生成网格...</translation>
+        <translation>Netzgenerierung wird gestartet...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1338"/>
         <source>Preparing solver thread...</source>
-        <translation>正在准备求解器线程...</translation>
+        <translation>Vorbereitung des Solver-Threads...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1471"/>
         <source>Mesh generation finished successfully.</source>
-        <translation>成功生成网格。</translation>
+        <translation>Netzgenerierung erfolgreich abgeschlossen.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1482"/>
         <source>[CRITICAL ERROR] </source>
-        <translation>[严重错误] </translation>
+        <translation>[KRITISCHER FEHLER] </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1493"/>
         <source>Solver finished.</source>
-        <translation>求解器求解完成。</translation>
+        <translation>Solver beendet.</translation>
     </message>
 </context>
 <context>
@@ -523,52 +519,52 @@
     <message>
         <location filename="../src/newprojectdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>对话框</translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="114"/>
         <source>New Project</source>
-        <translation>新建项目</translation>
+        <translation>Neues Projekt</translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="135"/>
         <source>Name your new project and choose a working directory to store all related documents.</source>
-        <translation>为你的新项目命名并选择一个工作目录来存放所有相关文件。</translation>
+        <translation>Benennen Sie Ihr neues Projekt und wählen Sie ein Arbeitsverzeichnis, um alle zugehörigen Dokumente zu speichern.</translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="192"/>
         <source>Project Name: </source>
-        <translation>项目名称: </translation>
+        <translation>Projektname: </translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="207"/>
         <source>Work Path: </source>
-        <translation>工作目录: </translation>
+        <translation>Arbeitspfad: </translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="306"/>
         <source>Browse...</source>
-        <translation>浏览...</translation>
+        <translation>Durchsuchen...</translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="364"/>
         <source>OK</source>
-        <translation>好</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../src/newprojectdialog.ui" line="385"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.cpp" line="262"/>
         <source>Choose new project work path</source>
-        <translation>选择一个项目工作目录</translation>
+        <translation>Arbeitsverzeichnis für neues Projekt auswählen</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.cpp" line="271"/>
         <source>Input error</source>
-        <translation>输入错误</translation>
+        <translation>Eingabefehler</translation>
     </message>
 </context>
 <context>
@@ -578,12 +574,12 @@
         <location filename="../src/mainwindow.cpp" line="77"/>
         <location filename="../src/mainwindow.cpp" line="80"/>
         <source>Error</source>
-        <translation>错误</translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="80"/>
         <source>Unknown Error</source>
-        <translation>未知错误</translation>
+        <translation>Unbekannter Fehler</translation>
     </message>
 </context>
 <context>
@@ -591,50 +587,42 @@
     <message>
         <location filename="../src/settingsdialog.ui" line="14"/>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="45"/>
         <source>Language:</source>
-        <translation>语言(Language):</translation>
+        <translation>Sprache(Language):</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="58"/>
         <source>English</source>
-        <translation>英语(English)</translation>
+        <translation>Englisch(English)</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="63"/>
         <source>Simplified Chinese(简体中文)</source>
-        <translation>简体中文</translation>
+        <translation>Chinesisch (vereinfacht)(简体中文)</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="68"/>
         <source>German(Deutsch)</source>
-        <translation>德语(Deutsch)</translation>
-    </message>
-    <message>
-        <source>简体中文</source>
-        <translation type="vanished">简体中文(Chinese)</translation>
-    </message>
-    <message>
-        <source>Deutsch</source>
-        <translation type="vanished">德语(Deutsch)</translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="111"/>
         <source>OK</source>
-        <translation>确定</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="123"/>
         <source>Apply</source>
-        <translation>应用</translation>
+        <translation>Anwenden</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="135"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -642,17 +630,17 @@
     <message>
         <location filename="../src/welcomedialog.ui" line="14"/>
         <source>Welcome - BridgeWind</source>
-        <translation>欢迎-桥风智绘</translation>
+        <translation>Willkommen - BridgeWind</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.ui" line="94"/>
         <source>BridgeWind</source>
-        <translation>桥风智绘</translation>
+        <translation>BridgeWind</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.ui" line="118"/>
         <source>New Project</source>
-        <translation>新建项目</translation>
+        <translation>Neues Projekt</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.ui" line="121"/>
@@ -664,7 +652,7 @@
     <message>
         <location filename="../src/welcomedialog.ui" line="139"/>
         <source>Open Project...</source>
-        <translation>打开项目...</translation>
+        <translation>Projekt öffnen...</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.ui" line="160"/>
@@ -674,7 +662,7 @@
     <message>
         <location filename="../src/welcomedialog.ui" line="269"/>
         <source>Recent Projects</source>
-        <translation>最近项目</translation>
+        <translation>Zuletzt geöffnete Projekte</translation>
     </message>
 </context>
 </TS>

@@ -40,6 +40,7 @@ private:
 private slots:
 	void onNewProjectButtonClicked();
 	void onRecentProjectClicked(const QModelIndex& index);
+	void onSettingsButtonClicked();
 };
 
 #include <QStyledItemDelegate>

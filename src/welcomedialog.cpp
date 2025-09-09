@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QFontMetrics>
 #include <QMessageBox>
+#include "settingsdialog.h"
 WelcomeDialog::WelcomeDialog(QWidget* parent)
 	:
 	QDialog(parent),
@@ -25,8 +26,10 @@ WelcomeDialog::WelcomeDialog(QWidget* parent)
 
 	QIcon newIcon(":/icons/res/icons/welcome_dialog_new_project.svg");
 	QIcon openIcon(":/icons/res/icons/welcome_dialog_open_project.svg");
+	QIcon settingsIcon(":/icons/res/icons/settings.svg");
 	ui->newProjectButton->setIcon(newIcon);
 	ui->openProjectButton->setIcon(openIcon);
+	ui->settingsButton->setIcon(settingsIcon);
 
 	QStandardItemModel* model = new QStandardItemModel(this);
 	m_historyManager = new ProjectHistoryManager(this);
@@ -51,7 +54,8 @@ WelcomeDialog::WelcomeDialog(QWidget* parent)
 	listView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	connect(listView, &QListView::clicked, this, &WelcomeDialog::onRecentProjectClicked);
 
-
+	connect(ui->settingsButton, &QPushButton::clicked, this, &WelcomeDialog::onSettingsButtonClicked);
+	connect(ui->smallSettingsButton, &QPushButton::clicked, this, &WelcomeDialog::onSettingsButtonClicked);
 
 
 }
@@ -128,6 +132,10 @@ void WelcomeDialog::onRecentProjectClicked(const QModelIndex& index)
 
 	// 3. 调用 accept() 来关闭欢迎对话框，并通知主窗口操作成功
 	this->accept();
+}
+void WelcomeDialog::onSettingsButtonClicked() {
+	SettingsDialog dialog(this);
+	dialog.exec();
 }
 ProjectItemDelegate::ProjectItemDelegate(QObject* parent) {
 
@@ -277,3 +285,4 @@ void NewProjectDialog::onOkButtonClicked() {
 NewProjectDialog::~NewProjectDialog() {
 	qDebug() << "~NewProjectDialog";
 }
+

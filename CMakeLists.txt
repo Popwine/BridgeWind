@@ -1,10 +1,23 @@
 
 cmake_minimum_required(VERSION 3.18)
-project(BridgeWind LANGUAGES CXX)
+project(BridgeWind LANGUAGES CXX VERSION 1.0.2)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+if(WIN32)
+    # 使用 configure_file 从 version.rc.in 生成 version.rc
+    # 这个命令会读取输入文件，替换所有 @VAR@ 占位符，并写入输出文件
+    configure_file(
+        "${CMAKE_SOURCE_DIR}/src/version.rc.in"
+        "${CMAKE_BINARY_DIR}/src/version.rc"
+        @ONLY
+    )
+    configure_file(
+    "${CMAKE_SOURCE_DIR}/src/version.h.in"
+    "${CMAKE_BINARY_DIR}/src/version.h"
+    @ONLY
+)
+endif()
 if(MSVC)
     add_compile_options(/utf-8)
 else()
@@ -81,8 +94,10 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt5 COMPONENTS Core Widgets Svg REQUIRED)
 find_package(Qt5 COMPONENTS LinguistTools REQUIRED)
 message(STATUS "CMake found windeployqt at: ${Qt5_WINDEPLOYQT_EXECUTABLE}")
-set(TS_FILES "${CMAKE_SOURCE_DIR}/translations/bridgewind_zh_CN.ts")
-
+set(TS_FILES 
+    "${CMAKE_SOURCE_DIR}/translations/bridgewind_zh_CN.ts"
+    "${CMAKE_SOURCE_DIR}/translations/bridgewind_de_DE.ts"
+)
 include_directories(
     src
     ${Qt5Widgets_INCLUDE_DIRS} # 这是 find_package 帮我们找到的Qt头文件路径
