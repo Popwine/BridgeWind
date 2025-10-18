@@ -73,7 +73,8 @@ PhengLEI
 ### **3.1 HDF5 (CGNS 的依赖)**
 
 -   **推荐版本**: 1.14.4-3
--   **源码下载**: [HDF5 官网](https://www.hdfgroup.org/downloads/hdf5/source-code/) (https://www.hdfgroup.org/downloads/hdf5/source-code/)
+-   **源码下载**: [HDF5 官网](https://www.hdfgroup.org/downloads/hdf5/source-code/)
+(https://www.hdfgroup.org/downloads/hdf5/source-code/)
 -   **编译说明**: 遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
         -   `CMAKE_INSTALL_PREFIX`: `BridgeWind-deps/3rdPartyInstall/hdf5-install-release`
@@ -84,7 +85,8 @@ PhengLEI
 ### **3.2 CGNS**
 
 -   **推荐版本**: 4.4.0
--   **源码下载**: [CGNS GitHub Releases](https://github.com/CGNS/CGNS/releases) (https://github.com/CGNS/CGNS/releases)
+-   **源码下载**: [CGNS GitHub Releases](https://github.com/CGNS/CGNS/releases)
+(https://github.com/CGNS/CGNS/releases)
 -   **编译说明**: 遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
         -   `CMAKE_INSTALL_PREFIX`: `BridgeWind/3rdPartyInstall/CGNS-install-release`
@@ -99,7 +101,8 @@ PhengLEI
 对于Qt，不需要手动编译。使用官方安装包是最高效的方式。
 
 -   **推荐版本**: 5.14.2
--   **下载链接**: [qt-opensource-windows-x86-5.14.2.exe](https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe) (https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe)
+-   **下载链接**: [qt-opensource-windows-x86-5.14.2.exe](https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe)
+(https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe)
 -   **安装说明**:
     1.  运行安装程序。
     2.  在 "Select Components" 步骤中，勾选与您的编译器匹配的组件（例如 `MSVC 2019 64-bit`）。
@@ -133,6 +136,7 @@ PhengLEI
 
 -   **推荐版本**: 9.4.2
 -   **源码下载**: [VTK 官网](https://vtk.org/download/)
+(https://vtk.org/download/)
 -   **编译说明**: 请确保已经编译了Qt。请遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
         -   `CMAKE_INSTALL_PREFIX`: `BridgeWind\3rdPartyInstall\VTK-9.4.2-install-release`
@@ -146,7 +150,9 @@ PhengLEI
 ### **3.5 libdxfrw**
 
 -   **推荐版本**: 0.6.3
--   **下载链接**: [libdxfrw SourceForge](https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download) (https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download)；或使用git克隆：
+-   **下载链接**: [libdxfrw SourceForge](https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download)
+(https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download)；
+或使用git克隆：
 ```
 git clone https://github.com/codelibs/libdxfrw.git
 ```
@@ -159,7 +165,8 @@ git clone https://github.com/codelibs/libdxfrw.git
 ### **3.6 风雷 (PHengLEI)**
 
 -   **代码库地址**: [https://www.osredm.com/PHengLEI/PHengLEI](https://www.osredm.com/PHengLEI/PHengLEI)
--   请按照官方教程编译风雷。[查看官方教程](https://www.bilibili.com/video/BV1eX4y1T7yW )(https://www.bilibili.com/video/BV1eX4y1T7yW)
+-   请按照官方教程编译风雷。[查看官方教程](https://www.bilibili.com/video/BV1eX4y1T7yW)
+(https://www.bilibili.com/video/BV1eX4y1T7yW)
 
 
 
