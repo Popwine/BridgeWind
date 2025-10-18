@@ -472,6 +472,11 @@
         <translation>Fehler</translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.cpp" line="1063"/>
+        <source>Please generate mesh first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.cpp" line="1202"/>
         <location filename="../src/mainwindow.cpp" line="1234"/>
         <location filename="../src/mainwindow.cpp" line="1264"/>
@@ -657,7 +662,7 @@
     <message>
         <location filename="../src/welcomedialog.ui" line="160"/>
         <source>Settings...</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen...</translation>
     </message>
     <message>
         <location filename="../src/welcomedialog.ui" line="269"/>

@@ -1,25 +1,46 @@
 # BridgeWind 编译指南 (Build Guide)
 
-本文档为希望从源代码编译 BridgeWind 的开发者提供了详细的步骤和指导。此流程涉及手动从源码编译多个依赖库，并直接修改项目中的 `CMakeLists.txt` 文件。请严格按照步骤操作。
+本文档为希望从源代码编译 BridgeWind 的开发者提供了详细的步骤和指导。此流程涉及手动从源码编译多个依赖库，并可能会手动修改项目中的 `CMakeLists.txt` 文件。
 
+本项目的编译流程自动化程度不足，依赖很多手动操作。我们正在积极寻求改进构建系统的方案。如果您对此有经验并愿意做出贡献，我们非常欢迎您提交 **Pull Request**！
 ## 1. 核心开发工具
 
 请首先确保您的开发环境中已安装以下核心工具：
 
--   **C++ 编译器**: 需支持 C++17 标准。推荐使用 **Visual Studio 2019** 或更高版本。
--   **CMake**: 版本 **3.15** 或更高。请确保已安装 `cmake-gui` 组件，并已将CMake添加到系统的 `PATH` 环境变量中。
+-   **Visual Studio 2019** 或更高版本。安装时除默认选项外请勾选“使用C++的桌面程序”、“Windos 11 SDK”、“Windos 10 SDK”。 https://visualstudio.microsoft.com/
+-   **CMake**: 版本 **3.15** 或更高。请确保已安装 `cmake-gui` 组件，并已将CMake添加到系统的 `PATH` 环境变量中。 https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.2-windows-x86_64.msi
+-   **Git**: https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.2/Git-2.51.0.2-64-bit.exe
+-   **MS-MPI**: 下载时请勾选"msmpisdk.msi", "msmpisetup.exe"两个文件并安装。 https://www.microsoft.com/en-us/download/details.aspx?id=57467
+-   **Gmsh**: https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64.zip
 
-## 2. 编译依赖库 (从源码)
+## 2. 克隆桥风智绘（BridgeWind）仓库
+1.  在您希望存放BrideWind源码的地方右键打开PowerShell，输入以下命令：
+```
+git clone https://osredm.com/p70941386/BridgeWind
+```
+2. 克隆后，当前目录会出现`BridgeWind`文件夹，其中有BridgeWind完整的源码，但不包括第三方库的源码。关于第三方库的源码我们需要逐个获得并编译。后面提到的`BridgeWind`文件夹即此路径。
+3. 在BridgeWind文件夹下新建一个"3rdPartyInstall"文件夹，用于存放**已编译好的**第三方库的二进制文件。
+## 3. 编译依赖库 (从源码)
 
-这是最关键且最耗时的部分。您需要依次下载并编译以下库。我们推荐为所有依赖库创建一个统一的安装目录，例如 `C:\dev\BridgeWind-deps`，并将每个库安装到其下的子目录中。
+这是最关键且最耗时的部分。您需要依次下载并编译依赖库。我们推荐把所有依赖库安装到`BridgeWind/3rdPartyInstall`文件夹下，这样不需要手动编码`CMakeLists.txt`中的依赖路径。
 
 ---
 
-### **通用编译流程 (使用 CMake GUI & Visual Studio)**
 
-对于下面列出的每个需要从源码编译的库，请遵循此通用流程：
 
-1.  **下载并解压源码**到您选择的位置。
+### **使用 CMake GUI & Visual Studio 的通用编译流程**
+
+对于这五个依赖：
+```
+HDF5
+CGNS
+VTK
+libdxfrw
+PhengLEI
+```
+请遵循此通用流程：
+
+1.  **下载并解压源码**到您任意的位置，链接将在后面给出。
 2.  在源码根目录下，创建一个名为 `build` 的空文件夹。
 3.  **启动 CMake GUI** (`cmake-gui.exe`)。
 4.  **设置路径**:
@@ -30,8 +51,8 @@
     -   在弹出的窗口中，选择与您的 Visual Studio 版本匹配的生成器（例如 "Visual Studio 16 2019"），并确保平台为 `x64`。
     -   点击 "Finish"。CMake 将开始配置，期间可能会出现红色高亮的变量。
 6.  **设置变量**:
-    -   在 CMake GUI 的变量列表中，找到 `CMAKE_INSTALL_PREFIX`。将其值设置为您规划的安装路径（例如 `C:/dev/BridgeWind-deps/library-name`）。
-    -   根据每个库的具体说明，设置其他必要的变量（例如 `BUILD_SHARED_LIBS` 或指向其他依赖的 `..._DIR` 路径）。
+    -   在 CMake GUI 的变量列表中，找到 `CMAKE_INSTALL_PREFIX`。将其值设置为 `BridgeWind/3rdPartyInstall`。
+    -   根据下面每个库的具体说明，设置其他必要的变量（例如 `BUILD_SHARED_LIBS` 或指向其他依赖的 `..._DIR` 路径）。
 7.  **再次配置与生成**:
     -   再次点击 **"Configure"**。所有红色高亮应该会消失。
     -   点击 **"Generate"**，CMake 将在 `build` 目录下生成 Visual Studio 解决方案 (`.sln`) 文件。
@@ -43,64 +64,104 @@
 
 ---
 
-### **2.1 HDF5 (CGNS 的依赖)**
+### **3.1 HDF5 (CGNS 的依赖)**
 
--   **推荐版本**: 1.12.2
--   **源码下载**: [HDF5 官网](https://www.hdfgroup.org/downloads/hdf5/source-code/)
+-   **推荐版本**: 1.14.4-3
+-   **源码下载**: [HDF5 官网](https://www.hdfgroup.org/downloads/hdf5/source-code/) (https://www.hdfgroup.org/downloads/hdf5/source-code/)
 -   **编译说明**: 遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
-        -   `CMAKE_INSTALL_PREFIX`: `C:/dev/BridgeWind-deps/hdf5`
+        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind-deps/3rdPartyInstall/hdf5-install-release`
         -   `BUILD_SHARED_LIBS`: 勾选 (ON)
 
 ---
 
-### **2.2 CGNS**
+### **3.2 CGNS**
 
 -   **推荐版本**: 4.4.0
--   **源码下载**: [CGNS GitHub Releases](https://github.com/CGNS/CGNS/releases)
+-   **源码下载**: [CGNS GitHub Releases](https://github.com/CGNS/CGNS/releases) (https://github.com/CGNS/CGNS/releases)
 -   **编译说明**: 遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
-        -   `CMAKE_INSTALL_PREFIX`: `C:/dev/BridgeWind-deps/cgns`
+        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind/3rdPartyInstall/CGNS-install-release`
         -   `BUILD_SHARED_LIBS`: 勾选 (ON)
         -   `CGNS_ENABLE_HDF5`: 勾选 (ON)
-        -   `HDF5_DIR`: 设置为您之前 HDF5 的安装路径，指向包含 `HDF5Config.cmake` 的目录，例如 `C:/dev/BridgeWind-deps/hdf5/share/cmake`。
+        -   `HDF5_DIR`: 设置为您之前 HDF5 的安装路径，指向包含 `HDF5Config.cmake` 的目录，即 `BridgeWind\3rdPartyInstall\hdf5-install-release\cmake`。
 
 ---
 
 ### **2.3 Qt 5 (使用安装包)**
 
-对于 Qt，使用官方安装包是最高效的方式。
+对于Qt，不需要手动编译。使用官方安装包是最高效的方式。
 
 -   **推荐版本**: 5.14.2
--   **下载链接**: [qt-opensource-windows-x86-5.14.2.exe](https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe)
+-   **下载链接**: [qt-opensource-windows-x86-5.14.2.exe](https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe) (https://download.qt.io/archive/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe)
 -   **安装说明**:
     1.  运行安装程序。
     2.  在 "Select Components" 步骤中，勾选与您的编译器匹配的组件（例如 `MSVC 2019 64-bit`）。
-    3.  记下安装路径，例如 `C:\Qt\5.14.2\msvc2019_64`。
+    3.  记下安装路径，例如 `C:\Qt`。
+    4.  将整个Qt文件夹复制到`BridgeWind/3rdPartyInstall/`文件夹下。推荐的复制后的目录应该为：
+```
+BridgeWind
+├── .git
+├── 3rdPartyInstall
+│   ├── CGNS-install-release
+│   ├── hdf5-install-release
+│   └── Qt
+│       └── Qt5.14.2
+│           ├── 5.14.2
+│           │   └── msvc2017_64
+│           │       ├── lib
+│           │       │   └── cmake
+│           │       └── ...
+│           ├── dist
+│           ├── Docs
+│           └── ...
+├── images
+├── res
+├── src
+└── translations
+```
 
 ---
 
 ### **2.4 VTK**
 
--   **推荐版本**: 9.2.4
+-   **推荐版本**: 9.4.2
 -   **源码下载**: [VTK 官网](https://vtk.org/download/)
--   **编译说明**: 遵循上述“通用编译流程”。
+-   **编译说明**: 请确保已经编译了Qt。请遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
-        -   `CMAKE_INSTALL_PREFIX`: `C:/dev/BridgeWind-deps/vtk`
+        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind\3rdPartyInstall\VTK-9.4.2-install-release`
         -   `BUILD_SHARED_LIBS`: 勾选 (ON)
         -   `VTK_GROUP_ENABLE_Qt`: 设置为 `YES`
         -   `VTK_QT_VERSION`: 设置为 `5`
-        -   `Qt5_DIR`: 设置为您 Qt 的安装路径，例如 `C:/Qt/5.14.2/msvc2019_64/lib/cmake/Qt5`。
+        -   `Qt5_DIR`: 设置为您 Qt5 的安装路径，即 `BridgeWind/3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2019_64/lib/cmake/Qt5`。
 
 ---
 
 ### **2.5 libdxfrw**
 
--   **下载链接**: [libdxfrw SourceForge](https://sourceforge.net/projects/libdxfrw/files/stable/)
+-   **推荐版本**: 0.6.3
+-   **下载链接**: [libdxfrw SourceForge](https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download) (https://sourceforge.net/projects/libdxfrw/files/libdxfrw-0.6.3.tar.bz2/download)；或使用git克隆：
+```
+git clone https://github.com/codelibs/libdxfrw.git
+```
 -   **编译说明**: 遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
-        -   `CMAKE_INSTALL_PREFIX`: `C:/dev/BridgeWind-deps/libdxfrw`
+        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind/3rdPartyInstall/libdxfrw-install-release`
 
+---
+
+### **3.2 PHengLEI**
+
+-   **代码库地址**: [https://www.osredm.com/PHengLEI/PHengLEI](https://www.osredm.com/PHengLEI/PHengLEI)
+-   请按照官方教程编译风雷。[查看官方教程](https://www.bilibili.com/video/BV1eX4y1T7yW )(https://www.bilibili.com/video/BV1eX4y1T7yW)
+
+-   **配置**:
+    1.  获取 `PHengLEIv3d0.exe` 及其依赖 (如 `tecio.dll`)。
+    2.  在 BridgeWind 项目根目录下，创建 `PHengLEI_template` 文件夹。
+    3.  将可执行文件和DLL复制到 `PHengLEI_template`。
+    4.  在 `PHengLEI_template` 内创建 `bin` 子文件夹，并将所有 `.hypara` 配置文件模板放入其中。
+
+---
 ## 3. 配置外部工具 (运行时依赖)
 
 ### **3.1 Gmsh**
@@ -167,4 +228,3 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
 
 ---
 
-我们正在积极寻求改进构建系统的方案。如果您对此有经验并愿意做出贡献，我们非常欢迎您提交 **Pull Request**！

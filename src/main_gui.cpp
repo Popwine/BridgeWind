@@ -71,8 +71,9 @@ void attachToConsole()
 #endif
 }
 
-int main(int argc, char* argv[])
-{
+
+
+int guiProcess(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("dlut");
     QCoreApplication::setApplicationName("BridgeWind");
 
@@ -119,7 +120,7 @@ int main(int argc, char* argv[])
     SettingsManager& settingsManager = SettingsManager::instance();
     QTranslator translator;
     if (settingsManager.getLanguage() != "en_US") {
-		qDebug() << "Current language setting:" << settingsManager.getLanguage();
+        qDebug() << "Current language setting:" << settingsManager.getLanguage();
 
         // --- 主要解决方案：从文件系统加载 ---
         // 获取可执行文件所在的目录 (例如 C:/.../bin)
@@ -140,10 +141,10 @@ int main(int argc, char* argv[])
             qWarning() << "Please ensure 'translations/bridgewind_" + settingsManager.getLanguage() + ".qm' exists relative to the executable.";
         }
     }
-    
-	
-    
-    
+
+
+
+
 
 
     a.setWindowIcon(QIcon(":/icons/res/icons/app_icon.ico"));
@@ -163,9 +164,9 @@ int main(int argc, char* argv[])
 
 
     WelcomeDialog welcomeDialog;
-    
+
     if (welcomeDialog.exec() == QDialog::Accepted) {
-        
+
         QString projectPath = welcomeDialog.finalProjectPath();
         QString projectName = welcomeDialog.finalProjectName();
         // 2. 将路径传递给 MainWindow
@@ -177,7 +178,7 @@ int main(int argc, char* argv[])
     }
 
     else {
-       
+
         return 0;
     }
 
@@ -186,4 +187,10 @@ int main(int argc, char* argv[])
     //MainWindow w(projectName, projectPath); // 需要修改 MainWindow 的构造函数
     //w.show();
     //return a.exec();
+}
+
+int main(int argc, char* argv[])
+{
+
+	return guiProcess(argc, argv);
 }

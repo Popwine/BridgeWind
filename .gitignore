@@ -6,7 +6,7 @@ dlls/
 res/test_case/
 res/test_service/
 res/meshes/
-bin/
+./bin
 Release_Package/
 Release_Package*/
 3rdPartyInstall/
@@ -21,5 +21,8 @@ CMakeCache.txt
 *.lib
 *.obj
 *.aps
+
+res/PHengLEI_template/PHengLEIv3d0.exe
+res/PHengLEI_template/tecio.dll
 # mesh file
 *.cgns

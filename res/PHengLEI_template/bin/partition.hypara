@@ -1,0 +1,23 @@
+// pgridtype: The grid type.
+//               0 -- unstruct grid
+//               1 -- struct grid
+// maxproc:   The number of partition zones that want to be divided into,
+//            which is equal to the number of CPU processors you want.
+//			  Usually, 50~100 thousands structured cells per CPU-Core is suggested.
+//			           30~70  thousands unstructured cells per CPU-Core is suggested.
+// original_grid_file     : original grid file that want to be divided(HyperFLOW/PHengLEI type, *.fts).
+// partition_grid_file    : target partition grid file(HyperFLOW/PHengLEI type, *.fts).
+
+int pgridtype = 0;
+int maxproc   = 4;
+
+string   original_grid_file  = "./grid/Bridge_Wind.fts";
+string   partition_grid_file = "./grid/Bridge_Wind__4.fts";
+
+
+// Number of multi-grid levels, ONLY used for structured grid.
+//               1 -- single level, 2 -- 2 level, N -- N level, ..., et al.
+int numberOfMultigrid = 1;
+
+
+

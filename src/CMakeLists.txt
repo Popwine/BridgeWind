@@ -124,6 +124,12 @@ add_executable(BridgeWindApp
     ${QM_FILES}
     
 )
+add_executable(TestApp
+
+    main_test.cpp
+    resources.qrc
+
+)
 if(WIN32)
     target_sources(BridgeWindApp PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/icon.rc
@@ -134,4 +140,8 @@ endif()
 target_link_libraries(BridgeWindApp PRIVATE
     BridgeWindUI
 )
+target_link_libraries(TestApp PRIVATE
+    BridgeWindUI
+)
+
 

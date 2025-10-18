@@ -1060,7 +1060,7 @@ void MainWindow::onSetParametersButtonClicked() {
     }
     else {
         ui->setMeshingButton->setChecked(true);
-        QMessageBox::critical(this, tr("Error"), QString("Please generate mesh first."));
+        QMessageBox::critical(this, tr("Error"), tr("Please generate mesh first."));
     }
 }
 void MainWindow::onSetBuiltInModeButtonClicked() {

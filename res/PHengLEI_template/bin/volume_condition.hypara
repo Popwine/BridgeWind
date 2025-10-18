@@ -1,0 +1,9 @@
+# nVolumeConditions: number of global volume conditions.
+# vcName             : Volume Condition Name.
+# vcType(in PHengLEI): Volume Condition Type.
+
+int nVolumeConditions = 1;
+string vcName = "Fluid";
+{
+  int vcType = 0;
+}
