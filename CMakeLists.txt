@@ -23,7 +23,7 @@ if(MSVC)
 else()
     add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
 endif()
-# 首先，为 Debug 版本设置路径
+# Debug 版本设置路径
 if(CMAKE_BUILD_TYPE MATCHES "Debug" OR CMAKE_CONFIGURATION_TYPES MATCHES "Debug")
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/libdxfrw-install") # 指向你的 Debug 版本
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/VTK-9.4.2-install-debug/lib/cmake/vtk-9.4")
@@ -31,16 +31,13 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug" OR CMAKE_CONFIGURATION_TYPES MATCHES "Debug"
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/CGNS-install")
 endif()
 
-# 然后，为 Release 版本设置路径
+# Release 版本设置路径
 if(CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_CONFIGURATION_TYPES MATCHES "Release")
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/libdxfrw-install-release") # 指向你刚刚创建的 Release 版本
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/VTK-9.4.2-install-release/lib/cmake/vtk-9.4")
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/hdf5-install-release")
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/CGNS-install-release")
 endif()
-
-
-
 
 
 #set(Qt5_DIR "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
