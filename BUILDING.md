@@ -3,11 +3,17 @@
 本文档为希望从源代码编译 BridgeWind 的开发者提供了详细的步骤和指导。此流程涉及手动从源码编译多个依赖库，并可能会手动修改项目中的 `CMakeLists.txt` 文件。
 
 本项目的编译流程自动化程度不足，依赖很多手动操作。我们正在积极寻求改进构建系统的方案。
+
+您可以下载已编译好的项目文件夹，并直接使用：
+
+https://pan.baidu.com/s/1EKRSHdYOXqWORBE4fFz8ig?pwd=7ngu
+提取码: 7ngu
+
 ## 1. 核心开发工具
 
 请首先确保您的开发环境中已安装以下核心工具：
 
--   **Visual Studio 2019** 或更高版本。安装时除默认选项外请勾选“使用C++的桌面程序”、“Windos 11 SDK”、“Windos 10 SDK”。 https://visualstudio.microsoft.com/
+-   **Visual Studio 2019** 或更高版本。安装时除默认选项外请勾选“使用C++的桌面开发”、“Windos 11 SDK”、“Windos 10 SDK”。 https://visualstudio.microsoft.com/
 -   **CMake**: 版本 **3.15** 或更高。请确保已安装 `cmake-gui` 组件，并已将CMake添加到系统的 `PATH` 环境变量中。 https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.2-windows-x86_64.msi
 -   **Git**: https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.2/Git-2.51.0.2-64-bit.exe
 -   **MS-MPI**: 下载时请勾选"msmpisdk.msi", "msmpisetup.exe"两个文件并安装。 https://www.microsoft.com/en-us/download/details.aspx?id=57467
@@ -26,7 +32,7 @@
 
 这是最关键且最耗时的部分。您需要依次下载并编译依赖库。我们推荐把所有依赖库安装到`BridgeWind/3rdPartyInstall`文件夹下，这样不需要手动编码`CMakeLists.txt`中的依赖路径。
  
-如果您不熟悉使用CMake GUI & Visual Studio的编译流程，请先阅读以下内容：
+如果您不熟悉使用`CMake GUI`和`Visual Studio`的编译流程，请先阅读以下内容：
 
 ---
 
@@ -179,7 +185,7 @@ git clone https://github.com/codelibs/libdxfrw.git
 **1. 在 Visual Studio 中打开项目**
 
 1.  启动 Visual Studio。
-2.  选择 **"Continue without code"** -> **"File" -> "Open" -> "Folder..."**。
+2.  选择 **"Continue without code"** -> "File" -> "Open" -> "Folder..."。
 3.  浏览并选择 `BridgeWind` 仓库的根目录。
 4.  Visual Studio 将自动检测到 `CMakeLists.txt` 并开始配置项目。由于您已在文件中硬编码了路径，配置过程应该会成功。
    
@@ -275,10 +281,16 @@ git clone https://github.com/codelibs/libdxfrw.git
     │               └── 其他vtk库依赖...
     └── ...
     ```
-   
+
+
 ## **编译完成！**
 
 您可以直接从 Visual Studio 中设置 `BridgeWindApp.exe` 为启动项并运行。
+
+若在编译时出现问题，可以下载已编译好的项目文件夹，并直接使用：
+
+https://pan.baidu.com/s/1EKRSHdYOXqWORBE4fFz8ig?pwd=7ngu
+提取码: 7ngu
 
 ---
 

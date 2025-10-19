@@ -39,10 +39,10 @@ if(CMAKE_BUILD_TYPE MATCHES "Release" OR CMAKE_CONFIGURATION_TYPES MATCHES "Rele
     list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/CGNS-install-release")
 endif()
 
-
-#set(Qt5_DIR "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
+# Qt路径
 list(APPEND CMAKE_PREFIX_PATH "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64")
 set(Qt5_DIR "./3rdPartyInstall/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5")
+
 # 1. 正常找到 HDF5。执行完这行，目标 HDF5::HDF5 就被定义了。
 find_package(HDF5 REQUIRED)
 
