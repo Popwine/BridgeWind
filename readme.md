@@ -339,7 +339,7 @@ git clone https://github.com/codelibs/libdxfrw.git
 
 您可以直接从 Visual Studio 中设置 `BridgeWindApp.exe` 为启动项并运行。
 
-![alt text](images\image-3.png)
+![alt text](./images/image-3.png)
 
 若在编译时出现问题，可以下载已编译好的项目文件夹，使用VS打开文件夹即可：
 
@@ -367,17 +367,17 @@ https://osredm.com/p70941386/BridgeWind/releases/download/1.0.2/BridgeWind-1.0.2
 1. 几何设置请选择为圆形，直径设置为1(m).
 2. 网格请按照下图设置：
 
-    ![alt text](images\image.png)
+    ![alt text](./images/image.png)
 
     点击生成网格后生成的网格如图所示：
-    ![alt text](images\image-1.png)
+    ![alt text](./images/image-1.png)
 3. 求解器请按照下图设置：
 
-    ![alt text](images\image-2.png)
+    ![alt text](./images/image-2.png)
 
 4. 分别修改雷诺数为60、80、100、120、150、180、200。将计算得到稳态段的的升力系数、阻力系数记录在图表中，与Qu(2003)的结果对比：
    
-   ![alt text](images\image-4.png)
+   ![alt text](./images/image-4.png)
 
     总体而言，无论是表征非定常涡脱落强度的升力系数，还是反映物体平均受力的阻力系数，“桥风智绘”的预测值都与基准数据吻合良好。
 
@@ -387,24 +387,24 @@ https://osredm.com/p70941386/BridgeWind/releases/download/1.0.2/BridgeWind-1.0.2
 
 1. 几何设置请按照下图设置：
    
-    ![alt text](images\image-5.png)
+    ![alt text](./images/image-5.png)
 
 2. 网格请按照下图设置：
 
-    ![alt text](images\image-6.png)
+    ![alt text](./images/image-6.png)
 
     生成的网格如图所示：
 
-    ![alt text](images\image-7.png)
+    ![alt text](./images/image-7.png)
 
-    ![alt text](images\image-8.png)
+    ![alt text](./images/image-8.png)
 
 3. 求解器请按照下图设置：
    
-   ![alt text](images\image-9.png)
+   ![alt text](./images/image-9.png)
 
 4. 对每隔箱梁分别计算[-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10]度的九个攻角。分别记录其稳态段的阻力系数、升力系数和扭矩系数。与陈（2002）和Mannini和 Bartoli(2008)的结果对比，如图所示：
-    ![alt text](images\image-10.png)
+    ![alt text](./images/image-10.png)
 
     通过与两种典型断面的基准数据对比，验证结果表明：“桥风智绘”软件对于流线型断面的关键气动参数（升、力矩）具有极高的定量预测精度，能够满足工程精细化分析的需求。
 
