@@ -150,7 +150,7 @@ PhengLEI
         -   `CMAKE_INSTALL_PREFIX`: `BridgeWind/3rdPartyInstall/CGNS-install-release`
         -   `BUILD_SHARED_LIBS`: 勾选 (ON)
         -   `CGNS_ENABLE_HDF5`: 勾选 (ON)
-        -   `HDF5_DIR`: 设置为您之前 HDF5 的安装路径，指向包含 `HDF5Config.cmake` 的目录，即 `BridgeWind\3rdPartyInstall\hdf5-install-release\cmake`。
+        -   `HDF5_DIR`: 设置为您之前 HDF5 的安装路径，指向包含 `HDF5Config.cmake` 的目录，即 `BridgeWind/3rdPartyInstall/hdf5-install-release/cmake`。
 
 ---
 
@@ -164,7 +164,7 @@ PhengLEI
 -   **安装说明**:
     1.  运行安装程序。
     2.  在 "Select Components" 步骤中，勾选与您的编译器匹配的组件（例如 `MSVC 2019 64-bit`）。
-    3.  记下安装路径，例如 `C:\Qt`。
+    3.  记下安装路径，例如 `C:/Qt`。
     4.  将整个Qt文件夹复制到`BridgeWind/3rdPartyInstall/`文件夹下。推荐的复制后的目录应该为：
         ```
         BridgeWind
@@ -197,7 +197,7 @@ PhengLEI
 (https://vtk.org/download/)
 -   **编译说明**: 请确保已经编译了Qt。请遵循上述“通用编译流程”。
     -   **CMake 变量设置**:
-        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind\3rdPartyInstall\VTK-9.4.2-install-release`
+        -   `CMAKE_INSTALL_PREFIX`: `BridgeWind/3rdPartyInstall/VTK-9.4.2-install-release`
         -   `BUILD_SHARED_LIBS`: 勾选 (ON)
         -   `VTK_GROUP_ENABLE_Qt`: 设置为 `YES`
         -   `VTK_QT_VERSION`: 设置为 `5`
@@ -276,18 +276,18 @@ git clone https://github.com/codelibs/libdxfrw.git
 
 **4. 配置依赖项**
 
-1. 请复制编译好的风雷可执行文件`PHengLEIv3d0.exe`复制到`BridgeWind\res\PHengLEI_template`目录中。
-2. 请将Gmsh安装目录中的`Gmsh.exe`复制到`BridgeWind\res\PHengLEI_template`目录中。
-3. 请您找到Tecplot安装目录中的`tecio.dll`文件（通常在`C:\Program Files\Tecplot\Tecplot 360 EX 2022 R1\bin`），并同样复制到`BridgeWind\res\PHengLEI_template`。
+1. 请复制编译好的风雷可执行文件`PHengLEIv3d0.exe`复制到`BridgeWind/res/PHengLEI_template`目录中。
+2. 请将Gmsh安装目录中的`Gmsh.exe`复制到`BridgeWind/res/PHengLEI_template`目录中。
+3. 请您找到Tecplot安装目录中的`tecio.dll`文件（通常在`C:/Program Files/Tecplot/Tecplot 360 EX 2022 R1/bin`），并同样复制到`BridgeWind/res/PHengLEI_template`。
 4. 请将以下全部内容复制到`BridgeWind/out/build/x64-Release/`文件夹下：
-   1. `BridgeWind\res\PHengLEI_template`整个文件夹；
-   2. `BridgeWind\3rdPartyInstall\hdf5-install-release\bin`中的`hdf5.dll`；
-   3. `BridgeWind\3rdPartyInstall\CGNS-install-release\bin`中的`cgnsdll.dll`；
-   4. `BridgeWind\3rdPartyInstall\VTK-9.4.2-install-release\bin`文件夹下的全部文件。
+   1. `BridgeWind/res/PHengLEI_template`整个文件夹；
+   2. `BridgeWind/3rdPartyInstall/hdf5-install-release/bin`中的`hdf5.dll`；
+   3. `BridgeWind/3rdPartyInstall/CGNS-install-release/bin`中的`cgnsdll.dll`；
+   4. `BridgeWind/3rdPartyInstall/VTK-9.4.2-install-release/bin`文件夹下的全部文件。
 5. 使用`windeployqt`解析BridgeWindApp.exe并为其配置依赖：
    1. 在开始菜单中找到`Qt 5.14.2 (MSVC 2017 64-bit)`打开，在命令行中输入：
         ```cmd
-        cd "您的路径\BridgeWind\out\build\x64-Release\src"
+        cd "您的路径/BridgeWind/out/build/x64-Release/src"
         windeployqt BridgeWindApp.exe
         ```
     2. `windeployqt`命令会自动为您配置qt所需的依赖项。
